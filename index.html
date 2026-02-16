@@ -24,9 +24,13 @@
 
 <section id="login" class="screen">
   <h2>Login</h2>
-  <input placeholder="E-mail" />
-  <input type="password" placeholder="Senha" />
-  <button onclick="go('home')">Entrar</button>
+
+  <input id="email" placeholder="E-mail" autocomplete="username" />
+  <input id="senha" type="password" placeholder="Senha" autocomplete="current-password" />
+
+  <p id="login-erro" style="display:none; margin:12px 0 0; opacity:.9;"></p>
+
+  <button onclick="loginDemo()">Entrar</button>
   <button class="link" onclick="go('splash')">Voltar</button>
 </section>
 
