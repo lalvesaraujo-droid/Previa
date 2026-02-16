@@ -1,36 +1,46 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prévia</title>
-<style>
-body{
-margin:0;
-font-family:-apple-system,system-ui;
-background:#0A285A;
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-height:100vh;
-text-align:center;
-}
-button{
-padding:14px 20px;
-border-radius:12px;
-border:none;
-background:#4F82C8;
-color:white;
-font-size:16px;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prévia</title>
+  <link rel="stylesheet" href="styles">
 </head>
+
 <body>
-<div>
-<h1>Prévia</h1>
-<p>Protótipo inicial rodando</p>
-<button onclick="alert('Prévia ativo')">Entrar</button>
-</div>
+
+<section id="splash" class="screen active">
+  <h1>Prévia</h1>
+  <p>Pré-anestésico digital</p>
+  <button onclick="go('login')">Entrar</button>
+</section>
+
+<section id="login" class="screen">
+  <h2>Login</h2>
+  <input placeholder="E-mail" />
+  <input type="password" placeholder="Senha" />
+  <button onclick="go('home')">Entrar</button>
+  <button class="link" onclick="go('splash')">Voltar</button>
+</section>
+
+<section id="home" class="screen">
+  <h2>Home</h2>
+  <button onclick="go('avaliacao')">Nova avaliação</button>
+  <button class="link" onclick="go('about')">Sobre</button>
+</section>
+
+<section id="avaliacao" class="screen">
+  <h2>Nova avaliação</h2>
+  <p>Formulário em construção</p>
+  <button class="link" onclick="go('home')">Voltar</button>
+</section>
+
+<section id="about" class="screen">
+  <h2>Sobre o Prévia</h2>
+  <p>Plataforma de pré-anestesia digital.</p>
+  <button class="link" onclick="go('home')">Voltar</button>
+</section>
+
+<script src="app.js"></script>
 </body>
 </html>
