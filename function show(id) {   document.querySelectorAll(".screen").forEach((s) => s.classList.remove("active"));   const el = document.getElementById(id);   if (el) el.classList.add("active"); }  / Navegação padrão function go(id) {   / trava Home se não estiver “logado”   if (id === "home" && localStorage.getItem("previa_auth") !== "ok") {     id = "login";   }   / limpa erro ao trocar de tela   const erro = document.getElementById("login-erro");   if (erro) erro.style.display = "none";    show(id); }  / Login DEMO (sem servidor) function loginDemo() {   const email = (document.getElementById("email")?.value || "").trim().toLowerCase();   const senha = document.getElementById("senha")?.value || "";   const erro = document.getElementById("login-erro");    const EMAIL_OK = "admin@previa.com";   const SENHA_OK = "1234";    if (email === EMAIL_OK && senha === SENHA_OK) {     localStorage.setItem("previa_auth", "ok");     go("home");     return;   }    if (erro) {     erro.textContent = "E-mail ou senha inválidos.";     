@@ -1,0 +1,49 @@
+function show(id) {
+  document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
+  const el = document.getElementById(id);
+  if (el) el.classList.add("active");
+}
+
+// Navegação padrão
+function go(id) {
+  // trava Home se não estiver “logado”
+  if (id === "home" && localStorage.getItem("previa_auth") !== "ok") {
+    id = "login";
+  }
+  // limpa erro ao trocar de tela
+  const erro = document.getElementById("login-erro");
+  if (erro) erro.style.display = "none";
+
+  show(id);
+}
+
+// Login DEMO (sem servidor)
+function loginDemo() {
+  const email = (document.getElementById("email")?.value || "").trim().toLowerCase();
+  const senha = document.getElementById("senha")?.value || "";
+  const erro = document.getElementById("login-erro");
+
+  const EMAIL_OK = "admin@previa.com";
+  const SENHA_OK = "1234";
+
+  if (email === EMAIL_OK && senha === SENHA_OK) {
+    localStorage.setItem("previa_auth", "ok");
+    go("home");
+    return;
+  }
+
+  if (erro) {
+    erro.textContent = "E-mail ou senha inválidos.";
+    erro.style.display = "block";
+  }
+}
+
+// Logout
+function logoutDemo() {
+  localStorage.removeItem("previa_auth");
+  go("splash");
+}
+
+// Inicializa na splash
+document.addEventListener("DOMContentLoaded", () => {
+  go("splash");
