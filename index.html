@@ -85,12 +85,11 @@ function loginDemo(){
   localStorage.setItem("previa_auth","1");
   show("home");
 }
-
 function logout(){
   localStorage.removeItem("previa_auth");
   show("login");
-
-
+</section>
+<script>
 function show(id){
   document.querySelectorAll(".screen").forEach(s=>{
     s.classList.remove("active");
@@ -98,7 +97,6 @@ function show(id){
   const el = document.getElementById(id);
   if(el) el.classList.add("active");
 }
-
 function go(id){
   if(id==="home" && !localStorage.getItem("previa_auth")){
     show("login");
@@ -106,17 +104,14 @@ function go(id){
   }
   show(id);
 }
-
 function loginDemo(){
-  localStorage.setItem("previa_auth","1");
+  localStorage.setItem("previa_auth","ok");
   show("home");
 }
-
 function logout(){
   localStorage.removeItem("previa_auth");
   show("login");
 }
-
 document.addEventListener("DOMContentLoaded", ()=>{
   if(localStorage.getItem("previa_auth")){
     show("home");
@@ -125,3 +120,5 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }
 });
 </script>
+</body>
+</html>
