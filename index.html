@@ -1,291 +1,286 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prévia</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    /* fallback simples caso seu styles.css não tenha tudo */
-    body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial; }
-    .app { padding: 18px; max-width: 760px; margin: 0 auto; }
-    .header { margin-bottom: 14px; color: #fff; }
-    .header h1 { margin: 0; font-size: 34px; letter-spacing: .2px; }
-    .sub { opacity:.85; margin-top:6px; font-size: 14px; }
-    .card { background: rgba(255,255,255,.10); border-radius: 18px; padding: 18px; backdrop-filter: blur(8px); color:#fff; border: 1px solid rgba(255,255,255,.10); }
-    h2 { margin: 0 0 12px 0; font-size: 28px; }
-    label { display:block; margin: 12px 0 6px; opacity:.9; }
-    input, select, textarea {
-      width: 100%; box-sizing: border-box;
-      border-radius: 14px; border: 1px solid rgba(255,255,255,.15);
-      padding: 12px 12px; font-size: 16px;
-      background: rgba(255,255,255,.92); color:#111;
-      outline: none;
-    }
-    textarea { min-height: 70px; resize: vertical; }
-    .btnRow { display:flex; gap: 12px; margin-top: 14px; }
-    .btn { flex:1; padding: 14px 14px; border-radius: 14px; font-size: 17px; border: 1px solid rgba(255,255,255,.18); }
-    .btnPrimary { background: rgba(60,140,255,.95); color: #fff; }
-    .btnGhost { background: rgba(255,255,255,.12); color: #fff; }
-    .btnDanger { background: rgba(255,80,80,.88); color: #fff; }
-    .histItem { background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 12px; margin: 10px 0; }
-    .histItem button { margin-top: 8px; width: 100%; padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.15); color:#fff; font-size: 16px;}
-    .topActions { display:flex; gap:10px; margin-top: 10px; }
-    .hint { opacity:.85; font-size: 14px; margin-top: 8px; line-height: 1.35; }
-    .toast {
-      position: fixed; left: 50%; transform: translateX(-50%);
-      bottom: 18px; background: rgba(0,0,0,.75); color:#fff;
-      padding: 10px 14px; border-radius: 999px; font-size: 14px;
-      opacity: 0; pointer-events:none; transition: .25s;
-    }
-    .toast.show { opacity: 1; }
-    /* fundo simples */
-    body { background: radial-gradient(circle at 20% 20%, #2d5d86 0%, #0b2a3d 70%, #071e2b 100%); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prévia</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body{
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+margin:0;
+background:linear-gradient(180deg,#0f2a44,#143a5a);
+color:white;
+}
+
+.container{padding:20px}
+
+.card{
+background:rgba(255,255,255,.08);
+border-radius:18px;
+padding:18px;
+margin-top:16px;
+backdrop-filter:blur(10px);
+}
+
+input,textarea,select{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+margin-top:6px;
+margin-bottom:14px;
+}
+
+button{
+padding:12px 16px;
+border:none;
+border-radius:12px;
+font-weight:600;
+}
+
+.primary{background:#3b82f6;color:white}
+.secondary{background:rgba(255,255,255,.2);color:white}
+.danger{background:#ef4444;color:white}
+
+.hidden{display:none}
+
+.historyItem{
+background:rgba(255,255,255,.08);
+border-radius:12px;
+padding:12px;
+margin-bottom:12px;
+}
+</style>
 </head>
 
 <body>
-  <div class="app">
 
-    <header class="header">
-      <h1>Prévia</h1>
-      <div class="sub">Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542</div>
-    </header>
+<div class="container">
 
-    <!-- HOME -->
-    <div class="card" id="screenHome">
-      <h2>Home</h2>
-      <div class="hint">Salvar avaliações, abrir em segundos e manter histórico no aparelho (localStorage).</div>
+<h1>Prévia</h1>
+<div style="opacity:.8;margin-bottom:10px">
+Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542
+</div>
 
-      <div class="topActions">
-        <button class="btn btnPrimary" id="btnNova">Nova avaliação</button>
-        <button class="btn btnGhost" id="btnHist">Histórico</button>
-      </div>
-    </div>
+<!-- HOME -->
+<div id="home" class="card">
+<h2>Home</h2>
+<button class="primary" onclick="nova()">Nova avaliação</button>
+<button class="secondary" onclick="verHistorico()">Histórico</button>
+</div>
 
-    <!-- FORM -->
-    <div class="card" id="screenForm" style="display:none">
-      <h2>Nova avaliação</h2>
+<!-- FORM -->
+<div id="form" class="card hidden">
 
-      <label>Paciente</label>
-      <input id="nome" placeholder="Nome completo" />
+<h2>Nova avaliação</h2>
 
-      <label>Idade</label>
-      <input id="idade" placeholder="Ex: 35" inputmode="numeric" />
+<label>Paciente</label>
+<input id="paciente">
 
-      <label>ASA</label>
-      <select id="asa">
-        <option>I</option><option>II</option><option>III</option><option>IV</option>
-      </select>
+<label>Idade</label>
+<input id="idade">
 
-      <label>Procedimento</label>
-      <input id="procedimento" placeholder="Ex: Mamoplastia redutora" />
+<label>ASA</label>
+<select id="asa">
+<option>I</option>
+<option>II</option>
+<option>III</option>
+<option>IV</option>
+</select>
 
-      <label>Comorbidades</label>
-      <textarea id="comorb" placeholder="Ex: HAS; Asma; DM"></textarea>
+<label>Procedimento</label>
+<input id="procedimento">
 
-      <label>Medicações</label>
-      <textarea id="medic" placeholder="Ex: Losartana 50mg; Metformina"></textarea>
+<label>Comorbidades</label>
+<textarea id="comorb"></textarea>
 
-      <label>Via aérea (Mallampati)</label>
-      <select id="mallampati">
-        <option>I</option><option>II</option><option>III</option><option>IV</option>
-      </select>
+<label>Medicações</label>
+<textarea id="medic"></textarea>
 
-      <label>Estratégia anestésica</label>
-      <textarea id="estrategia" placeholder="Ex: Geral; profilaxia PONV; analgesia multimodal..."></textarea>
+<label>Via aérea (Mallampati)</label>
+<select id="mall">
+<option>I</option>
+<option>II</option>
+<option>III</option>
+<option>IV</option>
+</select>
 
-      <label>Condição</label>
-      <input id="condicao" placeholder="Apto / Pendência" />
+<label>Estratégia anestésica</label>
+<textarea id="estrat"></textarea>
 
-      <label>Conduta</label>
-      <textarea id="conduta" placeholder="Jejum, orientações, ajustes de medicação, chegada ao hospital..."></textarea>
+<label>Condição</label>
+<input id="cond">
 
-      <label>Foto do paciente</label>
-      <input type="file" id="foto" accept="image/*" />
+<label>Conduta</label>
+<textarea id="conduta"></textarea>
 
-      <div class="btnRow">
-        <button class="btn btnPrimary" id="btnSalvar">Salvar</button>
-        <button class="btn btnGhost" id="btnVoltar">Voltar</button>
-      </div>
-    </div>
+<label>Foto</label>
+<input type="file" id="foto">
 
-    <!-- HISTÓRICO -->
-    <div class="card" id="screenHistory" style="display:none">
-      <h2>Histórico</h2>
-      <div class="hint">Fica salvo no aparelho. Se limpar o Safari / dados do site, o histórico some.</div>
-      <div id="historyList"></div>
+<button class="primary" onclick="salvar()">Salvar</button>
+<button class="secondary" onclick="home()">Voltar</button>
 
-      <div class="btnRow">
-        <button class="btn btnGhost" id="btnHome2">Home</button>
-        <button class="btn btnDanger" id="btnClear">Apagar tudo</button>
-      </div>
-    </div>
+</div>
 
-  </div>
+<!-- HISTORICO -->
+<div id="hist" class="card hidden">
+<h2>Histórico</h2>
+<div id="lista"></div>
 
-  <div class="toast" id="toast">Ok</div>
+<button class="secondary" onclick="home()">Home</button>
+<button class="danger" onclick="localStorage.clear();verHistorico()">Apagar tudo</button>
+</div>
+
+<!-- RESUMO -->
+<div id="resumo" class="card hidden">
+<h2>Resumo</h2>
+<div id="resumoTxt"></div>
+
+<button class="primary" onclick="gerarPDF()">Gerar PDF</button>
+<button class="secondary" onclick="verHistorico()">Voltar</button>
+</div>
+
+</div>
 
 <script>
-(() => {
-  // ===== refs (isso é o que salva o iPhone) =====
-  const $ = (id) => document.getElementById(id);
 
-  const screenHome = $("screenHome");
-  const screenForm = $("screenForm");
-  const screenHistory = $("screenHistory");
+let atual=null
 
-  const nome = $("nome");
-  const idade = $("idade");
-  const asa = $("asa");
-  const procedimento = $("procedimento");
-  const comorb = $("comorb");
-  const medic = $("medic");
-  const mallampati = $("mallampati");
-  const estrategia = $("estrategia");
-  const condicao = $("condicao");
-  const conduta = $("conduta");
-  const foto = $("foto");
+function home(){
+hideAll()
+document.getElementById("home").classList.remove("hidden")
+}
 
-  const historyList = $("historyList");
+function nova(){
+hideAll()
+document.getElementById("form").classList.remove("hidden")
+}
 
-  const toast = $("toast");
-  function showToast(msg){
-    toast.textContent = msg;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 1100);
-  }
+function verHistorico(){
+hideAll()
+document.getElementById("hist").classList.remove("hidden")
 
-  function show(which){
-    screenHome.style.display = (which==="home") ? "block" : "none";
-    screenForm.style.display = (which==="form") ? "block" : "none";
-    screenHistory.style.display = (which==="history") ? "block" : "none";
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+let dados=JSON.parse(localStorage.getItem("previas")||"[]")
+let html=""
 
-  // ===== storage =====
-  const KEY = "previa_avaliacoes_v1";
+dados.forEach((d,i)=>{
+html+=`
+<div class="historyItem">
+<b>${d.paciente||"Sem nome"}</b><br>
+${d.procedimento||""}<br>
+ASA ${d.asa} • Mallampati ${d.mall}<br><br>
+<button onclick="abrir(${i})">Ver resumo</button>
+</div>`
+})
 
-  function getList(){
-    try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
-    catch(e){ return []; }
-  }
-  function setList(list){
-    localStorage.setItem(KEY, JSON.stringify(list));
-  }
+document.getElementById("lista").innerHTML=html
+}
 
-  function clearForm(){
-    nome.value = "";
-    idade.value = "";
-    asa.value = "I";
-    procedimento.value = "";
-    comorb.value = "";
-    medic.value = "";
-    mallampati.value = "I";
-    estrategia.value = "";
-    condicao.value = "";
-    conduta.value = "";
-    if (foto) foto.value = "";
-  }
+function abrir(i){
+let dados=JSON.parse(localStorage.getItem("previas")||"[]")
+atual=dados[i]
 
-  function renderHistory(){
-    const list = getList();
-    historyList.innerHTML = "";
+hideAll()
+document.getElementById("resumo").classList.remove("hidden")
 
-    if(!list.length){
-      historyList.innerHTML = `<div class="histItem">Nenhuma avaliação salva ainda.</div>`;
-      return;
-    }
+document.getElementById("resumoTxt").innerHTML=`
+<b>${atual.paciente}</b><br>
+${atual.procedimento}<br>
+ASA ${atual.asa} • Mallampati ${atual.mall}<br><br>
+${atual.estrat}
+`
+}
 
-    list.slice().reverse().forEach((it, idxFromEnd) => {
-      const i = list.length - 1 - idxFromEnd;
+function salvar(){
 
-      const linha = document.createElement("div");
-      linha.className = "histItem";
-      linha.innerHTML = `
-        <b>${escapeHtml(it.nome || "Sem nome")}</b><br>
-        ${escapeHtml(it.procedimento || "Procedimento não informado")}<br>
-        ASA ${escapeHtml(it.asa || "-")} • Mallampati ${escapeHtml(it.mallampati || "-")}<br>
-        <button>Ver resumo</button>
-      `;
-      linha.querySelector("button").onclick = () => verResumo(i);
-      historyList.appendChild(linha);
-    });
-  }
+let reader=new FileReader()
 
-  function escapeHtml(s){
-    return String(s || "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
+let file=document.getElementById("foto").files[0]
 
-  function verResumo(i){
-    const list = getList();
-    const it = list[i];
-    if(!it) return;
+if(file){
+reader.onload=function(){
+gravar(reader.result)
+}
+reader.readAsDataURL(file)
+}else{
+gravar(null)
+}
 
-    const txt =
-`Paciente: ${it.nome || ""}
-Idade: ${it.idade || ""}
-ASA: ${it.asa || ""}
-Procedimento: ${it.procedimento || ""}
+}
 
-Comorbidades: ${it.comorb || ""}
-Medicações: ${it.medic || ""}
-Via aérea: Mallampati ${it.mallampati || ""}
+function gravar(fotoData){
 
-Estratégia anestésica: ${it.estrategia || ""}
+let obj={
+paciente:paciente.value,
+idade:idade.value,
+asa:asa.value,
+procedimento:procedimento.value,
+comorb:comorb.value,
+medic:medic.value,
+mall:mall.value,
+estrat:estrat.value,
+cond:cond.value,
+conduta:conduta.value,
+foto:fotoData
+}
 
-Condição: ${it.condicao || ""}
-Conduta: ${it.conduta || ""}`;
+let dados=JSON.parse(localStorage.getItem("previas")||"[]")
+dados.unshift(obj)
+localStorage.setItem("previas",JSON.stringify(dados))
 
-    alert(txt);
-  }
+home()
+}
 
-  function salvar(){
-    const data = {
-      nome: nome.value.trim(),
-      idade: idade.value.trim(),
-      asa: asa.value,
-      procedimento: procedimento.value.trim(),
-      comorb: comorb.value.trim(),
-      medic: medic.value.trim(),
-      mallampati: mallampati.value,
-      estrategia: estrategia.value.trim(),
-      condicao: condicao.value.trim(),
-      conduta: conduta.value.trim(),
-      createdAt: new Date().toISOString()
-    };
+function gerarPDF(){
 
-    const list = getList();
-    list.push(data);
-    setList(list);
+const { jsPDF } = window.jspdf
+let doc=new jsPDF()
 
-    showToast("Avaliação salva ✅");
-    clearForm();
-    show("home");
-  }
+// CAPA
+doc.setFontSize(22)
+doc.text("Prévia",20,20)
 
-  // ===== events =====
-  $("btnNova").addEventListener("click", () => { show("form"); });
-  $("btnHist").addEventListener("click", () => { renderHistory(); show("history"); });
+doc.setFontSize(10)
+doc.text("Dr Leonardo Alves Araújo",20,28)
+doc.text("CRM-MG 47310 • RQE 40542",20,33)
 
-  $("btnSalvar").addEventListener("click", salvar);
-  $("btnVoltar").addEventListener("click", () => show("home"));
+doc.setFontSize(16)
+doc.text(atual.paciente||"",20,50)
 
-  $("btnHome2").addEventListener("click", () => show("home"));
-  $("btnClear").addEventListener("click", () => {
-    localStorage.removeItem(KEY);
-    renderHistory();
-    showToast("Histórico apagado");
-  });
+doc.setFontSize(12)
+doc.text("Procedimento:",20,65)
+doc.text(atual.procedimento||"",20,72)
 
-  // start
-  show("home");
-})();
+doc.text("ASA "+atual.asa+" • Mallampati "+atual.mall,20,85)
+
+if(atual.foto){
+doc.addImage(atual.foto,"JPEG",140,40,50,50)
+}
+
+// PAG 2
+doc.addPage()
+
+doc.setFontSize(16)
+doc.text("Estratégia anestésica",20,20)
+
+doc.setFontSize(12)
+doc.text(doc.splitTextToSize(atual.estrat||"",170),20,35)
+
+doc.save("previa.pdf")
+}
+
+function hideAll(){
+document.getElementById("home").classList.add("hidden")
+document.getElementById("form").classList.add("hidden")
+document.getElementById("hist").classList.add("hidden")
+document.getElementById("resumo").classList.add("hidden")
+}
+
 </script>
 
 </body>
