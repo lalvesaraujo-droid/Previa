@@ -8,100 +8,423 @@
 </head>
 
 <body>
+
   <!-- SPLASH -->
   <section id="splash" class="screen active">
-    <div class="logo-block">
-      <div class="logo-title">Prévia</div>
-      <div class="logo-sub">
-        <div>Pré-</div>
-        <div>anestésico</div>
-        <div>digital</div>
+    <div class="card">
+      <div class="brand">Prévia</div>
+      <div class="subtitle">Avaliação pré-anestésica digital (médico/hospital)</div>
+      <button onclick="go('login')">Entrar</button>
+
+      <div class="footer-med">
+        RT: Dr. Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542
       </div>
     </div>
-
-    <button onclick="go('login')">Entrar</button>
   </section>
 
-  <!-- LOGIN -->
+  <!-- LOGIN (DEMO) -->
   <section id="login" class="screen">
-    <h2>Login</h2>
+    <div class="card">
+      <h2>Login</h2>
+      <p>Demo: qualquer e-mail e senha entram.</p>
 
-    <input id="email" placeholder="E-mail" autocomplete="username" />
-    <input id="senha" type="password" placeholder="Senha" autocomplete="current-password" />
+      <input id="email" placeholder="E-mail" autocomplete="username" />
+      <input id="senha" type="password" placeholder="Senha" autocomplete="current-password" />
 
-    <p id="login-erro" style="display:none; margin-top:12px;"></p>
+      <p id="login-erro" class="error">Usuário ou senha inválidos.</p>
 
-    <button onclick="loginDemo()">Entrar</button>
-    <button class="link" onclick="go('splash')">Voltar</button>
+      <button onclick="loginDemo()">Entrar</button>
+      <button class="btn-secondary" onclick="go('splash')">Voltar</button>
+    </div>
   </section>
 
   <!-- HOME -->
   <section id="home" class="screen">
-    <h2>Home</h2>
+    <div class="card">
+      <h2>Home</h2>
+      <p>Fluxo médico: criar avaliação → gerar resumo → copiar/PDF (em breve).</p>
 
-    <button onclick="go('avaliacao')">Nova avaliação</button>
-    <button class="link" onclick="go('about')">Sobre</button>
-    <button class="link" onclick="logout()">Sair</button>
+      <button onclick="go('avaliacao')">Nova avaliação</button>
+      <button onclick="go('about')">Sobre</button>
+      <button class="btn-secondary" onclick="logout()">Sair</button>
+    </div>
   </section>
 
-  <!-- AVALIAÇÃO -->
+  <!-- NOVA AVALIAÇÃO -->
   <section id="avaliacao" class="screen">
-    <h2>Nova avaliação</h2>
-    <p>Formulário em construção</p>
-    <button class="link" onclick="go('home')">Voltar</button>
+    <div class="card" style="text-align:left;">
+      <h2 style="text-align:center;">Nova avaliação</h2>
+
+      <h3 style="margin:10px 0 8px;">Identificação</h3>
+
+      <label>Paciente</label>
+      <input id="paciente" placeholder="Nome completo" />
+
+      <label>Idade</label>
+      <input id="idade" placeholder="Ex: 38" inputmode="numeric" />
+
+      <label>Procedimento</label>
+      <input id="procedimento" placeholder="Ex: Lipoabdominoplastia" />
+
+      <label>ASA</label>
+      <input id="asa" placeholder="Ex: ASA I / ASA II" />
+
+      <h3 style="margin:14px 0 8px;">Antropometria</h3>
+
+      <label>Peso (kg)</label>
+      <input id="peso" placeholder="Ex: 78" inputmode="decimal" oninput="calcIMC()" />
+
+      <label>Altura (cm)</label>
+      <input id="altura" placeholder="Ex: 172" inputmode="numeric" oninput="calcIMC()" />
+
+      <p id="imc-box" style="opacity:.85;margin:8px 0 0;">IMC: -</p>
+
+      <h3 style="margin:14px 0 8px;">Histórico</h3>
+
+      <label>Passado cirúrgico</label>
+      <input id="passado" placeholder="Ex: Colecistectomia (2019), Cesárea (2014)" />
+
+      <label>Intercorrências anestésicas anteriores</label>
+      <input id="intercorrencias" placeholder="Ex: PONV; intubação difícil; nenhuma" />
+
+      <h3 style="margin:14px 0 8px;">Clínico</h3>
+
+      <label>Alergias</label>
+      <input id="alergias" placeholder="Ex: Dipirona (urticária) / Nenhuma" />
+
+      <label>Comorbidades</label>
+      <input id="comorbidades" placeholder="Ex: HAS / DM / Asma / Nenhuma" />
+
+      <label>Medicações em uso</label>
+      <input id="meds" placeholder="Ex: Losartana 50mg / Metformina / Nenhuma" />
+
+      <label>Jejum (horas)</label>
+      <input id="jejum" placeholder="Ex: 8" inputmode="numeric" />
+
+      <h3 style="margin:14px 0 8px;">Medicamentos de alto impacto</h3>
+
+      <label>GLP-1 (Ozempic / análogos)</label>
+      <input id="glp1" placeholder="Ex: Ozempic semanal; última dose 10/02" />
+
+      <label>Anticoagulante / antiagregante</label>
+      <input id="anticoag" placeholder="Ex: Rivaroxabana; última dose ontem 20h" />
+
+      <h3 style="margin:14px 0 8px;">Via aérea</h3>
+
+      <label>Mallampati</label>
+      <input id="mallampati" placeholder="I / II / III / IV" />
+
+      <label>Foto Mallampati</label>
+      <input type="file" id="foto-mallampati" accept="image/*" capture="environment" />
+
+      <div id="wrap-mallampati" style="position:relative;margin-top:10px;display:none;">
+        <img id="preview-mallampati" style="
+          width:100%;
+          max-height:180px;
+          object-fit:cover;
+          border-radius:12px;
+          display:block;
+        " />
+        <!-- tarja simples (posição aproximada; ajustável depois) -->
+        <div style="
+          position:absolute;
+          top:35%;
+          left:18%;
+          width:64%;
+          height:18%;
+          background:#000;
+          opacity:0.55;
+          border-radius:8px;
+          pointer-events:none;
+        "></div>
+      </div>
+
+      <h3 style="margin:14px 0 8px;">Exames essenciais (anexos)</h3>
+
+      <label>Ecocardiograma (PDF ou foto)</label>
+      <input type="file" id="eco" accept="image/*,application/pdf" />
+
+      <label>ECG (PDF ou foto)</label>
+      <input type="file" id="ecg" accept="image/*,application/pdf" />
+
+      <label>Outros exames (múltiplos)</label>
+      <input type="file" id="outros" accept="image/*,application/pdf" multiple />
+
+      <div style="margin-top:10px;">
+        <p style="opacity:.85;margin-bottom:6px;">Anexos selecionados:</p>
+        <ul id="lista-anexos" style="opacity:.85; padding-left:18px;"></ul>
+      </div>
+
+      <h3 style="margin:14px 0 8px;">Observações</h3>
+      <input id="obs" placeholder="Ex: risco CV, PONV importante, etc." />
+
+      <button onclick="gerarResumo()">Gerar resumo</button>
+      <button class="btn-secondary" onclick="go('home')">Voltar</button>
+    </div>
+  </section>
+
+  <!-- RESUMO -->
+  <section id="resumo" class="screen">
+    <div class="card">
+      <h2>Resumo</h2>
+      <p style="opacity:.8;">Conferir e copiar para prontuário/WhatsApp.</p>
+
+      <textarea id="resumo-texto" style="
+        width:100%;
+        min-height:240px;
+        padding:12px;
+        border-radius:12px;
+        border:none;
+        font-size:14px;
+        outline:none;
+        resize:vertical;
+      "></textarea>
+
+      <button onclick="copiarResumo()">Copiar</button>
+      <button class="btn-secondary" onclick="go('avaliacao')">Voltar</button>
+      <button class="btn-secondary" onclick="go('home')">Home</button>
+    </div>
   </section>
 
   <!-- ABOUT -->
   <section id="about" class="screen">
-    <h2>Prévia</h2>
-    <p>Plataforma de avaliação pré-anestésica</p>
-
     <div class="card">
-      <b>RT: Dr. Leonardo Alves Araújo</b><br />
-      Anestesiologia<br />
-      CRM-MG 47310<br />
-      RQE 40542
-    </div>
+      <h2>Sobre</h2>
+      <p>Prévia — plataforma de avaliação pré-anestésica para médicos e hospitais.</p>
 
-    <button class="link" onclick="go('home')">Voltar</button>
+      <div class="footer-med" style="opacity:.85;">
+        <b>RT:</b> Dr. Leonardo Alves Araújo<br>
+        CRM-MG 47310<br>
+        RQE 40542
+      </div>
+
+      <button style="margin-top:16px;" onclick="go('home')">Voltar</button>
+    </div>
   </section>
 
   <script>
-    function show(id) {
+    // -------- Navegação --------
+    function show(id){
       document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
       const el = document.getElementById(id);
-      if (el) el.classList.add("active");
+      if(el) el.classList.add("active");
     }
 
-    function go(id) {
-      // Protege a Home: só entra se estiver "logado"
-      if (id === "home" && !localStorage.getItem("previa_auth")) {
+    function go(id){
+      // Protege Home (apenas após "login")
+      if(id === "home" && !localStorage.getItem("previa_auth")){
         show("login");
         return;
       }
-
-      // limpa mensagem de erro ao trocar de tela
+      // limpa erro de login
       const err = document.getElementById("login-erro");
-      if (err) err.style.display = "none";
+      if(err) err.style.display = "none";
 
       show(id);
     }
 
-    function loginDemo() {
-      // Demo: aceita qualquer coisa (pra você testar o fluxo)
+    function loginDemo(){
+      // Demo: entra sempre
       localStorage.setItem("previa_auth", "ok");
       show("home");
     }
 
-    function logout() {
+    function logout(){
       localStorage.removeItem("previa_auth");
       show("login");
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      if (localStorage.getItem("previa_auth")) show("home");
+      if(localStorage.getItem("previa_auth")) show("home");
       else show("splash");
     });
+
+    // -------- IMC --------
+    function calcIMC(){
+      const peso = parseFloat((document.getElementById("peso")?.value || "").replace(",", "."));
+      const alturaCm = parseFloat((document.getElementById("altura")?.value || "").replace(",", "."));
+      const box = document.getElementById("imc-box");
+      if(!box) return;
+
+      if(!peso || !alturaCm){
+        box.textContent = "IMC: -";
+        return;
+      }
+      const alturaM = alturaCm / 100;
+      const imc = peso / (alturaM * alturaM);
+      box.textContent = "IMC: " + imc.toFixed(1);
+    }
+
+    // -------- Anexos / preview --------
+    const anexos = {
+      mallampatiDataUrl: null,
+      eco: null,
+      ecg: null,
+      outros: []
+    };
+
+    function addAnexoToList(name){
+      const ul = document.getElementById("lista-anexos");
+      if(!ul) return;
+      const li = document.createElement("li");
+      li.textContent = name;
+      ul.appendChild(li);
+    }
+
+    function resetListaAnexos(){
+      const ul = document.getElementById("lista-anexos");
+      if(ul) ul.innerHTML = "";
+    }
+
+    document.getElementById("foto-mallampati")?.addEventListener("change", function(e){
+      const file = e.target.files?.[0];
+      if(!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        anexos.mallampatiDataUrl = ev.target.result;
+        const img = document.getElementById("preview-mallampati");
+        const wrap = document.getElementById("wrap-mallampati");
+        if(img && wrap){
+          img.src = anexos.mallampatiDataUrl;
+          wrap.style.display = "block";
+        }
+        // Atualiza lista
+        rebuildAnexosList();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function handleFileInput(id, key, multiple=false){
+      const el = document.getElementById(id);
+      if(!el) return;
+
+      el.addEventListener("change", (e) => {
+        const files = Array.from(e.target.files || []);
+        if(!files.length) return;
+
+        if(multiple){
+          anexos[key] = files;
+        } else {
+          anexos[key] = files[0];
+        }
+        rebuildAnexosList();
+      });
+    }
+
+    function rebuildAnexosList(){
+      resetListaAnexos();
+
+      if(anexos.mallampatiDataUrl) addAnexoToList("Foto Mallampati (imagem)");
+      if(anexos.eco) addAnexoToList("Ecocardiograma: " + anexos.eco.name);
+      if(anexos.ecg) addAnexoToList("ECG: " + anexos.ecg.name);
+      if(Array.isArray(anexos.outros) && anexos.outros.length){
+        anexos.outros.forEach(f => addAnexoToList("Outro: " + f.name));
+      }
+    }
+
+    handleFileInput("eco", "eco", false);
+    handleFileInput("ecg", "ecg", false);
+    handleFileInput("outros", "outros", true);
+
+    // -------- Resumo --------
+    function getVal(id){
+      return (document.getElementById(id)?.value || "").trim();
+    }
+
+    function gerarResumo(){
+      const paciente = getVal("paciente");
+      const idade = getVal("idade");
+      const procedimento = getVal("procedimento");
+      const asa = getVal("asa");
+
+      const peso = getVal("peso");
+      const altura = getVal("altura");
+      const imcText = (document.getElementById("imc-box")?.textContent || "IMC: -");
+
+      const passado = getVal("passado");
+      const interc = getVal("intercorrencias");
+
+      const alergias = getVal("alergias");
+      const comorb = getVal("comorbidades");
+      const meds = getVal("meds");
+      const jejum = getVal("jejum");
+
+      const glp1 = getVal("glp1");
+      const anticoag = getVal("anticoag");
+
+      const mall = getVal("mallampati");
+      const obs = getVal("obs");
+
+      const anexosTxt = [];
+      if(anexos.mallampatiDataUrl) anexosTxt.push("Foto Mallampati: anexada");
+      if(anexos.eco) anexosTxt.push("Ecocardiograma: " + anexos.eco.name);
+      if(anexos.ecg) anexosTxt.push("ECG: " + anexos.ecg.name);
+      if(Array.isArray(anexos.outros) && anexos.outros.length){
+        anexos.outros.forEach(f => anexosTxt.push("Outro: " + f.name));
+      }
+
+      const texto =
+`PRÉVIA — Avaliação Pré-Anestésica (DEMO)
+
+Paciente: ${paciente || "-"}
+Idade: ${idade || "-"}
+Procedimento: ${procedimento || "-"}
+Classificação: ${asa || "-"}
+
+Antropometria:
+- Peso: ${peso || "-"} kg
+- Altura: ${altura || "-"} cm
+- ${imcText || "IMC: -" }
+
+Histórico:
+- Passado cirúrgico: ${passado || "-"}
+- Intercorrências anestésicas: ${interc || "-"}
+
+Clínico:
+- Alergias: ${alergias || "-"}
+- Comorbidades: ${comorb || "-"}
+- Medicações: ${meds || "-"}
+- Jejum: ${jejum ? jejum + " h" : "-"}
+
+Alto impacto:
+- GLP-1 (Ozempic/análogos): ${glp1 || "-"}
+- Anticoagulante/antiagregante: ${anticoag || "-"}
+
+Via aérea:
+- Mallampati: ${mall || "-"}
+- Foto: ${anexos.mallampatiDataUrl ? "anexada (com tarja)" : "não anexada"}
+
+Exames anexados:
+${anexosTxt.length ? anexosTxt.map(a => "- " + a).join("\n") : "- nenhum"}
+
+Observações: ${obs || "-"}
+
+RT: Dr. Leonardo Alves Araújo — CRM-MG 47310 — RQE 40542
+`;
+
+      const ta = document.getElementById("resumo-texto");
+      if(ta) ta.value = texto;
+
+      go("resumo");
+    }
+
+    async function copiarResumo(){
+      const ta = document.getElementById("resumo-texto");
+      const texto = ta ? ta.value : "";
+      if(!texto) return;
+
+      try{
+        await navigator.clipboard.writeText(texto);
+        alert("Resumo copiado ✅");
+      } catch(e){
+        // fallback simples
+        ta.focus();
+        ta.select();
+        document.execCommand("copy");
+        alert("Resumo copiado ✅");
+      }
+    }
   </script>
 </body>
 </html>
