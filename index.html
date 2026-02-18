@@ -5,283 +5,271 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prévia</title>
 
-<link rel="stylesheet" href="styles.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
 body{
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-margin:0;
-background:linear-gradient(180deg,#0f2a44,#143a5a);
-color:white;
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  background:linear-gradient(180deg,#0f2a44,#1e4d6b);
+  color:white;
 }
-
-.container{padding:20px}
-
+.container{
+  max-width:480px;
+  margin:auto;
+  padding:20px;
+}
 .card{
-background:rgba(255,255,255,.08);
-border-radius:18px;
-padding:18px;
-margin-top:16px;
-backdrop-filter:blur(10px);
+  background:rgba(255,255,255,0.08);
+  border-radius:18px;
+  padding:20px;
+  margin-top:20px;
+  backdrop-filter:blur(10px);
 }
-
 input,textarea,select{
-width:100%;
-padding:12px;
-border-radius:10px;
-border:none;
-margin-top:6px;
-margin-bottom:14px;
+  width:100%;
+  margin-top:6px;
+  margin-bottom:14px;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  font-size:16px;
 }
-
 button{
-padding:12px 16px;
-border:none;
-border-radius:12px;
-font-weight:600;
+  padding:12px 18px;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  margin:6px;
 }
-
-.primary{background:#3b82f6;color:white}
-.secondary{background:rgba(255,255,255,.2);color:white}
-.danger{background:#ef4444;color:white}
-
-.hidden{display:none}
-
+.primary{background:#3b82f6;color:white;}
+.secondary{background:rgba(255,255,255,0.2);color:white;}
+.danger{background:#ef4444;color:white;}
+.hidden{display:none;}
+.stepTitle{font-size:20px;margin-bottom:10px;}
 .historyItem{
-background:rgba(255,255,255,.08);
-border-radius:12px;
-padding:12px;
-margin-bottom:12px;
+  background:rgba(255,255,255,0.1);
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:10px;
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
 <h1>Prévia</h1>
-<div style="opacity:.8;margin-bottom:10px">
-Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542
-</div>
+<div>Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542</div>
 
 <!-- HOME -->
 <div id="home" class="card">
 <h2>Home</h2>
-<button class="primary" onclick="nova()">Nova avaliação</button>
-<button class="secondary" onclick="verHistorico()">Histórico</button>
+<button class="primary" onclick="start()">Nova avaliação</button>
+<button class="secondary" onclick="showHistory()">Histórico</button>
 </div>
 
 <!-- FORM -->
-<div id="form" class="card hidden">
+<div id="formCard" class="card hidden">
+<div id="stepTitle" class="stepTitle"></div>
+<div id="stepContent"></div>
 
-<h2>Nova avaliação</h2>
-
-<label>Paciente</label>
-<input id="paciente">
-
-<label>Idade</label>
-<input id="idade">
-
-<label>ASA</label>
-<select id="asa">
-<option>I</option>
-<option>II</option>
-<option>III</option>
-<option>IV</option>
-</select>
-
-<label>Procedimento</label>
-<input id="procedimento">
-
-<label>Comorbidades</label>
-<textarea id="comorb"></textarea>
-
-<label>Medicações</label>
-<textarea id="medic"></textarea>
-
-<label>Via aérea (Mallampati)</label>
-<select id="mall">
-<option>I</option>
-<option>II</option>
-<option>III</option>
-<option>IV</option>
-</select>
-
-<label>Estratégia anestésica</label>
-<textarea id="estrat"></textarea>
-
-<label>Condição</label>
-<input id="cond">
-
-<label>Conduta</label>
-<textarea id="conduta"></textarea>
-
-<label>Foto</label>
-<input type="file" id="foto">
-
-<button class="primary" onclick="salvar()">Salvar</button>
-<button class="secondary" onclick="home()">Voltar</button>
-
+<div style="text-align:center">
+<button class="secondary" onclick="prev()">Voltar</button>
+<button class="primary" onclick="next()">Próximo</button>
+</div>
 </div>
 
-<!-- HISTORICO -->
-<div id="hist" class="card hidden">
+<!-- HISTORY -->
+<div id="historyCard" class="card hidden">
 <h2>Histórico</h2>
-<div id="lista"></div>
-
-<button class="secondary" onclick="home()">Home</button>
-<button class="danger" onclick="localStorage.clear();verHistorico()">Apagar tudo</button>
-</div>
-
-<!-- RESUMO -->
-<div id="resumo" class="card hidden">
-<h2>Resumo</h2>
-<div id="resumoTxt"></div>
-
-<button class="primary" onclick="gerarPDF()">Gerar PDF</button>
-<button class="secondary" onclick="verHistorico()">Voltar</button>
+<div id="historyList"></div>
+<button class="secondary" onclick="goHome()">Home</button>
+<button class="danger" onclick="clearHistory()">Apagar tudo</button>
 </div>
 
 </div>
 
 <script>
+const steps=[
+"Identificação",
+"Procedimento",
+"Histórico",
+"Clínico",
+"Alto impacto",
+"Via aérea",
+"Estratégia",
+"Conduta"
+];
 
-let atual=null
+let current=0;
+let data={};
+let fotoBase64="";
 
-function home(){
-hideAll()
-document.getElementById("home").classList.remove("hidden")
+function start(){
+current=0;
+data={};
+fotoBase64="";
+document.getElementById("home").classList.add("hidden");
+document.getElementById("formCard").classList.remove("hidden");
+renderStep();
 }
 
-function nova(){
-hideAll()
-document.getElementById("form").classList.remove("hidden")
+function renderStep(){
+document.getElementById("stepTitle").innerText=steps[current];
+let html="";
+
+if(current===0){
+html+=`Paciente<input id="paciente">`;
+html+=`Idade<input id="idade">`;
+html+=`ASA<select id="asa">
+<option>I</option><option>II</option><option>III</option><option>IV</option>
+</select>`;
 }
 
-function verHistorico(){
-hideAll()
-document.getElementById("hist").classList.remove("hidden")
-
-let dados=JSON.parse(localStorage.getItem("previas")||"[]")
-let html=""
-
-dados.forEach((d,i)=>{
-html+=`
-<div class="historyItem">
-<b>${d.paciente||"Sem nome"}</b><br>
-${d.procedimento||""}<br>
-ASA ${d.asa} • Mallampati ${d.mall}<br><br>
-<button onclick="abrir(${i})">Ver resumo</button>
-</div>`
-})
-
-document.getElementById("lista").innerHTML=html
+if(current===1){
+html+=`Procedimento<input id="procedimento">`;
 }
 
-function abrir(i){
-let dados=JSON.parse(localStorage.getItem("previas")||"[]")
-atual=dados[i]
-
-hideAll()
-document.getElementById("resumo").classList.remove("hidden")
-
-document.getElementById("resumoTxt").innerHTML=`
-<b>${atual.paciente}</b><br>
-${atual.procedimento}<br>
-ASA ${atual.asa} • Mallampati ${atual.mall}<br><br>
-${atual.estrat}
-`
+if(current===2){
+html+=`Comorbidades<textarea id="comorbidades"></textarea>`;
 }
 
-function salvar(){
+if(current===3){
+html+=`Medicações<textarea id="medicacoes"></textarea>`;
+}
 
-let reader=new FileReader()
+if(current===4){
+html+=`Risco cirúrgico<textarea id="risco"></textarea>`;
+}
 
-let file=document.getElementById("foto").files[0]
+if(current===5){
+html+=`Mallampati<select id="mallampati">
+<option>I</option><option>II</option><option>III</option><option>IV</option>
+</select>`;
+}
 
+if(current===6){
+html+=`Estratégia anestésica<textarea id="estrategia"></textarea>`;
+}
+
+if(current===7){
+html+=`Condição<input id="condicao">`;
+html+=`Conduta<textarea id="conduta"></textarea>`;
+html+=`Foto<input type="file" id="foto">`;
+}
+
+document.getElementById("stepContent").innerHTML=html;
+}
+
+function saveStep(){
+if(current===0){
+data.paciente=document.getElementById("paciente").value;
+data.idade=document.getElementById("idade").value;
+data.asa=document.getElementById("asa").value;
+}
+if(current===1) data.procedimento=document.getElementById("procedimento").value;
+if(current===2) data.comorbidades=document.getElementById("comorbidades").value;
+if(current===3) data.medicacoes=document.getElementById("medicacoes").value;
+if(current===4) data.risco=document.getElementById("risco").value;
+if(current===5) data.mallampati=document.getElementById("mallampati").value;
+if(current===6) data.estrategia=document.getElementById("estrategia").value;
+if(current===7){
+data.condicao=document.getElementById("condicao").value;
+data.conduta=document.getElementById("conduta").value;
+
+const file=document.getElementById("foto").files[0];
 if(file){
-reader.onload=function(){
-gravar(reader.result)
+const reader=new FileReader();
+reader.onload=()=>fotoBase64=reader.result;
+reader.readAsDataURL(file);
 }
-reader.readAsDataURL(file)
+}
+}
+
+function next(){
+saveStep();
+if(current<steps.length-1){
+current++;
+renderStep();
 }else{
-gravar(null)
+saveEvaluation();
+}
 }
 
+function prev(){
+if(current>0){
+current--;
+renderStep();
+}else{
+goHome();
+}
 }
 
-function gravar(fotoData){
-
-let obj={
-paciente:paciente.value,
-idade:idade.value,
-asa:asa.value,
-procedimento:procedimento.value,
-comorb:comorb.value,
-medic:medic.value,
-mall:mall.value,
-estrat:estrat.value,
-cond:cond.value,
-conduta:conduta.value,
-foto:fotoData
+function saveEvaluation(){
+data.foto=fotoBase64;
+let hist=JSON.parse(localStorage.getItem("previa_hist")||"[]");
+hist.unshift(data);
+localStorage.setItem("previa_hist",JSON.stringify(hist));
+generatePDF(data);
+goHome();
 }
 
-let dados=JSON.parse(localStorage.getItem("previas")||"[]")
-dados.unshift(obj)
-localStorage.setItem("previas",JSON.stringify(dados))
+function showHistory(){
+document.getElementById("home").classList.add("hidden");
+document.getElementById("historyCard").classList.remove("hidden");
 
-home()
+let hist=JSON.parse(localStorage.getItem("previa_hist")||"[]");
+let html="";
+hist.forEach(it=>{
+html+=`<div class="historyItem">
+<b>${it.paciente||"Sem nome"}</b><br>
+${it.procedimento||""}<br>
+ASA ${it.asa||""} • Mallampati ${it.mallampati||""}
+</div>`;
+});
+document.getElementById("historyList").innerHTML=html;
 }
 
-function gerarPDF(){
-
-const { jsPDF } = window.jspdf
-let doc=new jsPDF()
-
-// CAPA
-doc.setFontSize(22)
-doc.text("Prévia",20,20)
-
-doc.setFontSize(10)
-doc.text("Dr Leonardo Alves Araújo",20,28)
-doc.text("CRM-MG 47310 • RQE 40542",20,33)
-
-doc.setFontSize(16)
-doc.text(atual.paciente||"",20,50)
-
-doc.setFontSize(12)
-doc.text("Procedimento:",20,65)
-doc.text(atual.procedimento||"",20,72)
-
-doc.text("ASA "+atual.asa+" • Mallampati "+atual.mall,20,85)
-
-if(atual.foto){
-doc.addImage(atual.foto,"JPEG",140,40,50,50)
+function clearHistory(){
+localStorage.removeItem("previa_hist");
+showHistory();
 }
 
-// PAG 2
-doc.addPage()
-
-doc.setFontSize(16)
-doc.text("Estratégia anestésica",20,20)
-
-doc.setFontSize(12)
-doc.text(doc.splitTextToSize(atual.estrat||"",170),20,35)
-
-doc.save("previa.pdf")
+function goHome(){
+document.getElementById("formCard").classList.add("hidden");
+document.getElementById("historyCard").classList.add("hidden");
+document.getElementById("home").classList.remove("hidden");
 }
 
-function hideAll(){
-document.getElementById("home").classList.add("hidden")
-document.getElementById("form").classList.add("hidden")
-document.getElementById("hist").classList.add("hidden")
-document.getElementById("resumo").classList.add("hidden")
-}
+function generatePDF(d){
+let win=window.open("","_blank");
+let html=`
+<html><body style="font-family:Arial;padding:40px">
 
+<h1 style="color:#0f2a44">Prévia anestésica</h1>
+<h2>${d.paciente||""}</h2>
+
+${d.foto?`<img src="${d.foto}" style="width:120px;border-radius:10px"><br>`:""}
+
+<b>Procedimento:</b> ${d.procedimento||""}<br>
+<b>ASA:</b> ${d.asa||""}<br>
+<b>Mallampati:</b> ${d.mallampati||""}<br>
+<b>Comorbidades:</b> ${d.comorbidades||""}<br>
+<b>Medicações:</b> ${d.medicacoes||""}<br>
+
+<h2>Estratégia anestésica</h2>
+${d.estrategia||""}
+
+<h2>Conduta</h2>
+${d.conduta||""}
+
+<hr>
+<p>Consentimento informado obtido.</p>
+
+</body></html>
+`;
+win.document.write(html);
+win.document.close();
+}
 </script>
-
 </body>
 </html>
