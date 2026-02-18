@@ -1,248 +1,997 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prévia</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Prévia — Demo</title>
 
-<style>
-.step{display:none}
-.step.active{display:block}
-.progress{
-height:6px;
-background:#ffffff20;
-border-radius:6px;
-margin-bottom:20px;
-overflow:hidden
-}
-.progress-bar{
-height:100%;
-width:0%;
-background:white;
-transition:.3s
-}
-.nav{
-display:flex;
-justify-content:space-between;
-margin-top:20px
-}
-.nav button{
-width:48%
-}
-textarea{
-width:100%;
-min-height:160px;
-border-radius:12px;
-padding:10px;
-border:none
-}
-</style>
+  <!-- Se você tiver styles.css no repo, ele continua valendo -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- CSS base (para ficar estável mesmo se o styles.css estiver velho) -->
+  <style>
+    :root{
+      --bg1:#0b2c56;
+      --bg2:#0a3a6b;
+      --card: rgba(255,255,255,.10);
+      --stroke: rgba(255,255,255,.18);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --shadow: 0 16px 40px rgba(0,0,0,.35);
+      --radius: 22px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 20% 20%, rgba(255,255,255,.10), transparent 55%),
+        radial-gradient(900px 700px at 80% 25%, rgba(255,255,255,.08), transparent 60%),
+        linear-gradient(180deg, var(--bg2), var(--bg1));
+      min-height:100vh;
+    }
+
+    .screen{ display:none; min-height:100vh; padding:24px 16px 40px; }
+    .screen.active{ display:block; }
+
+    .wrap{ max-width:760px; margin:0 auto; }
+
+    .hero{
+      margin:22px 0 16px;
+      padding:18px 18px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    h1,h2,h3{ margin:0 0 10px; letter-spacing:.2px; }
+    h1{ font-size:28px; }
+    h2{ font-size:22px; }
+    h3{ font-size:18px; margin-top:14px; }
+
+    .muted{ color:var(--muted); font-size:14px; line-height:1.4; }
+
+    .card{
+      margin-top:14px;
+      padding:16px;
+      border-radius: var(--radius);
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .grid{ display:grid; grid-template-columns:1fr; gap:12px; }
+    @media (min-width:680px){
+      .grid.two{ grid-template-columns:1fr 1fr; }
+    }
+
+    label{ display:block; font-size:13px; color:var(--muted); margin:2px 0 8px; }
+    input, select, textarea{
+      width:100%;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.95);
+      color:#0b1b2f;
+      padding:12px 14px;
+      font-size:16px;
+      outline:none;
+    }
+    textarea{ min-height:96px; resize:vertical; }
+
+    .btnrow{ display:flex; gap:12px; margin-top:14px; flex-wrap:wrap; }
+    .btn{
+      flex:1;
+      min-width:140px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: var(--text);
+      padding:14px 16px;
+      font-size:16px;
+      cursor:pointer;
+      backdrop-filter: blur(10px);
+    }
+    .btn.primary{
+      background: rgba(255,255,255,.18);
+      border-color: rgba(255,255,255,.22);
+    }
+    .btn:active{ transform: translateY(1px); }
+
+    .progress{
+      margin-top:14px;
+      height:10px;
+      width:100%;
+      border-radius:999px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
+      overflow:hidden;
+    }
+    .progress > div{
+      height:100%;
+      width:0%;
+      background: rgba(255,255,255,.55);
+      border-right: 1px solid rgba(255,255,255,.25);
+      transition: width .25s ease;
+    }
+    .stepTitle{ margin-top:10px; font-size:16px; color:var(--muted); }
+
+    .pill{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color:var(--muted);
+      font-size:12px;
+      margin-right:6px;
+    }
+
+    .thumbRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .thumb{
+      width:110px; height:80px; border-radius:16px;
+      border:1px solid rgba(255,255,255,.20);
+      background: rgba(255,255,255,.08);
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden;
+    }
+    .thumb img{ width:100%; height:100%; object-fit:cover; }
+
+    .monoBox{
+      white-space:pre-wrap;
+      background: rgba(255,255,255,.92);
+      color:#0b1b2f;
+      border-radius:18px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.25);
+      font-size:14px;
+      line-height:1.35;
+    }
+
+    .topBar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:6px;
+    }
+    .topBar .right{ display:flex; gap:8px; align-items:center; }
+    .smallBtn{
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:14px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      color:var(--text);
+      cursor:pointer;
+    }
+
+    /* Área PDF (oculta na tela, usada para exportar) */
+    #pdfArea{
+      display:none;
+      font-family: Arial, Helvetica, sans-serif;
+      color:#0b1b2f;
+    }
+    #pdfArea .pdfPage{
+      padding:22px;
+    }
+    #pdfArea h2{ margin:0 0 10px; }
+    #pdfArea h3{ margin:16px 0 8px; }
+    #pdfArea .pdfBox{
+      border:1px solid #d7dbe2;
+      border-radius:12px;
+      padding:12px;
+      background:#ffffff;
+      white-space:pre-wrap;
+      line-height:1.35;
+      font-size:12.5px;
+    }
+    #pdfArea .pdfMuted{ color:#4b5563; font-size:12px; }
+    #pdfArea .pdfRow{ display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
+    #pdfArea .pdfImg{
+      width:220px; height:160px; border:1px solid #d7dbe2; border-radius:10px; overflow:hidden;
+    }
+    #pdfArea .pdfImg img{ width:100%; height:100%; object-fit:cover; }
+    #pdfArea .signLine{ margin-top:18px; }
+  </style>
+
+  <!-- Biblioteca PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
 
-<!-- SPLASH -->
-<section id="splash" class="screen active">
-<div class="card">
-<div class="brand">Prévia</div>
-<p>Avaliação pré-anestésica digital</p>
-<button onclick="goHome()">Entrar</button>
-</div>
-</section>
+  <!-- SPLASH -->
+  <section id="splash" class="screen active">
+    <div class="wrap">
+      <div class="hero">
+        <div class="topBar">
+          <div>
+            <h1>Prévia</h1>
+            <div class="muted">Pré-anestesia digital • demo</div>
+          </div>
+          <div class="right">
+            <span class="pill">v0</span>
+          </div>
+        </div>
 
-<!-- HOME -->
-<section id="home" class="screen">
-<div class="card">
-<h2>Home</h2>
-<button onclick="start()">Nova avaliação</button>
-</div>
-</section>
+        <div class="btnrow">
+          <button class="btn primary" onclick="show('login')">Continuar</button>
+          <button class="btn" onclick="loginDemo()">Pular (demo)</button>
+        </div>
 
-<!-- WIZARD -->
-<section id="wizard" class="screen">
-<div class="card">
+        <div class="muted" style="margin-top:12px">
+          Esta é uma demo local (sem backend). Os dados ficam salvos só no seu navegador.
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="progress"><div id="bar" class="progress-bar"></div></div>
+  <!-- LOGIN -->
+  <section id="login" class="screen">
+    <div class="wrap">
+      <div class="hero">
+        <h2>Entrar</h2>
+        <div class="muted">Para testar rápido: digite qualquer e-mail e qualquer senha.</div>
 
-<!-- STEP 1 -->
-<div class="step active">
-<h3>Identificação</h3>
-<input id="nome" placeholder="Nome">
-<input id="idade" placeholder="Idade">
-<input id="sexo" placeholder="Sexo">
+        <div class="grid two" style="margin-top:12px">
+          <div>
+            <label>E-mail</label>
+            <input id="loginEmail" placeholder="ex: leo@previa.com" autocomplete="username" />
+          </div>
+          <div>
+            <label>Senha</label>
+            <input id="loginPass" placeholder="qualquer senha" type="password" autocomplete="current-password" />
+          </div>
+        </div>
 
-<input id="peso" placeholder="Peso (kg)" oninput="imc()">
-<input id="altura" placeholder="Altura (cm)" oninput="imc()">
-<p id="imc">IMC: -</p>
+        <div class="btnrow">
+          <button class="btn primary" onclick="loginReal()">Entrar</button>
+          <button class="btn" onclick="show('splash')">Voltar</button>
+        </div>
 
-<input id="procedimento" placeholder="Procedimento">
-<input id="hospital" placeholder="Hospital">
-<input id="data" placeholder="Data">
-</div>
+        <div class="muted" style="margin-top:12px">
+          Dr. Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- STEP 2 -->
-<div class="step">
-<h3>Histórico anestésico</h3>
-<input id="cirurgias" placeholder="Cirurgias prévias">
-<input id="intercorrencias" placeholder="Intercorrências">
-<input id="ponv" placeholder="PONV">
-<input id="va_dificil" placeholder="Via aérea difícil">
-<input id="hm" placeholder="Hipertermia maligna">
-</div>
+  <!-- HOME -->
+  <section id="home" class="screen">
+    <div class="wrap">
+      <div class="hero">
+        <div class="topBar">
+          <div>
+            <h2>Home</h2>
+            <div class="muted">Consultas rápidas. 8 etapas → resumo → PDF.</div>
+          </div>
+          <div class="right">
+            <button class="smallBtn" onclick="resetAvaliacao()">Nova avaliação</button>
+            <button class="smallBtn" onclick="logout()">Sair</button>
+          </div>
+        </div>
 
-<!-- STEP 3 -->
-<div class="step">
-<h3>Comorbidades</h3>
-<input id="has" placeholder="HAS">
-<input id="dm" placeholder="DM">
-<input id="cardio" placeholder="Cardiopatia">
-<input id="pneumo" placeholder="Pneumopatia">
-<input id="saos" placeholder="SAOS">
-<input id="outras" placeholder="Outras">
-</div>
+        <div class="btnrow">
+          <button class="btn primary" onclick="startWizard()">Iniciar avaliação</button>
+          <button class="btn" onclick="show('resumo')">Ir para resumo</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- STEP 4 -->
-<div class="step">
-<h3>Medicações</h3>
-<input id="uso" placeholder="Uso contínuo">
-<input id="anticoag" placeholder="Anticoagulante">
-<input id="glp1" placeholder="GLP-1 / Ozempic">
-<input id="corticoide" placeholder="Corticoide">
-<input id="outros_med" placeholder="Outros">
-</div>
+  <!-- WIZARD (8 ETAPAS) -->
+  <section id="wizard" class="screen">
+    <div class="wrap">
+      <div class="hero">
+        <div class="topBar">
+          <div>
+            <h2>Nova avaliação</h2>
+            <div id="stepTitle" class="stepTitle">Etapa 1/8</div>
+          </div>
+          <div class="right">
+            <button class="smallBtn" onclick="show('home')">Home</button>
+          </div>
+        </div>
 
-<!-- STEP 5 -->
-<div class="step">
-<h3>Estado atual</h3>
-<input id="pa" placeholder="PA">
-<input id="fc" placeholder="FC">
-<input id="spo2" placeholder="SatO₂">
-<input id="met" placeholder="Capacidade funcional (MET)">
-<input id="jejum" placeholder="Jejum">
-</div>
+        <div class="progress"><div id="bar"></div></div>
+      </div>
 
-<!-- STEP 6 -->
-<div class="step">
-<h3>Via aérea</h3>
-<input id="mallampati" placeholder="Mallampati">
-<input id="dtm" placeholder="Distância mento-esternal">
-<input id="abertura" placeholder="Abertura oral">
-<input id="cervical" placeholder="Mobilidade cervical">
+      <div class="card" id="stepCard"></div>
 
-<input type="file" id="foto">
-<img id="img" style="width:100%;display:none;margin-top:10px;border-radius:10px">
-</div>
+      <div class="btnrow">
+        <button class="btn" onclick="prevStep()">Voltar</button>
+        <button class="btn primary" onclick="nextStep()">Próximo</button>
+      </div>
 
-<!-- STEP 7 -->
-<div class="step">
-<h3>Exames e risco</h3>
-<input id="exames" placeholder="Exames relevantes">
-<input id="asa" placeholder="ASA">
-<input id="tev" placeholder="Risco TEV">
-<input id="sangue" placeholder="Reserva sangue">
-<input id="uti" placeholder="Necessidade UTI">
-</div>
+      <div class="muted" style="margin-top:10px">
+        Dica: tudo salva automaticamente. Você pode sair e voltar.
+      </div>
+    </div>
+  </section>
 
-<!-- STEP 8 -->
-<div class="step">
-<h3>Conduta</h3>
-<input id="condicao" placeholder="Apto / Pendência">
-<input id="suspender" placeholder="Suspender">
-<input id="manter" placeholder="Manter">
-<input id="recom" placeholder="Recomendações">
-<textarea id="obs" placeholder="Observações"></textarea>
-</div>
+  <!-- RESUMO -->
+  <section id="resumo" class="screen">
+    <div class="wrap">
+      <div class="hero">
+        <h2>Resumo anestésico</h2>
+        <div class="muted">Geração automática a partir do formulário.</div>
 
-<div class="nav">
-<button onclick="prev()">Voltar</button>
-<button onclick="next()">Próximo</button>
-</div>
+        <div style="margin-top:12px" class="monoBox" id="resumoTexto"></div>
 
-</div>
-</section>
+        <div class="btnrow">
+          <button class="btn primary" onclick="copiarResumo()">Copiar</button>
+          <button class="btn" onclick="gerarPDF()">Gerar PDF + TCLE</button>
+        </div>
 
-<!-- RESUMO -->
-<section id="resumo" class="screen">
-<div class="card">
-<h2>Resumo anestésico</h2>
-<textarea id="texto"></textarea>
-<button onclick="copy()">Copiar</button>
-<button onclick="goHome()">Home</button>
-</div>
-</section>
+        <div class="btnrow">
+          <button class="btn" onclick="show('wizard')">Voltar para etapas</button>
+          <button class="btn" onclick="show('home')">Home</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<script>
-let step=0
-const steps=document.querySelectorAll(".step")
-const bar=document.getElementById("bar")
+  <!-- ÁREA PDF (OCULTA) -->
+  <div id="pdfArea">
+    <div class="pdfPage">
+      <h2>Consulta Pré-Anestésica — Prévia</h2>
+      <div class="pdfMuted" id="pdfMeta"></div>
 
-function showStep(){
-steps.forEach(s=>s.classList.remove("active"))
-steps[step].classList.add("active")
-bar.style.width=((step+1)/steps.length*100)+"%"
-}
+      <h3>Resumo anestésico</h3>
+      <div class="pdfBox" id="pdfResumo"></div>
 
-function next(){
-if(step<steps.length-1){step++;showStep()}
-else gerar()
-}
+      <h3>Anexos (se houver)</h3>
+      <div class="pdfMuted" id="pdfAnexosTxt"></div>
+      <div class="pdfRow" id="pdfImgs"></div>
 
-function prev(){
-if(step>0){step--;showStep()}
-}
+      <h3>Termo de Consentimento Livre e Esclarecido (TCLE) — Anestesia</h3>
+      <div class="pdfBox" id="pdfTCLE"></div>
 
-function start(){
-document.getElementById("splash").classList.remove("active")
-document.getElementById("home").classList.remove("active")
-document.getElementById("wizard").classList.add("active")
-}
+      <div class="signLine">
+        <div style="margin-top:18px">______________________________________________</div>
+        <div class="pdfMuted">Paciente / Responsável — Assinatura</div>
 
-function goHome(){
-document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"))
-document.getElementById("home").classList.add("active")
-}
+        <div style="margin-top:14px"><strong>Dr. Leonardo Alves Araújo</strong></div>
+        <div class="pdfMuted">CRM-MG 47310 • RQE 40542</div>
+      </div>
+    </div>
+  </div>
 
-function imc(){
-let p=parseFloat(document.getElementById("peso").value)
-let a=parseFloat(document.getElementById("altura").value)/100
-if(p&&a)document.getElementById("imc").innerText="IMC: "+(p/(a*a)).toFixed(1)
-}
+  <script>
+    // ---------------------------
+    // AUTH (demo)
+    // ---------------------------
+    function show(id){
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      const el = document.getElementById(id);
+      if(el) el.classList.add("active");
+    }
 
-document.getElementById("foto").addEventListener("change",e=>{
-let f=e.target.files[0]
-if(!f)return
-let r=new FileReader()
-r.onload=ev=>{
-let img=document.getElementById("img")
-img.src=ev.target.result
-img.style.display="block"
-}
-r.readAsDataURL(f)
-})
+    function loginDemo(){
+      localStorage.setItem("previa_auth", "ok");
+      show("home");
+    }
 
-function gerar(){
-let t=`
-Paciente ${nome.value}, ${idade.value} anos, ASA ${asa.value}.
-Procedimento: ${procedimento.value}.
+    function loginReal(){
+      // demo: aceita qualquer email/senha
+      const em = document.getElementById("loginEmail").value.trim();
+      const pw = document.getElementById("loginPass").value.trim();
+      if(!em || !pw){
+        alert("Digite e-mail e senha (qualquer um, é demo).");
+        return;
+      }
+      localStorage.setItem("previa_auth", "ok");
+      show("home");
+    }
 
-Comorbidades: ${has.value} ${dm.value} ${cardio.value} ${pneumo.value} ${saos.value}.
-Medicações: ${uso.value} ${anticoag.value} ${glp1.value}.
-Via aérea: Mallampati ${mallampati.value}.
+    function logout(){
+      localStorage.removeItem("previa_auth");
+      show("login");
+    }
 
-Condição: ${condicao.value}.
-Conduta: ${recom.value}.
-`
-document.getElementById("wizard").classList.remove("active")
-document.getElementById("resumo").classList.add("active")
-document.getElementById("texto").value=t
-}
+    document.addEventListener("DOMContentLoaded", () => {
+      if(localStorage.getItem("previa_auth")){
+        show("home");
+      } else {
+        show("splash");
+      }
+      loadState();
+      renderResumo();
+    });
 
-function copy(){
-navigator.clipboard.writeText(document.getElementById("texto").value)
-alert("Copiado")
-}
-</script>
+    // ---------------------------
+    // STATE
+    // ---------------------------
+    const STATE_KEY = "previa_state_v1";
+    let state = {
+      step: 1,
+      data: {
+        paciente: "",
+        idade: "",
+        procedimento: "",
+        asa: "ASA I",
+        peso: "",
+        altura: "",
+        imc: "",
 
+        passadoCirurgico: "",
+        intercorrenciasAnestesicas: "",
+
+        alergias: "",
+        comorbidades: "",
+        medicacoes: "",
+        jejumHoras: "",
+
+        glp1: "",
+        anticoagulante: "",
+
+        mallampati: "",
+        vad: "",
+        anexos: {
+          mallampatiImg: "",
+          examesImg: ""
+        },
+
+        condicao: "",
+        condutaApto: "",
+        suspender: "",
+        manter: "",
+        recomendacoes: "",
+        observacoes: ""
+      }
+    };
+
+    function saveState(){
+      localStorage.setItem(STATE_KEY, JSON.stringify(state));
+    }
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(STATE_KEY);
+        if(raw){
+          const parsed = JSON.parse(raw);
+          if(parsed && parsed.data) state = parsed;
+        }
+      }catch(e){}
+    }
+
+    function resetAvaliacao(){
+      if(!confirm("Começar uma nova avaliação? (isso limpa os campos desta demo)")) return;
+      localStorage.removeItem(STATE_KEY);
+      state.step = 1;
+      state.data = {
+        paciente: "", idade: "", procedimento: "", asa: "ASA I",
+        peso: "", altura: "", imc: "",
+        passadoCirurgico: "", intercorrenciasAnestesicas: "",
+        alergias: "", comorbidades: "", medicacoes: "", jejumHoras: "",
+        glp1: "", anticoagulante: "",
+        mallampati: "", vad: "",
+        anexos: { mallampatiImg: "", examesImg: "" },
+        condicao: "", condutaApto: "", suspender: "", manter: "",
+        recomendacoes: "", observacoes: ""
+      };
+      saveState();
+      startWizard();
+    }
+
+    // ---------------------------
+    // WIZARD (8 etapas)
+    // ---------------------------
+    const TOTAL = 8;
+
+    function startWizard(){
+      show("wizard");
+      if(!state.step || state.step<1 || state.step>8) state.step = 1;
+      renderStep();
+    }
+
+    function setBar(){
+      const pct = Math.round((state.step-1) / (TOTAL-1) * 100);
+      document.getElementById("bar").style.width = pct + "%";
+      document.getElementById("stepTitle").innerText = `Etapa ${state.step}/${TOTAL}`;
+    }
+
+    function prevStep(){
+      if(state.step>1) state.step--;
+      saveState();
+      renderStep();
+    }
+
+    function nextStep(){
+      collectStepInputs();
+      if(state.step<TOTAL) state.step++;
+      saveState();
+      renderStep();
+    }
+
+    function renderStep(){
+      setBar();
+      const card = document.getElementById("stepCard");
+      card.innerHTML = getStepHTML(state.step);
+      bindStepHandlers(state.step);
+      hydrateStepInputs(state.step);
+      renderResumo();
+    }
+
+    function getStepHTML(step){
+      const head = (title, subtitle="") => `
+        <h3>${title}</h3>
+        ${subtitle ? `<div class="muted">${subtitle}</div>` : ""}
+      `;
+
+      if(step===1){
+        return `
+          ${head("1) Identificação", "O mínimo pra não errar paciente e contexto.")}
+          <div class="grid two">
+            <div>
+              <label>Paciente</label>
+              <input id="paciente" placeholder="Nome do paciente" />
+            </div>
+            <div>
+              <label>Idade (anos)</label>
+              <input id="idade" inputmode="numeric" placeholder="ex: 34" />
+            </div>
+          </div>
+
+          <div class="grid two">
+            <div>
+              <label>Peso (kg)</label>
+              <input id="peso" inputmode="decimal" placeholder="ex: 72" />
+            </div>
+            <div>
+              <label>Altura (cm)</label>
+              <input id="altura" inputmode="numeric" placeholder="ex: 168" />
+            </div>
+          </div>
+
+          <div class="grid two">
+            <div>
+              <label>ASA</label>
+              <select id="asa">
+                <option>ASA I</option>
+                <option>ASA II</option>
+                <option>ASA III</option>
+                <option>ASA IV</option>
+                <option>ASA V</option>
+              </select>
+            </div>
+            <div>
+              <label>IMC (auto)</label>
+              <input id="imc" placeholder="calculado automaticamente" disabled />
+            </div>
+          </div>
+        `;
+      }
+
+      if(step===2){
+        return `
+          ${head("2) Procedimento", "O que vai acontecer (pra encaixar risco e conduta).")}
+          <label>Procedimento</label>
+          <input id="procedimento" placeholder="ex: Mamoplastia redutora" />
+        `;
+      }
+
+      if(step===3){
+        return `
+          ${head("3) Histórico", "O que já aconteceu no centro cirúrgico deixa rastros.")}
+          <label>Passado cirúrgico</label>
+          <textarea id="passadoCirurgico" placeholder="Ex: Colecistectomia (2019), Cesárea (2014)"></textarea>
+
+          <label>Intercorrências anestésicas anteriores</label>
+          <textarea id="intercorrenciasAnestesicas" placeholder="Ex: PONV, intubação difícil, nenhuma"></textarea>
+        `;
+      }
+
+      if(step===4){
+        return `
+          ${head("4) Clínico", "A tríade da vida real: alergia, comorbidade, remédio.")}
+          <label>Alergias</label>
+          <input id="alergias" placeholder="Ex: Dipirona (urticária) / Nenhuma" />
+
+          <label>Comorbidades</label>
+          <input id="comorbidades" placeholder="Ex: HAS / DM / Asma / Nega cardiopatia" />
+
+          <label>Medicações em uso</label>
+          <textarea id="medicacoes" placeholder="Ex: Losartana 50mg, Metformina, Sertralina..."></textarea>
+
+          <label>Jejum (horas)</label>
+          <input id="jejumHoras" inputmode="numeric" placeholder="Ex: 8" />
+        `;
+      }
+
+      if(step===5){
+        return `
+          ${head("5) Medicamentos de alto impacto", "Dois campos que mudam decisão e segurança.")}
+          <label>GLP-1 (Ozempic / análogos)</label>
+          <input id="glp1" placeholder="Ex: semanal; última dose 10/02" />
+
+          <label>Anticoagulante / antiagregante</label>
+          <input id="anticoagulante" placeholder="Ex: Rivaroxabana; última dose ontem 20h" />
+        `;
+      }
+
+      if(step===6){
+        return `
+          ${head("6) Via aérea + Anexos", "Foto e exame resumido: o anestesista agradece.")}
+          <div class="grid two">
+            <div>
+              <label>Mallampati</label>
+              <input id="mallampati" placeholder="I / II / III / IV (ou 2/3)" />
+            </div>
+            <div>
+              <label>Observação VAD</label>
+              <input id="vad" placeholder="Ex: não representa VAD / suspeita VAD" />
+            </div>
+          </div>
+
+          <div class="grid two">
+            <div>
+              <label>Foto Mallampati (opcional)</label>
+              <input id="mallampatiFile" type="file" accept="image/*" />
+              <div class="muted" style="margin-top:6px">Ideal: tarja preta nos olhos (privacidade).</div>
+              <div class="thumbRow">
+                <div class="thumb" id="thumbMall"></div>
+              </div>
+            </div>
+
+            <div>
+              <label>Exames essenciais (opcional)</label>
+              <input id="examesFile" type="file" accept="image/*,.pdf" />
+              <div class="muted" style="margin-top:6px">Eco/ECG/laudos importantes. (PDF fica listado, imagem aparece.)</div>
+              <div class="thumbRow">
+                <div class="thumb" id="thumbExam"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      if(step===7){
+        return `
+          ${head("7) Conduta", "A parte que vira mensagem pronta e evita ruído.")}
+          <label>Condição</label>
+          <input id="condicao" placeholder="Ex: Apto à cirurgia sob anestesia geral" />
+
+          <label>Conduta (Apto / Pendência)</label>
+          <input id="condutaApto" placeholder="Ex: Apto / Pendência: ... / Necessita..." />
+
+          <div class="grid two">
+            <div>
+              <label>Suspender</label>
+              <textarea id="suspender" placeholder="Ex: Suspender X dias antes..."></textarea>
+            </div>
+            <div>
+              <label>Manter</label>
+              <textarea id="manter" placeholder="Ex: Manter anti-hipertensivos..."></textarea>
+            </div>
+          </div>
+
+          <label>Recomendações</label>
+          <textarea id="recomendacoes" placeholder="Ex: Chegar 1h antes. Trazer acompanhante. Orientações de jejum..."></textarea>
+
+          <label>Observações</label>
+          <textarea id="observacoes" placeholder="Ex: risco liberado cardiologia CRM..., exames ok..."></textarea>
+        `;
+      }
+
+      return `
+        ${head("8) Revisão final", "Se o anestesista tivesse 15 segundos: é isso aqui.")}
+        <div class="muted">O resumo abaixo atualiza sozinho. Se quiser ajustar, volte e edite.</div>
+        <div style="margin-top:12px" class="monoBox" id="previewResumo"></div>
+
+        <div class="btnrow">
+          <button class="btn primary" onclick="show('resumo')">Ir para tela de resumo</button>
+          <button class="btn" onclick="copiarResumo()">Copiar agora</button>
+        </div>
+      `;
+    }
+
+    function bindStepHandlers(step){
+      if(step===1){
+        const peso = document.getElementById("peso");
+        const altura = document.getElementById("altura");
+        const asa = document.getElementById("asa");
+
+        const recalc = () => {
+          collectStepInputs();
+          renderIMC();
+          renderResumo();
+          saveState();
+        };
+
+        peso && peso.addEventListener("input", recalc);
+        altura && altura.addEventListener("input", recalc);
+        asa && asa.addEventListener("change", recalc);
+      }
+
+      if(step===6){
+        const mall = document.getElementById("mallampatiFile");
+        const exa  = document.getElementById("examesFile");
+
+        mall && mall.addEventListener("change", async (e) => {
+          const file = e.target.files && e.target.files[0];
+          if(!file) return;
+          const dataUrl = await fileToDataURL(file);
+          state.data.anexos.mallampatiImg = dataUrl;
+          saveState();
+          renderThumbs();
+          renderResumo();
+        });
+
+        exa && exa.addEventListener("change", async (e) => {
+          const file = e.target.files && e.target.files[0];
+          if(!file) return;
+
+          if(file.type && file.type.startsWith("image/")){
+            const dataUrl = await fileToDataURL(file);
+            state.data.anexos.examesImg = dataUrl;
+          } else {
+            state.data.anexos.examesImg = "PDF: " + file.name;
+          }
+          saveState();
+          renderThumbs();
+          renderResumo();
+        });
+
+        renderThumbs();
+      }
+
+      if(step===8){
+        const prev = document.getElementById("previewResumo");
+        if(prev) prev.innerText = buildResumo();
+      }
+    }
+
+    function hydrateStepInputs(){
+      const d = state.data;
+      const map = {
+        paciente:"paciente", idade:"idade", procedimento:"procedimento", asa:"asa",
+        peso:"peso", altura:"altura", imc:"imc",
+        passadoCirurgico:"passadoCirurgico", intercorrenciasAnestesicas:"intercorrenciasAnestesicas",
+        alergias:"alergias", comorbidades:"comorbidades", medicacoes:"medicacoes", jejumHoras:"jejumHoras",
+        glp1:"glp1", anticoagulante:"anticoagulante",
+        mallampati:"mallampati", vad:"vad",
+        condicao:"condicao", condutaApto:"condutaApto", suspender:"suspender", manter:"manter",
+        recomendacoes:"recomendacoes", observacoes:"observacoes"
+      };
+
+      Object.keys(map).forEach(key => {
+        const id = map[key];
+        const el = document.getElementById(id);
+        if(el) el.value = d[key] || "";
+      });
+
+      renderIMC();
+      renderThumbs();
+    }
+
+    function collectStepInputs(){
+      const d = state.data;
+
+      const assign = (id, key) => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        d[key] = (el.value || "").trim();
+      };
+
+      assign("paciente","paciente");
+      assign("idade","idade");
+      assign("procedimento","procedimento");
+      assign("asa","asa");
+      assign("peso","peso");
+      assign("altura","altura");
+
+      assign("passadoCirurgico","passadoCirurgico");
+      assign("intercorrenciasAnestesicas","intercorrenciasAnestesicas");
+
+      assign("alergias","alergias");
+      assign("comorbidades","comorbidades");
+      assign("medicacoes","medicacoes");
+      assign("jejumHoras","jejumHoras");
+
+      assign("glp1","glp1");
+      assign("anticoagulante","anticoagulante");
+
+      assign("mallampati","mallampati");
+      assign("vad","vad");
+
+      assign("condicao","condicao");
+      assign("condutaApto","condutaApto");
+      assign("suspender","suspender");
+      assign("manter","manter");
+      assign("recomendacoes","recomendacoes");
+      assign("observacoes","observacoes");
+
+      renderIMC();
+      saveState();
+    }
+
+    function renderIMC(){
+      const peso = parseFloat((state.data.peso||"").replace(",","."));
+      const alturaCm = parseFloat((state.data.altura||"").replace(",","."));
+      const imcEl = document.getElementById("imc");
+      if(!imcEl) return;
+
+      if(peso>0 && alturaCm>0){
+        const h = alturaCm/100;
+        const imc = peso/(h*h);
+        state.data.imc = imc.toFixed(1).replace(".",",");
+        imcEl.value = state.data.imc;
+      } else {
+        state.data.imc = "";
+        imcEl.value = "";
+      }
+    }
+
+    function renderThumbs(){
+      const mall = document.getElementById("thumbMall");
+      const exa  = document.getElementById("thumbExam");
+
+      if(mall){
+        mall.innerHTML = state.data.anexos.mallampatiImg
+          ? '<img alt="Mallampati" src="'+state.data.anexos.mallampatiImg+'">'
+          : '<div class="muted" style="padding:10px;text-align:center">sem foto</div>';
+      }
+
+      if(exa){
+        const v = state.data.anexos.examesImg;
+        if(v && v.indexOf("data:image/")===0){
+          exa.innerHTML = '<img alt="Exame" src="'+v+'">';
+        } else if(v && v.indexOf("PDF:")===0){
+          exa.innerHTML = '<div class="muted" style="padding:10px;text-align:center">'+escapeHtml(v)+'</div>';
+        } else {
+          exa.innerHTML = '<div class="muted" style="padding:10px;text-align:center">sem anexo</div>';
+        }
+      }
+    }
+
+    function fileToDataURL(file){
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ---------------------------
+    // RESUMO
+    // ---------------------------
+    function buildResumo(){
+      const d = state.data;
+      const p = (s) => (s && String(s).trim()) ? String(s).trim() : "";
+
+      const pacienteLinha =
+        (p(d.paciente) ? "Paciente: " + p(d.paciente) : "Paciente:") +
+        (p(d.idade) ? ", " + p(d.idade) + " anos" : "") +
+        (p(d.asa) ? ", " + p(d.asa) : "") +
+        (p(d.peso) ? ", " + p(d.peso) + " kg" : "") +
+        (p(d.altura) ? ", " + p(d.altura) + " cm" : "") +
+        (p(d.imc) ? " (IMC " + p(d.imc) + ")" : "");
+
+      let txt = "";
+      txt += pacienteLinha + "\n";
+      txt += "Procedimento: " + (p(d.procedimento) || "-") + ".\n\n";
+
+      const aler = p(d.alergias) || "Nega alergias";
+      const comorb = p(d.comorbidades) || "Nega comorbidades relevantes";
+      const meds = p(d.medicacoes) || "Nega medicações contínuas";
+
+      txt += "Alergias: " + aler + ".\n";
+      txt += "Comorbidades: " + comorb + ".\n";
+      txt += "Medicações: " + meds + ".\n";
+
+      if(p(d.glp1)) txt += "GLP-1: " + p(d.glp1) + ".\n";
+      if(p(d.anticoagulante)) txt += "Anticoagulante/antiagregante: " + p(d.anticoagulante) + ".\n";
+
+      if(p(d.passadoCirurgico)) txt += "\nPassado cirúrgico: " + p(d.passadoCirurgico) + ".\n";
+      if(p(d.intercorrenciasAnestesicas)) txt += "Intercorrências anestésicas: " + p(d.intercorrenciasAnestesicas) + ".\n";
+
+      txt += "\nVia aérea: Mallampati " + (p(d.mallampati) || "-");
+      if(p(d.vad)) txt += " (" + p(d.vad) + ")";
+      if(d.anexos.mallampatiImg) txt += " (vide foto)";
+      txt += ".\n";
+
+      const condicao = p(d.condicao) || "-";
+      const condutaApto = p(d.condutaApto) || "-";
+      txt += "\nCondição: " + condicao + ".\n";
+      txt += "Conduta: " + condutaApto + ".\n";
+
+      let linha = [];
+      if(p(d.jejumHoras)) linha.push("Jejum " + p(d.jejumHoras) + "h");
+      if(p(d.recomendacoes)) linha.push(p(d.recomendacoes));
+      if(linha.length) txt += linha.join(". ") + ".\n";
+
+      if(p(d.suspender)) txt += "Suspender: " + p(d.suspender) + ".\n";
+      if(p(d.manter)) txt += "Manter: " + p(d.manter) + ".\n";
+
+      if(p(d.observacoes)) txt += "\nObs.: " + p(d.observacoes) + "\n";
+
+      return txt.trim();
+    }
+
+    function renderResumo(){
+      const resumo = buildResumo();
+      const box = document.getElementById("resumoTexto");
+      if(box) box.innerText = resumo || "Preencha a avaliação para gerar o resumo.";
+    }
+
+    function copiarResumo(){
+      const resumo = buildResumo();
+      if(!resumo){
+        alert("Sem resumo ainda. Preencha os campos primeiro.");
+        return;
+      }
+      navigator.clipboard.writeText(resumo)
+        .then(() => alert("Resumo copiado ✅"))
+        .catch(() => alert("Não consegui copiar. (iOS às vezes exige toque direto no campo.)"));
+    }
+
+    // ---------------------------
+    // PDF + TCLE
+    // ---------------------------
+    function gerarPDF(){
+      collectStepInputs();
+      const resumo = buildResumo();
+
+      const now = new Date();
+      const dt = now.toLocaleString("pt-BR");
+      document.getElementById("pdfMeta").innerText =
+        "Gerado em: " + dt + "\nDr. Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542";
+
+      document.getElementById("pdfResumo").innerText = resumo || "-";
+
+      const anexosTxt = [];
+      if(state.data.anexos.mallampatiImg) anexosTxt.push("• Foto Mallampati (imagem)");
+      if(state.data.anexos.examesImg){
+        if(state.data.anexos.examesImg.indexOf("data:image/")===0) anexosTxt.push("• Exame essencial (imagem)");
+        else anexosTxt.push("• " + state.data.anexos.examesImg);
+      }
+      document.getElementById("pdfAnexosTxt").innerText = anexosTxt.length ? anexosTxt.join("\n") : "Sem anexos.";
+
+      const pdfImgs = document.getElementById("pdfImgs");
+      pdfImgs.innerHTML = "";
+      if(state.data.anexos.mallampatiImg){
+        pdfImgs.innerHTML += '<div class="pdfImg"><img src="'+state.data.anexos.mallampatiImg+'" alt="Mallampati"></div>';
+      }
+      if(state.data.anexos.examesImg && state.data.anexos.examesImg.indexOf("data:image/")===0){
+        pdfImgs.innerHTML += '<div class="pdfImg"><img src="'+state.data.anexos.examesImg+'" alt="Exame"></div>';
+      }
+
+      const tcle = [
+        "Declaro que fui avaliado(a) em consulta pré-anestésica e recebi explicações claras sobre o plano anestésico, benefícios, riscos potenciais, alternativas e cuidados necessários.",
+        "",
+        "Estou ciente de que a anestesia, embora geralmente segura, pode estar associada a eventos adversos como náuseas/vômitos, reações alérgicas, alterações respiratórias e cardiovasculares e, raramente, complicações graves.",
+        "",
+        "Fui orientado(a) quanto ao jejum, uso/suspensão de medicações, necessidade de acompanhante e condições para realização do procedimento.",
+        "",
+        "Autorizo a realização da anestesia indicada para o procedimento proposto, bem como condutas necessárias para minha segurança durante o ato anestésico."
+      ].join("\n");
+
+      document.getElementById("pdfTCLE").innerText = tcle;
+
+      const element = document.getElementById("pdfArea");
+      html2pdf().set({
+        margin: 10,
+        filename: "consulta_pre_anestesica_previa.pdf",
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      }).from(element).save();
+    }
+
+    function escapeHtml(s){
+      return String(s)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+    }
+  </script>
 </body>
 </html>
