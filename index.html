@@ -5,126 +5,81 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prévia</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 <style>
 body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-background:linear-gradient(180deg,#1e3c72,#2a5298);
-color:white;
+  margin:0;
+  font-family:-apple-system,system-ui;
+  background:linear-gradient(180deg,#284a78,#0f2747);
+  color:white;
 }
 
 .container{
-max-width:420px;
-margin:auto;
-padding:20px;
+  max-width:420px;
+  margin:auto;
+  padding:20px;
 }
 
 .card{
-background:white;
-color:#1e3c72;
-border-radius:18px;
-padding:20px;
-margin-top:20px;
+  background:rgba(255,255,255,0.08);
+  padding:20px;
+  border-radius:18px;
+  backdrop-filter:blur(8px);
+  margin-bottom:20px;
 }
 
-h1{
-text-align:center;
-font-weight:600;
-margin-top:40px;
+h1,h2{
+  text-align:center;
+  margin-bottom:20px;
 }
 
-label{
-font-size:14px;
-font-weight:600;
-display:block;
-margin-top:12px;
+input,select,textarea{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  margin-bottom:14px;
+  font-size:15px;
 }
 
-input,textarea,select{
-width:100%;
-padding:12px;
-border-radius:12px;
-border:none;
-margin-top:6px;
-background:#f1f3f6;
+textarea{
+  min-height:80px;
 }
 
 button{
-width:100%;
-padding:14px;
-border-radius:14px;
-border:1px solid rgba(255,255,255,0.4);
-background:transparent;
-color:white;
-font-size:16px;
-margin-top:16px;
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:14px;
+  font-size:16px;
+  margin-top:10px;
+  cursor:pointer;
 }
 
 .primary{
-background:white;
-color:#1e3c72;
-font-weight:600;
+  background:rgba(255,255,255,0.2);
+  color:white;
 }
 
-.logo{
-text-align:center;
-font-size:26px;
-font-weight:700;
-letter-spacing:2px;
-margin-top:10px;
+.secondary{
+  background:rgba(255,255,255,0.1);
+  color:white;
 }
 
-.pdf-page{
-width:794px;
-min-height:1123px;
-background:white;
-padding:60px;
-font-family:Helvetica,Arial;
-color:#1e3c72;
-}
-
-.pdf-header{
-text-align:center;
-margin-bottom:40px;
-}
-
-.pdf-title{
-font-size:26px;
-font-weight:700;
-margin-top:10px;
-}
-
-.pdf-section{
-margin-top:20px;
-}
-
-.pdf-label{
-font-weight:700;
-}
-
-.pdf-photo{
-width:120px;
-height:120px;
-border-radius:12px;
-object-fit:cover;
-margin-top:20px;
+#resumoBox{
+  display:none;
 }
 </style>
-</head>
 
+</head>
 <body>
 
 <div class="container">
 
-<div class="logo">PRÉVIA</div>
-
-<h1>Nova avaliação</h1>
+<h1>Prévia</h1>
 
 <div class="card">
 
-<label>Nome do paciente</label>
+<label>Paciente</label>
 <input id="nome">
 
 <label>Idade</label>
@@ -133,22 +88,30 @@ margin-top:20px;
 <label>Procedimento</label>
 <input id="procedimento">
 
-<label>Tipo anestésico</label>
-<select id="tipo">
-<option>Geral</option>
-<option>Raqui</option>
-<option>Peridural</option>
-<option>Bloqueio</option>
-<option>Sedação</option>
+<label>ASA</label>
+<select id="asa">
+<option>I</option>
+<option>II</option>
+<option>III</option>
+<option>IV</option>
 </select>
 
 <label>Comorbidades</label>
-<input id="comorbidades">
+<input id="comorb">
 
 <label>Medicações</label>
-<input id="medicacoes">
+<input id="meds">
 
-<label>Via aérea (Mallampati)</label>
+<label>GLP-1</label>
+<input id="glp1">
+
+<label>Anticoagulante</label>
+<input id="anticoag">
+
+<label>Jejum (h)</label>
+<input id="jejum">
+
+<label>Mallampati</label>
 <select id="mallampati">
 <option>I</option>
 <option>II</option>
@@ -156,139 +119,195 @@ margin-top:20px;
 <option>IV</option>
 </select>
 
-<label>Condição</label>
-<input id="condicao" placeholder="Apto / Pendência">
+<label>Tipo anestésico</label>
+<select id="tipo">
+<option>Geral</option>
+<option>Raqui</option>
+<option>Sedação</option>
+</select>
 
 <label>Conduta</label>
 <textarea id="conduta"></textarea>
 
+<label>Status</label>
+<select id="status">
+<option>Apto</option>
+<option>Apto com ressalvas</option>
+<option>Adiar</option>
+</select>
+
 <label>Foto do paciente</label>
 <input type="file" id="foto" accept="image/*">
 
-<button class="primary" onclick="gerarResumo()">Gerar resumo</button>
+<button class="primary" onclick="gerarResumo()">Gerar PDF</button>
 
 </div>
 
-<div id="resumoBox" class="card" style="display:none">
-
-<h2 style="text-align:center">Resumo anestésico</h2>
-
-<div id="resumoTexto"></div>
-
-<button onclick="gerarPDF()">Gerar PDF</button>
-
+<div id="resumoBox" class="card">
+<h2>Resumo anestésico</h2>
+<div id="textoResumo"></div>
 </div>
 
 </div>
-
-<!-- PDF HIDDEN -->
-<div id="pdfArea" style="display:none"></div>
 
 <script>
-
 function gerarResumo(){
 
-const nome=document.getElementById("nome").value
-const idade=document.getElementById("idade").value
-const procedimento=document.getElementById("procedimento").value
-const tipo=document.getElementById("tipo").value
-const comorbidades=document.getElementById("comorbidades").value
-const medicacoes=document.getElementById("medicacoes").value
-const mallampati=document.getElementById("mallampati").value
-const condicao=document.getElementById("condicao").value
-const conduta=document.getElementById("conduta").value
+const nome = document.getElementById("nome").value;
+const idade = document.getElementById("idade").value;
+const proc = document.getElementById("procedimento").value;
+const asa = document.getElementById("asa").value;
+const comorb = document.getElementById("comorb").value;
+const meds = document.getElementById("meds").value;
+const glp1 = document.getElementById("glp1").value;
+const anticoag = document.getElementById("anticoag").value;
+const jejum = document.getElementById("jejum").value;
+const mall = document.getElementById("mallampati").value;
+const tipo = document.getElementById("tipo").value;
+const conduta = document.getElementById("conduta").value;
+const status = document.getElementById("status").value;
 
-const texto=`
-Paciente ${nome}, ${idade} anos.
-Procedimento: ${procedimento}.
-Tipo anestésico: ${tipo}.
+let texto =
+`Paciente: ${nome}, ${idade} anos
+Procedimento: ${proc}
 
-Comorbidades: ${comorbidades}.
-Medicações: ${medicacoes}.
-Via aérea: Mallampati ${mallampati}.
+ASA ${asa}
+Mallampati ${mall}
+Jejum ${jejum} h
 
-Condição: ${condicao}.
-Conduta: ${conduta}.
-`
+Comorbidades: ${comorb}
+Medicações: ${meds}
 
-document.getElementById("resumoTexto").innerText=texto
-document.getElementById("resumoBox").style.display="block"
+GLP-1: ${glp1}
+Anticoagulante: ${anticoag}
+
+Conduta: ${conduta}
+
+STATUS: ${status}`;
+
+document.getElementById("textoResumo").innerText = texto;
+document.getElementById("resumoBox").style.display="block";
+
+gerarPDF(nome,idade,proc,asa,comorb,meds,glp1,anticoag,jejum,mall,tipo,conduta,status);
 }
 
-function gerarPDF(){
+function gerarPDF(nome,idade,proc,asa,comorb,meds,glp1,anticoag,jejum,mall,tipo,conduta,status){
 
-const nome=document.getElementById("nome").value
-const idade=document.getElementById("idade").value
-const procedimento=document.getElementById("procedimento").value
-const tipo=document.getElementById("tipo").value
-const comorbidades=document.getElementById("comorbidades").value
-const medicacoes=document.getElementById("medicacoes").value
-const mallampati=document.getElementById("mallampati").value
-const condicao=document.getElementById("condicao").value
-const conduta=document.getElementById("conduta").value
+const file = document.getElementById("foto").files[0];
+const reader = new FileReader();
 
-const file=document.getElementById("foto").files[0]
+reader.onload = function(){
 
-let fotoHTML=""
+const img = reader.result;
 
-if(file){
-const url=URL.createObjectURL(file)
-fotoHTML=`<img src="${url}" class="pdf-photo">`
+const w = window.open("");
+
+w.document.write(`
+<html>
+<head>
+<style>
+body{font-family:Arial;margin:0}
+.page{
+width:794px;
+height:1123px;
+padding:60px;
+box-sizing:border-box;
+page-break-after:always;
 }
 
-const pdfHTML=`
-<div class="pdf-page">
-
-<div class="pdf-header">
-<div style="font-size:20px;letter-spacing:3px;">PRÉVIA</div>
-<div class="pdf-title">Avaliação Pré-Anestésica</div>
-${fotoHTML}
-</div>
-
-<div class="pdf-section">
-<span class="pdf-label">Paciente:</span> ${nome}, ${idade} anos
-</div>
-
-<div class="pdf-section">
-<span class="pdf-label">Procedimento:</span> ${procedimento}
-</div>
-
-<div class="pdf-section">
-<span class="pdf-label">Tipo anestésico:</span> ${tipo}
-</div>
-
-<div class="pdf-section">
-<span class="pdf-label">Comorbidades:</span> ${comorbidades}
-</div>
-
-<div class="pdf-section">
-<span class="pdf-label">Medicações:</span> ${medicacoes}
-</div>
-
-<div class="pdf-section">
-<span class="pdf-label">Via aérea:</span> Mallampati ${mallampati}
-</div>
-
-<div class="pdf-section">
-<span class="pdf-label">Condição:</span> ${condicao}
-</div>
-
-<div class="pdf-section">
-<span class="pdf-label">Conduta:</span> ${conduta}
-</div>
-
-<div style="margin-top:60px;font-size:12px;color:#666">
-Documento gerado pelo sistema PRÉVIA
-</div>
-
-</div>
-`
-
-document.getElementById("pdfArea").innerHTML=pdfHTML
-
-html2pdf().from(document.getElementById("pdfArea")).save(`Previa_${nome}.pdf`)
+.capa{
+background:#0f2747;
+color:white;
+text-align:center;
 }
 
+.foto{
+width:180px;
+height:180px;
+border-radius:100px;
+object-fit:cover;
+margin-top:40px;
+}
+
+.logo{
+font-size:34px;
+letter-spacing:8px;
+margin-top:40px;
+}
+
+.titulo{
+margin-top:80px;
+font-size:28px;
+}
+
+.bloco{
+margin-top:40px;
+line-height:1.6;
+}
+
+h2{margin-top:0}
+</style>
+</head>
+<body>
+
+<div class="page capa">
+<div class="logo">PRÉVIA</div>
+<img src="${img}" class="foto">
+<div class="titulo">${nome}</div>
+<div>${proc}</div>
+</div>
+
+<div class="page">
+<h2>Estratégia anestésica</h2>
+
+<div class="bloco">
+<b>Classificação</b><br>
+ASA ${asa}<br>
+Mallampati ${mall}<br>
+Jejum ${jejum} h
+</div>
+
+<div class="bloco">
+<b>Comorbidades</b><br>
+${comorb}
+</div>
+
+<div class="bloco">
+<b>Medicações</b><br>
+${meds}<br>
+GLP-1: ${glp1}<br>
+Anticoagulante: ${anticoag}
+</div>
+
+<div class="bloco">
+<b>Técnica proposta</b><br>
+${tipo}
+</div>
+
+<div class="bloco">
+<b>Conduta</b><br>
+${conduta}
+</div>
+
+<div class="bloco">
+<b>Status</b><br>
+${status}
+</div>
+
+</div>
+
+</body>
+</html>
+`);
+
+w.document.close();
+w.print();
+}
+
+if(file) reader.readAsDataURL(file);
+else alert("Selecione a foto do paciente");
+
+}
 </script>
 
 </body>
