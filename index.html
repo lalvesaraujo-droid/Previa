@@ -61,5 +61,38 @@
 </section>
 
 <script src="app.js"></script>
+<script>
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  const el=document.getElementById(id);
+  if(el) el.classList.add("active");
+}
+
+function go(id){
+  if(id==="home" && !localStorage.getItem("previa_auth")){
+    show("login");
+    return;
+  }
+  show(id);
+}
+
+function loginDemo(){
+  localStorage.setItem("previa_auth","1");
+  show("home");
+}
+
+function logout(){
+  localStorage.removeItem("previa_auth");
+  show("login");
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  if(localStorage.getItem("previa_auth")){
+    show("home");
+  }else{
+    show("splash");
+  }
+});
+</script>
 </body>
 </html>
