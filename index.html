@@ -5,174 +5,134 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prévia</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
 body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont;
-background:linear-gradient(180deg,#0f2b46,#123a5c);
-color:white;
+  margin:0;
+  font-family:-apple-system, BlinkMacSystemFont;
+  background:linear-gradient(180deg,#0e2a47,#153a5c);
+  color:white;
 }
 
 .container{
-max-width:480px;
-margin:auto;
-padding:20px;
+  max-width:500px;
+  margin:auto;
+  padding:20px;
 }
 
 .card{
-background:rgba(255,255,255,0.08);
-border-radius:20px;
-padding:20px;
-margin-bottom:20px;
-backdrop-filter:blur(12px);
-}
-
-h1,h2{
-margin:0 0 12px 0;
-}
-
-label{
-font-size:13px;
-opacity:0.8;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(12px);
+  border-radius:20px;
+  padding:20px;
+  margin-top:20px;
 }
 
 input,textarea,select{
-width:100%;
-padding:12px;
-border-radius:12px;
-border:none;
-margin-top:6px;
-margin-bottom:14px;
-font-size:15px;
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  margin-top:8px;
+  margin-bottom:16px;
+  font-size:16px;
 }
 
 button{
-width:100%;
-padding:14px;
-border-radius:14px;
-border:none;
-font-size:16px;
-margin-top:10px;
+  width:100%;
+  padding:16px;
+  border-radius:14px;
+  border:none;
+  font-size:18px;
+  margin-top:12px;
 }
 
-.primary{background:#3b82f6;color:white;}
-.secondary{background:rgba(255,255,255,0.15);color:white;}
+.primary{background:#2d8cff;color:white;}
+.secondary{background:rgba(255,255,255,0.2);color:white;}
 
-.histItem{
-background:rgba(255,255,255,0.1);
-padding:12px;
-border-radius:12px;
-margin-bottom:10px;
-cursor:pointer;
-}
+h1,h2{margin:0 0 10px 0;}
+
+.hidden{display:none;}
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
 <!-- HOME -->
-<div id="homeTela">
-<div class="card">
-<h1>Prévia</h1>
-<div style="opacity:0.7;font-size:13px;margin-bottom:10px">
-Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542
-</div>
-
-<button class="primary" onclick="novaAvaliacao()">Nova avaliação</button>
-<button class="secondary" onclick="abrirHistorico()">Histórico</button>
-</div>
+<div id="home">
+  <h1>Prévia</h1>
+  <div class="card">
+    <h2>Home</h2>
+    <button class="primary" onclick="show('form')">Nova avaliação</button>
+    <button class="secondary" onclick="show('historico')">Histórico</button>
+  </div>
 </div>
 
 <!-- FORM -->
-<div id="formTela" style="display:none">
-<div class="card">
-<h2>Nova avaliação</h2>
+<div id="form" class="hidden">
+  <h2>Nova avaliação</h2>
 
-<label>Paciente</label>
-<input id="paciente">
+  <div class="card">
+    <label>Paciente</label>
+    <input id="paciente">
 
-<label>Idade</label>
-<input id="idade">
+    <label>Idade</label>
+    <input id="idade">
 
-<label>ASA</label>
-<select id="asa">
-<option>I</option><option>II</option><option>III</option><option>IV</option>
-</select>
+    <label>ASA</label>
+    <select id="asa">
+      <option>I</option><option>II</option><option>III</option><option>IV</option>
+    </select>
 
-<label>Procedimento</label>
-<input id="procedimento">
+    <label>Procedimento</label>
+    <input id="procedimento">
 
-<label>Comorbidades</label>
-<textarea id="comorbidades"></textarea>
+    <label>Comorbidades</label>
+    <textarea id="comorbidades"></textarea>
 
-<label>Medicações</label>
-<textarea id="medicacoes"></textarea>
+    <label>Medicações</label>
+    <textarea id="medicacoes"></textarea>
 
-<label>Via aérea (Mallampati)</label>
-<select id="mallampati">
-<option>I</option><option>II</option><option>III</option><option>IV</option>
-</select>
+    <label>Mallampati</label>
+    <select id="mallampati">
+      <option>I</option><option>II</option><option>III</option><option>IV</option>
+    </select>
 
-<label>Estratégia anestésica</label>
-<textarea id="estrategia"></textarea>
+    <label>Estratégia anestésica</label>
+    <textarea id="estrategia"></textarea>
 
-<label>Condição</label>
-<input id="condicao" placeholder="Apto / Pendência">
+    <label>Condição</label>
+    <input id="condicao">
 
-<label>Conduta</label>
-<textarea id="conduta"></textarea>
+    <label>Conduta</label>
+    <textarea id="conduta"></textarea>
 
-<label>Foto do paciente</label>
-<input type="file" id="foto" accept="image/*">
-
-<button class="primary" onclick="gerarResumo()">Gerar resumo</button>
-<button class="secondary" onclick="irHome()">Voltar</button>
-
-</div>
-</div>
-
-<!-- RESUMO -->
-<div id="resumoTela" style="display:none">
-<div class="card">
-<h2>Resumo anestésico</h2>
-<div id="textoResumo" style="white-space:pre-wrap;color:black;background:white;padding:14px;border-radius:12px"></div>
-
-<button class="primary" onclick="gerarPDF()">Gerar PDF</button>
-<button class="secondary" onclick="irHome()">Home</button>
-</div>
+    <button class="primary" onclick="gerarPDF()">Gerar PDF</button>
+    <button class="secondary" onclick="salvar()">Salvar</button>
+    <button class="secondary" onclick="show('home')">Voltar</button>
+  </div>
 </div>
 
 <!-- HISTÓRICO -->
-<div id="historicoTela" style="display:none">
-<div class="card">
-<h2>Histórico</h2>
-<div id="listaHistorico"></div>
-<button class="secondary" onclick="irHome()">Voltar</button>
-</div>
+<div id="historico" class="hidden">
+  <h2>Histórico</h2>
+  <div id="lista"></div>
+  <button class="secondary" onclick="show('home')">Voltar</button>
 </div>
 
 </div>
 
 <script>
-
-function novaAvaliacao(){
-document.getElementById("homeTela").style.display="none";
-document.getElementById("formTela").style.display="block";
+function show(id){
+  document.querySelectorAll('#home,#form,#historico')
+  .forEach(el=>el.classList.add('hidden'))
+  document.getElementById(id).classList.remove('hidden')
+  if(id==="historico") carregar()
 }
 
-function irHome(){
-document.getElementById("homeTela").style.display="block";
-document.getElementById("formTela").style.display="none";
-document.getElementById("resumoTela").style.display="none";
-document.getElementById("historicoTela").style.display="none";
-}
-
-function gerarResumo(){
-
-let dados={
+function dados(){
+return {
 paciente:paciente.value,
 idade:idade.value,
 asa:asa.value,
@@ -183,96 +143,47 @@ mallampati:mallampati.value,
 estrategia:estrategia.value,
 condicao:condicao.value,
 conduta:conduta.value
-};
-
-let texto=
-`Paciente: ${dados.paciente}, ${dados.idade} anos, ASA ${dados.asa}
-Procedimento: ${dados.procedimento}
-
-Comorbidades: ${dados.comorbidades}
-Medicações: ${dados.medicacoes}
-Via aérea: Mallampati ${dados.mallampati}
-
-Estratégia anestésica: ${dados.estrategia}
-
-Condição: ${dados.condicao}
-Conduta: ${dados.conduta}`;
-
-textoResumo.innerText=texto;
-
-salvarHistorico(dados);
-
-document.getElementById("formTela").style.display="none";
-document.getElementById("resumoTela").style.display="block";
+}
 }
 
-function salvarHistorico(d){
-let h=JSON.parse(localStorage.getItem("previaHist")||"[]");
-h.unshift(d);
-localStorage.setItem("previaHist",JSON.stringify(h));
+function salvar(){
+let h=JSON.parse(localStorage.previas||"[]")
+h.push(dados())
+localStorage.previas=JSON.stringify(h)
+alert("Salvo")
 }
 
-function abrirHistorico(){
-document.getElementById("homeTela").style.display="none";
-document.getElementById("historicoTela").style.display="block";
-
-let lista=document.getElementById("listaHistorico");
-lista.innerHTML="";
-
-let h=JSON.parse(localStorage.getItem("previaHist")||"[]");
-
-h.forEach((d,i)=>{
-let div=document.createElement("div");
-div.className="histItem";
-div.innerHTML=`${d.paciente} • ASA ${d.asa}<br><span style="opacity:0.6">${d.procedimento}</span>`;
-div.onclick=()=>abrirItem(i);
-lista.appendChild(div);
-});
+function carregar(){
+let h=JSON.parse(localStorage.previas||"[]")
+lista.innerHTML=""
+h.reverse().forEach(p=>{
+let div=document.createElement("div")
+div.className="card"
+div.innerHTML="<b>"+p.paciente+"</b><br>"+p.procedimento
+lista.appendChild(div)
+})
 }
 
-function abrirItem(i){
-let h=JSON.parse(localStorage.getItem("previaHist")||"[]");
-let d=h[i];
+function gerarPDF(){
+let p=dados()
 
-let texto=
-`Paciente: ${d.paciente}, ${d.idade} anos, ASA ${d.asa}
-Procedimento: ${d.procedimento}
-
-Comorbidades: ${d.comorbidades}
-Medicações: ${d.medicacoes}
-Via aérea: Mallampati ${d.mallampati}
-
-Estratégia anestésica: ${d.estrategia}
-
-Condição: ${d.condicao}
-Conduta: ${d.conduta}`;
-
-textoResumo.innerText=texto;
-
-document.getElementById("historicoTela").style.display="none";
-document.getElementById("resumoTela").style.display="block";
+let w=window.open("")
+w.document.write(`
+<html><body style="font-family:Arial;padding:40px">
+<h1>Prévia anestésica</h1>
+<p><b>${p.paciente}</b>, ${p.idade} anos, ASA ${p.asa}</p>
+<p><b>Procedimento:</b> ${p.procedimento}</p>
+<p><b>Comorbidades:</b> ${p.comorbidades}</p>
+<p><b>Medicações:</b> ${p.medicacoes}</p>
+<p><b>Mallampati:</b> ${p.mallampati}</p>
+<p><b>Estratégia:</b> ${p.estrategia}</p>
+<p><b>Condição:</b> ${p.condicao}</p>
+<p><b>Conduta:</b> ${p.conduta}</p>
+</body></html>
+`)
+w.print()
 }
-
-async function gerarPDF(){
-
-const { jsPDF } = window.jspdf;
-let doc=new jsPDF();
-
-let texto=document.getElementById("textoResumo").innerText;
-
-doc.setFont("helvetica");
-doc.setFontSize(14);
-doc.text("Prévia — Avaliação Pré-anestésica",20,20);
-
-doc.setFontSize(11);
-doc.text("Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542",20,28);
-
-doc.setFontSize(11);
-doc.text(texto,20,40,{maxWidth:170});
-
-doc.save("Previa.pdf");
-}
-
 </script>
+
 </body>
 </html>
