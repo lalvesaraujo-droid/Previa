@@ -1,243 +1,231 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Prévia</title>
-<link rel="stylesheet" href="styles.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-.hidden { display:none; }
+:root{
+  --bg1:#0b2336;
+  --bg2:#123a57;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.12);
+  --text:#eaf3ff;
+  --muted:rgba(234,243,255,.7);
+  --btn:#2f7cf6;
+  --radius:22px;
+}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+  background:radial-gradient(1200px 800px at 20% 20%,#1b4a7a 0%,var(--bg2) 40%,var(--bg1) 100%);
+  color:var(--text);
+  padding:18px;
+}
+.brand{font-size:40px;font-weight:800}
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:20px;
+  margin-bottom:16px;
+}
+h2{margin:0 0 12px 0}
+label{display:block;margin:12px 0 6px 0;color:var(--muted)}
+input,textarea,select{
+  width:100%;
+  border-radius:14px;
+  border:none;
+  padding:12px;
+  font-size:15px;
+}
+textarea{min-height:70px}
+.btn{
+  margin-top:14px;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:var(--btn);
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  width:100%;
+}
 </style>
 </head>
 
 <body>
 
-<header class="topbar">
-  <div class="logoDot"></div>
-  <div>
-    <div class="logo">Prévia</div>
-    <div class="subtitle">Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542</div>
-  </div>
-</header>
+<div class="brand">Prévia</div>
 
-<!-- HOME -->
-<div class="card" id="screenHome">
-  <h2>Home</h2>
-  <p>Fazer avaliação em <b>8 etapas</b>, salvar e gerar PDF.</p>
+<div class="card">
+<h2>Pré-anestesia</h2>
 
-  <button class="btnPrimary" onclick="start()">Nova avaliação</button>
-  <button class="btnGhost" onclick="openHistory()">Histórico</button>
-</div>
+<label>Paciente</label>
+<input id="nome"/>
 
-<!-- STEP -->
-<div class="card hidden" id="screenStep">
-  <h2 id="stepTitle"></h2>
+<label>Procedimento</label>
+<input id="proc"/>
 
-  <div id="stepBody"></div>
+<label>ASA</label>
+<select id="asa">
+<option>I</option><option>II</option><option>III</option><option>IV</option>
+</select>
 
-  <div class="btnRow">
-    <button class="btnGhost" onclick="prevStep()">Voltar</button>
-    <button class="btnPrimary" onclick="nextStep()">Avançar</button>
-  </div>
-</div>
+<label>Mallampati</label>
+<select id="mall">
+<option>I</option><option>II</option><option>III</option><option>IV</option>
+</select>
 
-<!-- HISTORY -->
-<div class="card hidden" id="screenHistory">
-  <h2>Histórico</h2>
-  <div id="historyList"></div>
+<label>Comorbidades</label>
+<textarea id="comorb"></textarea>
 
-  <div class="btnRow">
-    <button class="btnGhost" onclick="goHome()">Home</button>
-    <button class="btnDanger" onclick="clearHistory()">Apagar tudo</button>
-  </div>
+<label>Medicações</label>
+<textarea id="meds"></textarea>
+
+<label>Alergias</label>
+<textarea id="alerg"></textarea>
+
+<label>Passado cirúrgico</label>
+<textarea id="cirurg"></textarea>
+
+<label>Intercorrências anestésicas</label>
+<textarea id="interc"></textarea>
+
+<label>Estratégia anestésica</label>
+<textarea id="estrat"></textarea>
+
+<label>Conduta</label>
+<textarea id="cond"></textarea>
+
+<label>Foto do paciente</label>
+<input type="file" id="fotoPaciente" accept="image/*"/>
+
+<label>Foto via aérea</label>
+<input type="file" id="fotoVia" accept="image/*"/>
+
+<label>Anexar exames</label>
+<input type="file" id="exames" accept="image/*" multiple/>
+
+<button class="btn" onclick="gerarPDF()">Gerar PDF premium</button>
 </div>
 
 <script>
-
-const steps = [
-"Identificação",
-"Procedimento",
-"Histórico",
-"Clínico",
-"Alto impacto",
-"Via aérea",
-"Estratégia",
-"Conduta"
-]
-
-let step = 0
-let data = {}
-
-function start(){
-  step=0
-  data={}
-  showStep()
+async function fileToBase64(file){
+  return new Promise(r=>{
+    const reader=new FileReader();
+    reader.onload=e=>r(e.target.result);
+    reader.readAsDataURL(file);
+  });
 }
 
-function showStep(){
-  document.getElementById("screenHome").classList.add("hidden")
-  document.getElementById("screenHistory").classList.add("hidden")
-  document.getElementById("screenStep").classList.remove("hidden")
+async function gerarPDF(){
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p","mm","a4");
 
-  document.getElementById("stepTitle").innerText = steps[step]
+  const nome=document.getElementById("nome").value;
+  const proc=document.getElementById("proc").value;
+  const asa=document.getElementById("asa").value;
+  const mall=document.getElementById("mall").value;
+  const comorb=document.getElementById("comorb").value;
+  const meds=document.getElementById("meds").value;
+  const alerg=document.getElementById("alerg").value;
+  const cirurg=document.getElementById("cirurg").value;
+  const interc=document.getElementById("interc").value;
+  const estrat=document.getElementById("estrat").value;
+  const cond=document.getElementById("cond").value;
 
-  let html=""
+  let fotoPaciente=null;
+  let fotoVia=null;
+  let exames=[];
 
-  if(step==0){
-    html=`
-    <label>Paciente</label>
-    <input id="paciente">
-    <label>Idade</label>
-    <input id="idade">
-    <label>ASA</label>
-    <select id="asa">
-      <option>I</option><option>II</option><option>III</option>
-    </select>
-    `
+  const f1=document.getElementById("fotoPaciente").files[0];
+  if(f1) fotoPaciente=await fileToBase64(f1);
+
+  const f2=document.getElementById("fotoVia").files[0];
+  if(f2) fotoVia=await fileToBase64(f2);
+
+  const exFiles=document.getElementById("exames").files;
+  for(let i=0;i<exFiles.length;i++){
+    exames.push(await fileToBase64(exFiles[i]));
   }
 
-  if(step==1){
-    html=`
-    <label>Procedimento</label>
-    <input id="procedimento">
-    `
+  /* CAPA */
+  pdf.setFillColor(15,40,70);
+  pdf.rect(0,0,210,297,"F");
+
+  pdf.setTextColor(255,255,255);
+  pdf.setFontSize(28);
+  pdf.text("Prévia",20,30);
+
+  pdf.setFontSize(16);
+  pdf.text(nome||"Paciente",20,50);
+
+  pdf.setFontSize(12);
+  pdf.text(proc||"",20,60);
+  pdf.text("ASA "+asa+"  Mallampati "+mall,20,70);
+
+  if(fotoPaciente){
+    pdf.addImage(fotoPaciente,"JPEG",140,30,50,60);
   }
 
-  if(step==2){
-    html=`
-    <label>Comorbidades</label>
-    <textarea id="comorb"></textarea>
-    <label>Medicações</label>
-    <textarea id="medic"></textarea>
-    `
+  /* PAGINA CLINICA */
+  pdf.addPage();
+  pdf.setTextColor(0,0,0);
+  pdf.setFontSize(16);
+  pdf.text("Dados clínicos",20,20);
+
+  pdf.setFontSize(11);
+  let y=30;
+
+  function bloco(titulo,txt){
+    if(!txt) return;
+    pdf.setFont(undefined,"bold");
+    pdf.text(titulo,20,y);
+    y+=6;
+    pdf.setFont(undefined,"normal");
+    pdf.text(pdf.splitTextToSize(txt,170),20,y);
+    y+=10;
   }
 
-  if(step==3){
-    html=`
-    <label>Exame físico relevante</label>
-    <textarea id="fisico"></textarea>
-    `
-  }
+  bloco("Comorbidades",comorb);
+  bloco("Medicações",meds);
+  bloco("Alergias",alerg);
+  bloco("Passado cirúrgico",cirurg);
+  bloco("Intercorrências anestésicas",interc);
+  bloco("Estratégia anestésica",estrat);
+  bloco("Conduta",cond);
 
-  if(step==4){
-    html=`
-    <label>Risco cirúrgico</label>
-    <textarea id="risco"></textarea>
-    `
-  }
+  /* ANEXOS */
+  if(fotoVia || exames.length){
+    pdf.addPage();
+    pdf.setFontSize(16);
+    pdf.text("Anexos",20,20);
 
-  if(step==5){
-    html=`
-    <label>Mallampati</label>
-    <select id="mall">
-      <option>I</option><option>II</option><option>III</option><option>IV</option>
-    </select>
-    `
-  }
+    let y2=30;
 
-  if(step==6){
-    html=`
-    <label>Estratégia anestésica</label>
-    <textarea id="estrat"></textarea>
-    `
-  }
-
-  if(step==7){
-    html=`
-    <label>Condição</label>
-    <input id="cond">
-    <label>Conduta</label>
-    <textarea id="conduta"></textarea>
-    `
-  }
-
-  document.getElementById("stepBody").innerHTML = html
-}
-
-function nextStep(){
-  saveStep()
-
-  if(step<steps.length-1){
-    step++
-    showStep()
-  }else{
-    saveEval()
-    generatePDF()
-    goHome()
-  }
-}
-
-function prevStep(){
-  if(step>0){
-    step--
-    showStep()
-  }else{
-    goHome()
-  }
-}
-
-function saveStep(){
-  const inputs = document.querySelectorAll("#stepBody input, #stepBody textarea, #stepBody select")
-  inputs.forEach(i=>data[i.id]=i.value)
-}
-
-function saveEval(){
-  let hist = JSON.parse(localStorage.getItem("previaHist")||"[]")
-  hist.unshift(data)
-  localStorage.setItem("previaHist",JSON.stringify(hist))
-}
-
-function openHistory(){
-  document.getElementById("screenHome").classList.add("hidden")
-  document.getElementById("screenHistory").classList.remove("hidden")
-
-  let hist = JSON.parse(localStorage.getItem("previaHist")||"[]")
-  let html=""
-
-  hist.forEach(h=>{
-    html+=`
-    <div class="histCard">
-      <b>${h.paciente||"Sem nome"}</b><br>
-      ${h.procedimento||""} • ASA ${h.asa||""}
-    </div>
-    `
-  })
-
-  document.getElementById("historyList").innerHTML=html
-}
-
-function clearHistory(){
-  localStorage.removeItem("previaHist")
-  openHistory()
-}
-
-function goHome(){
-  document.getElementById("screenHome").classList.remove("hidden")
-  document.getElementById("screenStep").classList.add("hidden")
-  document.getElementById("screenHistory").classList.add("hidden")
-}
-
-async function generatePDF(){
-  const { jsPDF } = window.jspdf
-  const doc = new jsPDF()
-
-  doc.setFontSize(14)
-  doc.text("Prévia anestésica",10,10)
-
-  let y=20
-  Object.entries(data).forEach(([k,v])=>{
-    if(v){
-      doc.text(k+": "+v,10,y)
-      y+=8
+    if(fotoVia){
+      pdf.text("Via aérea",20,y2);
+      pdf.addImage(fotoVia,"JPEG",20,y2+4,60,60);
+      y2+=70;
     }
-  })
 
-  doc.save("previa.pdf")
+    if(exames.length){
+      pdf.text("Exames",20,y2);
+      y2+=6;
+      exames.forEach((img,i)=>{
+        const x=20+(i%3)*60;
+        const yy=y2+Math.floor(i/3)*60;
+        pdf.addImage(img,"JPEG",x,yy,50,50);
+      });
+    }
+  }
+
+  pdf.save("Previa_"+(nome||"Paciente")+".pdf");
 }
-
 </script>
 
 </body>
