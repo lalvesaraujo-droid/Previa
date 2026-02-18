@@ -66,12 +66,14 @@
 </section>
 
 
-}function show(id){
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>{
+    s.classList.remove("active");
+  });
+
   const el = document.getElementById(id);
   if(el) el.classList.add("active");
 }
-
 function go(id){
   if(id==="home" && !localStorage.getItem("previa_auth")){
     show("login");
