@@ -1,997 +1,295 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Prévia — Demo</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prévia</title>
 
-  <!-- Se você tiver styles.css no repo, ele continua valendo -->
-  <link rel="stylesheet" href="styles.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-  <!-- CSS base (para ficar estável mesmo se o styles.css estiver velho) -->
-  <style>
-    :root{
-      --bg1:#0b2c56;
-      --bg2:#0a3a6b;
-      --card: rgba(255,255,255,.10);
-      --stroke: rgba(255,255,255,.18);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.70);
-      --shadow: 0 16px 40px rgba(0,0,0,.35);
-      --radius: 22px;
-    }
+<style>
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+background:linear-gradient(180deg,#1e3c72,#2a5298);
+color:white;
+}
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 800px at 20% 20%, rgba(255,255,255,.10), transparent 55%),
-        radial-gradient(900px 700px at 80% 25%, rgba(255,255,255,.08), transparent 60%),
-        linear-gradient(180deg, var(--bg2), var(--bg1));
-      min-height:100vh;
-    }
+.container{
+max-width:420px;
+margin:auto;
+padding:20px;
+}
 
-    .screen{ display:none; min-height:100vh; padding:24px 16px 40px; }
-    .screen.active{ display:block; }
+.card{
+background:white;
+color:#1e3c72;
+border-radius:18px;
+padding:20px;
+margin-top:20px;
+}
 
-    .wrap{ max-width:760px; margin:0 auto; }
+h1{
+text-align:center;
+font-weight:600;
+margin-top:40px;
+}
 
-    .hero{
-      margin:22px 0 16px;
-      padding:18px 18px;
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.14);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
+label{
+font-size:14px;
+font-weight:600;
+display:block;
+margin-top:12px;
+}
 
-    h1,h2,h3{ margin:0 0 10px; letter-spacing:.2px; }
-    h1{ font-size:28px; }
-    h2{ font-size:22px; }
-    h3{ font-size:18px; margin-top:14px; }
+input,textarea,select{
+width:100%;
+padding:12px;
+border-radius:12px;
+border:none;
+margin-top:6px;
+background:#f1f3f6;
+}
 
-    .muted{ color:var(--muted); font-size:14px; line-height:1.4; }
+button{
+width:100%;
+padding:14px;
+border-radius:14px;
+border:1px solid rgba(255,255,255,0.4);
+background:transparent;
+color:white;
+font-size:16px;
+margin-top:16px;
+}
 
-    .card{
-      margin-top:14px;
-      padding:16px;
-      border-radius: var(--radius);
-      background: var(--card);
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
+.primary{
+background:white;
+color:#1e3c72;
+font-weight:600;
+}
 
-    .grid{ display:grid; grid-template-columns:1fr; gap:12px; }
-    @media (min-width:680px){
-      .grid.two{ grid-template-columns:1fr 1fr; }
-    }
+.logo{
+text-align:center;
+font-size:26px;
+font-weight:700;
+letter-spacing:2px;
+margin-top:10px;
+}
 
-    label{ display:block; font-size:13px; color:var(--muted); margin:2px 0 8px; }
-    input, select, textarea{
-      width:100%;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.95);
-      color:#0b1b2f;
-      padding:12px 14px;
-      font-size:16px;
-      outline:none;
-    }
-    textarea{ min-height:96px; resize:vertical; }
+.pdf-page{
+width:794px;
+min-height:1123px;
+background:white;
+padding:60px;
+font-family:Helvetica,Arial;
+color:#1e3c72;
+}
 
-    .btnrow{ display:flex; gap:12px; margin-top:14px; flex-wrap:wrap; }
-    .btn{
-      flex:1;
-      min-width:140px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.10);
-      color: var(--text);
-      padding:14px 16px;
-      font-size:16px;
-      cursor:pointer;
-      backdrop-filter: blur(10px);
-    }
-    .btn.primary{
-      background: rgba(255,255,255,.18);
-      border-color: rgba(255,255,255,.22);
-    }
-    .btn:active{ transform: translateY(1px); }
+.pdf-header{
+text-align:center;
+margin-bottom:40px;
+}
 
-    .progress{
-      margin-top:14px;
-      height:10px;
-      width:100%;
-      border-radius:999px;
-      background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.14);
-      overflow:hidden;
-    }
-    .progress > div{
-      height:100%;
-      width:0%;
-      background: rgba(255,255,255,.55);
-      border-right: 1px solid rgba(255,255,255,.25);
-      transition: width .25s ease;
-    }
-    .stepTitle{ margin-top:10px; font-size:16px; color:var(--muted); }
+.pdf-title{
+font-size:26px;
+font-weight:700;
+margin-top:10px;
+}
 
-    .pill{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.08);
-      color:var(--muted);
-      font-size:12px;
-      margin-right:6px;
-    }
+.pdf-section{
+margin-top:20px;
+}
 
-    .thumbRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .thumb{
-      width:110px; height:80px; border-radius:16px;
-      border:1px solid rgba(255,255,255,.20);
-      background: rgba(255,255,255,.08);
-      display:flex; align-items:center; justify-content:center;
-      overflow:hidden;
-    }
-    .thumb img{ width:100%; height:100%; object-fit:cover; }
+.pdf-label{
+font-weight:700;
+}
 
-    .monoBox{
-      white-space:pre-wrap;
-      background: rgba(255,255,255,.92);
-      color:#0b1b2f;
-      border-radius:18px;
-      padding:14px;
-      border:1px solid rgba(255,255,255,.25);
-      font-size:14px;
-      line-height:1.35;
-    }
-
-    .topBar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-top:6px;
-    }
-    .topBar .right{ display:flex; gap:8px; align-items:center; }
-    .smallBtn{
-      padding:10px 12px;
-      border-radius:14px;
-      font-size:14px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.08);
-      color:var(--text);
-      cursor:pointer;
-    }
-
-    /* Área PDF (oculta na tela, usada para exportar) */
-    #pdfArea{
-      display:none;
-      font-family: Arial, Helvetica, sans-serif;
-      color:#0b1b2f;
-    }
-    #pdfArea .pdfPage{
-      padding:22px;
-    }
-    #pdfArea h2{ margin:0 0 10px; }
-    #pdfArea h3{ margin:16px 0 8px; }
-    #pdfArea .pdfBox{
-      border:1px solid #d7dbe2;
-      border-radius:12px;
-      padding:12px;
-      background:#ffffff;
-      white-space:pre-wrap;
-      line-height:1.35;
-      font-size:12.5px;
-    }
-    #pdfArea .pdfMuted{ color:#4b5563; font-size:12px; }
-    #pdfArea .pdfRow{ display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
-    #pdfArea .pdfImg{
-      width:220px; height:160px; border:1px solid #d7dbe2; border-radius:10px; overflow:hidden;
-    }
-    #pdfArea .pdfImg img{ width:100%; height:100%; object-fit:cover; }
-    #pdfArea .signLine{ margin-top:18px; }
-  </style>
-
-  <!-- Biblioteca PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+.pdf-photo{
+width:120px;
+height:120px;
+border-radius:12px;
+object-fit:cover;
+margin-top:20px;
+}
+</style>
 </head>
 
 <body>
 
-  <!-- SPLASH -->
-  <section id="splash" class="screen active">
-    <div class="wrap">
-      <div class="hero">
-        <div class="topBar">
-          <div>
-            <h1>Prévia</h1>
-            <div class="muted">Pré-anestesia digital • demo</div>
-          </div>
-          <div class="right">
-            <span class="pill">v0</span>
-          </div>
-        </div>
-
-        <div class="btnrow">
-          <button class="btn primary" onclick="show('login')">Continuar</button>
-          <button class="btn" onclick="loginDemo()">Pular (demo)</button>
-        </div>
-
-        <div class="muted" style="margin-top:12px">
-          Esta é uma demo local (sem backend). Os dados ficam salvos só no seu navegador.
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LOGIN -->
-  <section id="login" class="screen">
-    <div class="wrap">
-      <div class="hero">
-        <h2>Entrar</h2>
-        <div class="muted">Para testar rápido: digite qualquer e-mail e qualquer senha.</div>
-
-        <div class="grid two" style="margin-top:12px">
-          <div>
-            <label>E-mail</label>
-            <input id="loginEmail" placeholder="ex: leo@previa.com" autocomplete="username" />
-          </div>
-          <div>
-            <label>Senha</label>
-            <input id="loginPass" placeholder="qualquer senha" type="password" autocomplete="current-password" />
-          </div>
-        </div>
-
-        <div class="btnrow">
-          <button class="btn primary" onclick="loginReal()">Entrar</button>
-          <button class="btn" onclick="show('splash')">Voltar</button>
-        </div>
-
-        <div class="muted" style="margin-top:12px">
-          Dr. Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOME -->
-  <section id="home" class="screen">
-    <div class="wrap">
-      <div class="hero">
-        <div class="topBar">
-          <div>
-            <h2>Home</h2>
-            <div class="muted">Consultas rápidas. 8 etapas → resumo → PDF.</div>
-          </div>
-          <div class="right">
-            <button class="smallBtn" onclick="resetAvaliacao()">Nova avaliação</button>
-            <button class="smallBtn" onclick="logout()">Sair</button>
-          </div>
-        </div>
-
-        <div class="btnrow">
-          <button class="btn primary" onclick="startWizard()">Iniciar avaliação</button>
-          <button class="btn" onclick="show('resumo')">Ir para resumo</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- WIZARD (8 ETAPAS) -->
-  <section id="wizard" class="screen">
-    <div class="wrap">
-      <div class="hero">
-        <div class="topBar">
-          <div>
-            <h2>Nova avaliação</h2>
-            <div id="stepTitle" class="stepTitle">Etapa 1/8</div>
-          </div>
-          <div class="right">
-            <button class="smallBtn" onclick="show('home')">Home</button>
-          </div>
-        </div>
-
-        <div class="progress"><div id="bar"></div></div>
-      </div>
-
-      <div class="card" id="stepCard"></div>
-
-      <div class="btnrow">
-        <button class="btn" onclick="prevStep()">Voltar</button>
-        <button class="btn primary" onclick="nextStep()">Próximo</button>
-      </div>
-
-      <div class="muted" style="margin-top:10px">
-        Dica: tudo salva automaticamente. Você pode sair e voltar.
-      </div>
-    </div>
-  </section>
-
-  <!-- RESUMO -->
-  <section id="resumo" class="screen">
-    <div class="wrap">
-      <div class="hero">
-        <h2>Resumo anestésico</h2>
-        <div class="muted">Geração automática a partir do formulário.</div>
-
-        <div style="margin-top:12px" class="monoBox" id="resumoTexto"></div>
-
-        <div class="btnrow">
-          <button class="btn primary" onclick="copiarResumo()">Copiar</button>
-          <button class="btn" onclick="gerarPDF()">Gerar PDF + TCLE</button>
-        </div>
-
-        <div class="btnrow">
-          <button class="btn" onclick="show('wizard')">Voltar para etapas</button>
-          <button class="btn" onclick="show('home')">Home</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ÁREA PDF (OCULTA) -->
-  <div id="pdfArea">
-    <div class="pdfPage">
-      <h2>Consulta Pré-Anestésica — Prévia</h2>
-      <div class="pdfMuted" id="pdfMeta"></div>
-
-      <h3>Resumo anestésico</h3>
-      <div class="pdfBox" id="pdfResumo"></div>
-
-      <h3>Anexos (se houver)</h3>
-      <div class="pdfMuted" id="pdfAnexosTxt"></div>
-      <div class="pdfRow" id="pdfImgs"></div>
-
-      <h3>Termo de Consentimento Livre e Esclarecido (TCLE) — Anestesia</h3>
-      <div class="pdfBox" id="pdfTCLE"></div>
-
-      <div class="signLine">
-        <div style="margin-top:18px">______________________________________________</div>
-        <div class="pdfMuted">Paciente / Responsável — Assinatura</div>
-
-        <div style="margin-top:14px"><strong>Dr. Leonardo Alves Araújo</strong></div>
-        <div class="pdfMuted">CRM-MG 47310 • RQE 40542</div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // ---------------------------
-    // AUTH (demo)
-    // ---------------------------
-    function show(id){
-      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-      const el = document.getElementById(id);
-      if(el) el.classList.add("active");
-    }
-
-    function loginDemo(){
-      localStorage.setItem("previa_auth", "ok");
-      show("home");
-    }
-
-    function loginReal(){
-      // demo: aceita qualquer email/senha
-      const em = document.getElementById("loginEmail").value.trim();
-      const pw = document.getElementById("loginPass").value.trim();
-      if(!em || !pw){
-        alert("Digite e-mail e senha (qualquer um, é demo).");
-        return;
-      }
-      localStorage.setItem("previa_auth", "ok");
-      show("home");
-    }
-
-    function logout(){
-      localStorage.removeItem("previa_auth");
-      show("login");
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      if(localStorage.getItem("previa_auth")){
-        show("home");
-      } else {
-        show("splash");
-      }
-      loadState();
-      renderResumo();
-    });
-
-    // ---------------------------
-    // STATE
-    // ---------------------------
-    const STATE_KEY = "previa_state_v1";
-    let state = {
-      step: 1,
-      data: {
-        paciente: "",
-        idade: "",
-        procedimento: "",
-        asa: "ASA I",
-        peso: "",
-        altura: "",
-        imc: "",
-
-        passadoCirurgico: "",
-        intercorrenciasAnestesicas: "",
-
-        alergias: "",
-        comorbidades: "",
-        medicacoes: "",
-        jejumHoras: "",
-
-        glp1: "",
-        anticoagulante: "",
-
-        mallampati: "",
-        vad: "",
-        anexos: {
-          mallampatiImg: "",
-          examesImg: ""
-        },
-
-        condicao: "",
-        condutaApto: "",
-        suspender: "",
-        manter: "",
-        recomendacoes: "",
-        observacoes: ""
-      }
-    };
-
-    function saveState(){
-      localStorage.setItem(STATE_KEY, JSON.stringify(state));
-    }
-
-    function loadState(){
-      try{
-        const raw = localStorage.getItem(STATE_KEY);
-        if(raw){
-          const parsed = JSON.parse(raw);
-          if(parsed && parsed.data) state = parsed;
-        }
-      }catch(e){}
-    }
-
-    function resetAvaliacao(){
-      if(!confirm("Começar uma nova avaliação? (isso limpa os campos desta demo)")) return;
-      localStorage.removeItem(STATE_KEY);
-      state.step = 1;
-      state.data = {
-        paciente: "", idade: "", procedimento: "", asa: "ASA I",
-        peso: "", altura: "", imc: "",
-        passadoCirurgico: "", intercorrenciasAnestesicas: "",
-        alergias: "", comorbidades: "", medicacoes: "", jejumHoras: "",
-        glp1: "", anticoagulante: "",
-        mallampati: "", vad: "",
-        anexos: { mallampatiImg: "", examesImg: "" },
-        condicao: "", condutaApto: "", suspender: "", manter: "",
-        recomendacoes: "", observacoes: ""
-      };
-      saveState();
-      startWizard();
-    }
-
-    // ---------------------------
-    // WIZARD (8 etapas)
-    // ---------------------------
-    const TOTAL = 8;
-
-    function startWizard(){
-      show("wizard");
-      if(!state.step || state.step<1 || state.step>8) state.step = 1;
-      renderStep();
-    }
-
-    function setBar(){
-      const pct = Math.round((state.step-1) / (TOTAL-1) * 100);
-      document.getElementById("bar").style.width = pct + "%";
-      document.getElementById("stepTitle").innerText = `Etapa ${state.step}/${TOTAL}`;
-    }
-
-    function prevStep(){
-      if(state.step>1) state.step--;
-      saveState();
-      renderStep();
-    }
-
-    function nextStep(){
-      collectStepInputs();
-      if(state.step<TOTAL) state.step++;
-      saveState();
-      renderStep();
-    }
-
-    function renderStep(){
-      setBar();
-      const card = document.getElementById("stepCard");
-      card.innerHTML = getStepHTML(state.step);
-      bindStepHandlers(state.step);
-      hydrateStepInputs(state.step);
-      renderResumo();
-    }
-
-    function getStepHTML(step){
-      const head = (title, subtitle="") => `
-        <h3>${title}</h3>
-        ${subtitle ? `<div class="muted">${subtitle}</div>` : ""}
-      `;
-
-      if(step===1){
-        return `
-          ${head("1) Identificação", "O mínimo pra não errar paciente e contexto.")}
-          <div class="grid two">
-            <div>
-              <label>Paciente</label>
-              <input id="paciente" placeholder="Nome do paciente" />
-            </div>
-            <div>
-              <label>Idade (anos)</label>
-              <input id="idade" inputmode="numeric" placeholder="ex: 34" />
-            </div>
-          </div>
-
-          <div class="grid two">
-            <div>
-              <label>Peso (kg)</label>
-              <input id="peso" inputmode="decimal" placeholder="ex: 72" />
-            </div>
-            <div>
-              <label>Altura (cm)</label>
-              <input id="altura" inputmode="numeric" placeholder="ex: 168" />
-            </div>
-          </div>
-
-          <div class="grid two">
-            <div>
-              <label>ASA</label>
-              <select id="asa">
-                <option>ASA I</option>
-                <option>ASA II</option>
-                <option>ASA III</option>
-                <option>ASA IV</option>
-                <option>ASA V</option>
-              </select>
-            </div>
-            <div>
-              <label>IMC (auto)</label>
-              <input id="imc" placeholder="calculado automaticamente" disabled />
-            </div>
-          </div>
-        `;
-      }
-
-      if(step===2){
-        return `
-          ${head("2) Procedimento", "O que vai acontecer (pra encaixar risco e conduta).")}
-          <label>Procedimento</label>
-          <input id="procedimento" placeholder="ex: Mamoplastia redutora" />
-        `;
-      }
-
-      if(step===3){
-        return `
-          ${head("3) Histórico", "O que já aconteceu no centro cirúrgico deixa rastros.")}
-          <label>Passado cirúrgico</label>
-          <textarea id="passadoCirurgico" placeholder="Ex: Colecistectomia (2019), Cesárea (2014)"></textarea>
-
-          <label>Intercorrências anestésicas anteriores</label>
-          <textarea id="intercorrenciasAnestesicas" placeholder="Ex: PONV, intubação difícil, nenhuma"></textarea>
-        `;
-      }
-
-      if(step===4){
-        return `
-          ${head("4) Clínico", "A tríade da vida real: alergia, comorbidade, remédio.")}
-          <label>Alergias</label>
-          <input id="alergias" placeholder="Ex: Dipirona (urticária) / Nenhuma" />
-
-          <label>Comorbidades</label>
-          <input id="comorbidades" placeholder="Ex: HAS / DM / Asma / Nega cardiopatia" />
-
-          <label>Medicações em uso</label>
-          <textarea id="medicacoes" placeholder="Ex: Losartana 50mg, Metformina, Sertralina..."></textarea>
-
-          <label>Jejum (horas)</label>
-          <input id="jejumHoras" inputmode="numeric" placeholder="Ex: 8" />
-        `;
-      }
-
-      if(step===5){
-        return `
-          ${head("5) Medicamentos de alto impacto", "Dois campos que mudam decisão e segurança.")}
-          <label>GLP-1 (Ozempic / análogos)</label>
-          <input id="glp1" placeholder="Ex: semanal; última dose 10/02" />
-
-          <label>Anticoagulante / antiagregante</label>
-          <input id="anticoagulante" placeholder="Ex: Rivaroxabana; última dose ontem 20h" />
-        `;
-      }
-
-      if(step===6){
-        return `
-          ${head("6) Via aérea + Anexos", "Foto e exame resumido: o anestesista agradece.")}
-          <div class="grid two">
-            <div>
-              <label>Mallampati</label>
-              <input id="mallampati" placeholder="I / II / III / IV (ou 2/3)" />
-            </div>
-            <div>
-              <label>Observação VAD</label>
-              <input id="vad" placeholder="Ex: não representa VAD / suspeita VAD" />
-            </div>
-          </div>
-
-          <div class="grid two">
-            <div>
-              <label>Foto Mallampati (opcional)</label>
-              <input id="mallampatiFile" type="file" accept="image/*" />
-              <div class="muted" style="margin-top:6px">Ideal: tarja preta nos olhos (privacidade).</div>
-              <div class="thumbRow">
-                <div class="thumb" id="thumbMall"></div>
-              </div>
-            </div>
-
-            <div>
-              <label>Exames essenciais (opcional)</label>
-              <input id="examesFile" type="file" accept="image/*,.pdf" />
-              <div class="muted" style="margin-top:6px">Eco/ECG/laudos importantes. (PDF fica listado, imagem aparece.)</div>
-              <div class="thumbRow">
-                <div class="thumb" id="thumbExam"></div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      if(step===7){
-        return `
-          ${head("7) Conduta", "A parte que vira mensagem pronta e evita ruído.")}
-          <label>Condição</label>
-          <input id="condicao" placeholder="Ex: Apto à cirurgia sob anestesia geral" />
-
-          <label>Conduta (Apto / Pendência)</label>
-          <input id="condutaApto" placeholder="Ex: Apto / Pendência: ... / Necessita..." />
-
-          <div class="grid two">
-            <div>
-              <label>Suspender</label>
-              <textarea id="suspender" placeholder="Ex: Suspender X dias antes..."></textarea>
-            </div>
-            <div>
-              <label>Manter</label>
-              <textarea id="manter" placeholder="Ex: Manter anti-hipertensivos..."></textarea>
-            </div>
-          </div>
-
-          <label>Recomendações</label>
-          <textarea id="recomendacoes" placeholder="Ex: Chegar 1h antes. Trazer acompanhante. Orientações de jejum..."></textarea>
-
-          <label>Observações</label>
-          <textarea id="observacoes" placeholder="Ex: risco liberado cardiologia CRM..., exames ok..."></textarea>
-        `;
-      }
-
-      return `
-        ${head("8) Revisão final", "Se o anestesista tivesse 15 segundos: é isso aqui.")}
-        <div class="muted">O resumo abaixo atualiza sozinho. Se quiser ajustar, volte e edite.</div>
-        <div style="margin-top:12px" class="monoBox" id="previewResumo"></div>
-
-        <div class="btnrow">
-          <button class="btn primary" onclick="show('resumo')">Ir para tela de resumo</button>
-          <button class="btn" onclick="copiarResumo()">Copiar agora</button>
-        </div>
-      `;
-    }
-
-    function bindStepHandlers(step){
-      if(step===1){
-        const peso = document.getElementById("peso");
-        const altura = document.getElementById("altura");
-        const asa = document.getElementById("asa");
-
-        const recalc = () => {
-          collectStepInputs();
-          renderIMC();
-          renderResumo();
-          saveState();
-        };
-
-        peso && peso.addEventListener("input", recalc);
-        altura && altura.addEventListener("input", recalc);
-        asa && asa.addEventListener("change", recalc);
-      }
-
-      if(step===6){
-        const mall = document.getElementById("mallampatiFile");
-        const exa  = document.getElementById("examesFile");
-
-        mall && mall.addEventListener("change", async (e) => {
-          const file = e.target.files && e.target.files[0];
-          if(!file) return;
-          const dataUrl = await fileToDataURL(file);
-          state.data.anexos.mallampatiImg = dataUrl;
-          saveState();
-          renderThumbs();
-          renderResumo();
-        });
-
-        exa && exa.addEventListener("change", async (e) => {
-          const file = e.target.files && e.target.files[0];
-          if(!file) return;
-
-          if(file.type && file.type.startsWith("image/")){
-            const dataUrl = await fileToDataURL(file);
-            state.data.anexos.examesImg = dataUrl;
-          } else {
-            state.data.anexos.examesImg = "PDF: " + file.name;
-          }
-          saveState();
-          renderThumbs();
-          renderResumo();
-        });
-
-        renderThumbs();
-      }
-
-      if(step===8){
-        const prev = document.getElementById("previewResumo");
-        if(prev) prev.innerText = buildResumo();
-      }
-    }
-
-    function hydrateStepInputs(){
-      const d = state.data;
-      const map = {
-        paciente:"paciente", idade:"idade", procedimento:"procedimento", asa:"asa",
-        peso:"peso", altura:"altura", imc:"imc",
-        passadoCirurgico:"passadoCirurgico", intercorrenciasAnestesicas:"intercorrenciasAnestesicas",
-        alergias:"alergias", comorbidades:"comorbidades", medicacoes:"medicacoes", jejumHoras:"jejumHoras",
-        glp1:"glp1", anticoagulante:"anticoagulante",
-        mallampati:"mallampati", vad:"vad",
-        condicao:"condicao", condutaApto:"condutaApto", suspender:"suspender", manter:"manter",
-        recomendacoes:"recomendacoes", observacoes:"observacoes"
-      };
-
-      Object.keys(map).forEach(key => {
-        const id = map[key];
-        const el = document.getElementById(id);
-        if(el) el.value = d[key] || "";
-      });
-
-      renderIMC();
-      renderThumbs();
-    }
-
-    function collectStepInputs(){
-      const d = state.data;
-
-      const assign = (id, key) => {
-        const el = document.getElementById(id);
-        if(!el) return;
-        d[key] = (el.value || "").trim();
-      };
-
-      assign("paciente","paciente");
-      assign("idade","idade");
-      assign("procedimento","procedimento");
-      assign("asa","asa");
-      assign("peso","peso");
-      assign("altura","altura");
-
-      assign("passadoCirurgico","passadoCirurgico");
-      assign("intercorrenciasAnestesicas","intercorrenciasAnestesicas");
-
-      assign("alergias","alergias");
-      assign("comorbidades","comorbidades");
-      assign("medicacoes","medicacoes");
-      assign("jejumHoras","jejumHoras");
-
-      assign("glp1","glp1");
-      assign("anticoagulante","anticoagulante");
-
-      assign("mallampati","mallampati");
-      assign("vad","vad");
-
-      assign("condicao","condicao");
-      assign("condutaApto","condutaApto");
-      assign("suspender","suspender");
-      assign("manter","manter");
-      assign("recomendacoes","recomendacoes");
-      assign("observacoes","observacoes");
-
-      renderIMC();
-      saveState();
-    }
-
-    function renderIMC(){
-      const peso = parseFloat((state.data.peso||"").replace(",","."));
-      const alturaCm = parseFloat((state.data.altura||"").replace(",","."));
-      const imcEl = document.getElementById("imc");
-      if(!imcEl) return;
-
-      if(peso>0 && alturaCm>0){
-        const h = alturaCm/100;
-        const imc = peso/(h*h);
-        state.data.imc = imc.toFixed(1).replace(".",",");
-        imcEl.value = state.data.imc;
-      } else {
-        state.data.imc = "";
-        imcEl.value = "";
-      }
-    }
-
-    function renderThumbs(){
-      const mall = document.getElementById("thumbMall");
-      const exa  = document.getElementById("thumbExam");
-
-      if(mall){
-        mall.innerHTML = state.data.anexos.mallampatiImg
-          ? '<img alt="Mallampati" src="'+state.data.anexos.mallampatiImg+'">'
-          : '<div class="muted" style="padding:10px;text-align:center">sem foto</div>';
-      }
-
-      if(exa){
-        const v = state.data.anexos.examesImg;
-        if(v && v.indexOf("data:image/")===0){
-          exa.innerHTML = '<img alt="Exame" src="'+v+'">';
-        } else if(v && v.indexOf("PDF:")===0){
-          exa.innerHTML = '<div class="muted" style="padding:10px;text-align:center">'+escapeHtml(v)+'</div>';
-        } else {
-          exa.innerHTML = '<div class="muted" style="padding:10px;text-align:center">sem anexo</div>';
-        }
-      }
-    }
-
-    function fileToDataURL(file){
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // ---------------------------
-    // RESUMO
-    // ---------------------------
-    function buildResumo(){
-      const d = state.data;
-      const p = (s) => (s && String(s).trim()) ? String(s).trim() : "";
-
-      const pacienteLinha =
-        (p(d.paciente) ? "Paciente: " + p(d.paciente) : "Paciente:") +
-        (p(d.idade) ? ", " + p(d.idade) + " anos" : "") +
-        (p(d.asa) ? ", " + p(d.asa) : "") +
-        (p(d.peso) ? ", " + p(d.peso) + " kg" : "") +
-        (p(d.altura) ? ", " + p(d.altura) + " cm" : "") +
-        (p(d.imc) ? " (IMC " + p(d.imc) + ")" : "");
-
-      let txt = "";
-      txt += pacienteLinha + "\n";
-      txt += "Procedimento: " + (p(d.procedimento) || "-") + ".\n\n";
-
-      const aler = p(d.alergias) || "Nega alergias";
-      const comorb = p(d.comorbidades) || "Nega comorbidades relevantes";
-      const meds = p(d.medicacoes) || "Nega medicações contínuas";
-
-      txt += "Alergias: " + aler + ".\n";
-      txt += "Comorbidades: " + comorb + ".\n";
-      txt += "Medicações: " + meds + ".\n";
-
-      if(p(d.glp1)) txt += "GLP-1: " + p(d.glp1) + ".\n";
-      if(p(d.anticoagulante)) txt += "Anticoagulante/antiagregante: " + p(d.anticoagulante) + ".\n";
-
-      if(p(d.passadoCirurgico)) txt += "\nPassado cirúrgico: " + p(d.passadoCirurgico) + ".\n";
-      if(p(d.intercorrenciasAnestesicas)) txt += "Intercorrências anestésicas: " + p(d.intercorrenciasAnestesicas) + ".\n";
-
-      txt += "\nVia aérea: Mallampati " + (p(d.mallampati) || "-");
-      if(p(d.vad)) txt += " (" + p(d.vad) + ")";
-      if(d.anexos.mallampatiImg) txt += " (vide foto)";
-      txt += ".\n";
-
-      const condicao = p(d.condicao) || "-";
-      const condutaApto = p(d.condutaApto) || "-";
-      txt += "\nCondição: " + condicao + ".\n";
-      txt += "Conduta: " + condutaApto + ".\n";
-
-      let linha = [];
-      if(p(d.jejumHoras)) linha.push("Jejum " + p(d.jejumHoras) + "h");
-      if(p(d.recomendacoes)) linha.push(p(d.recomendacoes));
-      if(linha.length) txt += linha.join(". ") + ".\n";
-
-      if(p(d.suspender)) txt += "Suspender: " + p(d.suspender) + ".\n";
-      if(p(d.manter)) txt += "Manter: " + p(d.manter) + ".\n";
-
-      if(p(d.observacoes)) txt += "\nObs.: " + p(d.observacoes) + "\n";
-
-      return txt.trim();
-    }
-
-    function renderResumo(){
-      const resumo = buildResumo();
-      const box = document.getElementById("resumoTexto");
-      if(box) box.innerText = resumo || "Preencha a avaliação para gerar o resumo.";
-    }
-
-    function copiarResumo(){
-      const resumo = buildResumo();
-      if(!resumo){
-        alert("Sem resumo ainda. Preencha os campos primeiro.");
-        return;
-      }
-      navigator.clipboard.writeText(resumo)
-        .then(() => alert("Resumo copiado ✅"))
-        .catch(() => alert("Não consegui copiar. (iOS às vezes exige toque direto no campo.)"));
-    }
-
-    // ---------------------------
-    // PDF + TCLE
-    // ---------------------------
-    function gerarPDF(){
-      collectStepInputs();
-      const resumo = buildResumo();
-
-      const now = new Date();
-      const dt = now.toLocaleString("pt-BR");
-      document.getElementById("pdfMeta").innerText =
-        "Gerado em: " + dt + "\nDr. Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542";
-
-      document.getElementById("pdfResumo").innerText = resumo || "-";
-
-      const anexosTxt = [];
-      if(state.data.anexos.mallampatiImg) anexosTxt.push("• Foto Mallampati (imagem)");
-      if(state.data.anexos.examesImg){
-        if(state.data.anexos.examesImg.indexOf("data:image/")===0) anexosTxt.push("• Exame essencial (imagem)");
-        else anexosTxt.push("• " + state.data.anexos.examesImg);
-      }
-      document.getElementById("pdfAnexosTxt").innerText = anexosTxt.length ? anexosTxt.join("\n") : "Sem anexos.";
-
-      const pdfImgs = document.getElementById("pdfImgs");
-      pdfImgs.innerHTML = "";
-      if(state.data.anexos.mallampatiImg){
-        pdfImgs.innerHTML += '<div class="pdfImg"><img src="'+state.data.anexos.mallampatiImg+'" alt="Mallampati"></div>';
-      }
-      if(state.data.anexos.examesImg && state.data.anexos.examesImg.indexOf("data:image/")===0){
-        pdfImgs.innerHTML += '<div class="pdfImg"><img src="'+state.data.anexos.examesImg+'" alt="Exame"></div>';
-      }
-
-      const tcle = [
-        "Declaro que fui avaliado(a) em consulta pré-anestésica e recebi explicações claras sobre o plano anestésico, benefícios, riscos potenciais, alternativas e cuidados necessários.",
-        "",
-        "Estou ciente de que a anestesia, embora geralmente segura, pode estar associada a eventos adversos como náuseas/vômitos, reações alérgicas, alterações respiratórias e cardiovasculares e, raramente, complicações graves.",
-        "",
-        "Fui orientado(a) quanto ao jejum, uso/suspensão de medicações, necessidade de acompanhante e condições para realização do procedimento.",
-        "",
-        "Autorizo a realização da anestesia indicada para o procedimento proposto, bem como condutas necessárias para minha segurança durante o ato anestésico."
-      ].join("\n");
-
-      document.getElementById("pdfTCLE").innerText = tcle;
-
-      const element = document.getElementById("pdfArea");
-      html2pdf().set({
-        margin: 10,
-        filename: "consulta_pre_anestesica_previa.pdf",
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-      }).from(element).save();
-    }
-
-    function escapeHtml(s){
-      return String(s)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-    }
-  </script>
+<div class="container">
+
+<div class="logo">PRÉVIA</div>
+
+<h1>Nova avaliação</h1>
+
+<div class="card">
+
+<label>Nome do paciente</label>
+<input id="nome">
+
+<label>Idade</label>
+<input id="idade">
+
+<label>Procedimento</label>
+<input id="procedimento">
+
+<label>Tipo anestésico</label>
+<select id="tipo">
+<option>Geral</option>
+<option>Raqui</option>
+<option>Peridural</option>
+<option>Bloqueio</option>
+<option>Sedação</option>
+</select>
+
+<label>Comorbidades</label>
+<input id="comorbidades">
+
+<label>Medicações</label>
+<input id="medicacoes">
+
+<label>Via aérea (Mallampati)</label>
+<select id="mallampati">
+<option>I</option>
+<option>II</option>
+<option>III</option>
+<option>IV</option>
+</select>
+
+<label>Condição</label>
+<input id="condicao" placeholder="Apto / Pendência">
+
+<label>Conduta</label>
+<textarea id="conduta"></textarea>
+
+<label>Foto do paciente</label>
+<input type="file" id="foto" accept="image/*">
+
+<button class="primary" onclick="gerarResumo()">Gerar resumo</button>
+
+</div>
+
+<div id="resumoBox" class="card" style="display:none">
+
+<h2 style="text-align:center">Resumo anestésico</h2>
+
+<div id="resumoTexto"></div>
+
+<button onclick="gerarPDF()">Gerar PDF</button>
+
+</div>
+
+</div>
+
+<!-- PDF HIDDEN -->
+<div id="pdfArea" style="display:none"></div>
+
+<script>
+
+function gerarResumo(){
+
+const nome=document.getElementById("nome").value
+const idade=document.getElementById("idade").value
+const procedimento=document.getElementById("procedimento").value
+const tipo=document.getElementById("tipo").value
+const comorbidades=document.getElementById("comorbidades").value
+const medicacoes=document.getElementById("medicacoes").value
+const mallampati=document.getElementById("mallampati").value
+const condicao=document.getElementById("condicao").value
+const conduta=document.getElementById("conduta").value
+
+const texto=`
+Paciente ${nome}, ${idade} anos.
+Procedimento: ${procedimento}.
+Tipo anestésico: ${tipo}.
+
+Comorbidades: ${comorbidades}.
+Medicações: ${medicacoes}.
+Via aérea: Mallampati ${mallampati}.
+
+Condição: ${condicao}.
+Conduta: ${conduta}.
+`
+
+document.getElementById("resumoTexto").innerText=texto
+document.getElementById("resumoBox").style.display="block"
+}
+
+function gerarPDF(){
+
+const nome=document.getElementById("nome").value
+const idade=document.getElementById("idade").value
+const procedimento=document.getElementById("procedimento").value
+const tipo=document.getElementById("tipo").value
+const comorbidades=document.getElementById("comorbidades").value
+const medicacoes=document.getElementById("medicacoes").value
+const mallampati=document.getElementById("mallampati").value
+const condicao=document.getElementById("condicao").value
+const conduta=document.getElementById("conduta").value
+
+const file=document.getElementById("foto").files[0]
+
+let fotoHTML=""
+
+if(file){
+const url=URL.createObjectURL(file)
+fotoHTML=`<img src="${url}" class="pdf-photo">`
+}
+
+const pdfHTML=`
+<div class="pdf-page">
+
+<div class="pdf-header">
+<div style="font-size:20px;letter-spacing:3px;">PRÉVIA</div>
+<div class="pdf-title">Avaliação Pré-Anestésica</div>
+${fotoHTML}
+</div>
+
+<div class="pdf-section">
+<span class="pdf-label">Paciente:</span> ${nome}, ${idade} anos
+</div>
+
+<div class="pdf-section">
+<span class="pdf-label">Procedimento:</span> ${procedimento}
+</div>
+
+<div class="pdf-section">
+<span class="pdf-label">Tipo anestésico:</span> ${tipo}
+</div>
+
+<div class="pdf-section">
+<span class="pdf-label">Comorbidades:</span> ${comorbidades}
+</div>
+
+<div class="pdf-section">
+<span class="pdf-label">Medicações:</span> ${medicacoes}
+</div>
+
+<div class="pdf-section">
+<span class="pdf-label">Via aérea:</span> Mallampati ${mallampati}
+</div>
+
+<div class="pdf-section">
+<span class="pdf-label">Condição:</span> ${condicao}
+</div>
+
+<div class="pdf-section">
+<span class="pdf-label">Conduta:</span> ${conduta}
+</div>
+
+<div style="margin-top:60px;font-size:12px;color:#666">
+Documento gerado pelo sistema PRÉVIA
+</div>
+
+</div>
+`
+
+document.getElementById("pdfArea").innerHTML=pdfHTML
+
+html2pdf().from(document.getElementById("pdfArea")).save(`Previa_${nome}.pdf`)
+}
+
+</script>
+
 </body>
 </html>
