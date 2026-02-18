@@ -1,314 +1,887 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prévia</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Prévia • Demo</title>
 <style>
-body{
-  margin:0;
-  font-family:-apple-system,system-ui;
-  background:linear-gradient(180deg,#284a78,#0f2747);
-  color:white;
-}
-
-.container{
-  max-width:420px;
-  margin:auto;
-  padding:20px;
-}
-
-.card{
-  background:rgba(255,255,255,0.08);
-  padding:20px;
-  border-radius:18px;
-  backdrop-filter:blur(8px);
-  margin-bottom:20px;
-}
-
-h1,h2{
-  text-align:center;
-  margin-bottom:20px;
-}
-
-input,select,textarea{
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:none;
-  margin-bottom:14px;
-  font-size:15px;
-}
-
-textarea{
-  min-height:80px;
-}
-
-button{
-  width:100%;
-  padding:16px;
-  border:none;
-  border-radius:14px;
-  font-size:16px;
-  margin-top:10px;
-  cursor:pointer;
-}
-
-.primary{
-  background:rgba(255,255,255,0.2);
-  color:white;
-}
-
-.secondary{
-  background:rgba(255,255,255,0.1);
-  color:white;
-}
-
-#resumoBox{
-  display:none;
-}
+  :root{
+    --bg1:#0b2d4b; --bg2:#071a2f;
+    --card:rgba(255,255,255,.10); --border:rgba(255,255,255,.18);
+    --txt:#f6f8fc; --muted:rgba(255,255,255,.75);
+    --field:#ffffff; --fieldTxt:#0a1b2b;
+    --r:20px; --r2:14px; --shadow:0 16px 60px rgba(0,0,0,.35);
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Text",Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:var(--font); color:var(--txt);
+    background:
+      radial-gradient(900px 600px at 25% 30%, rgba(90,145,200,.35), transparent 55%),
+      radial-gradient(800px 520px at 70% 40%, rgba(80,120,180,.25), transparent 58%),
+      linear-gradient(180deg, var(--bg1), var(--bg2));
+    overflow-x:hidden;
+  }
+  .screen{display:none; min-height:100vh; padding:26px 16px 40px;}
+  .screen.active{display:block;}
+  .wrap{max-width:560px; margin:0 auto;}
+  .topbar{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;}
+  .brand{display:flex; flex-direction:column; gap:2px}
+  .logo{font-weight:900; letter-spacing:.6px; font-size:18px}
+  .tag{font-size:12px; color:var(--muted)}
+  .pill{
+    display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+    padding:10px 12px; border-radius:999px;
+    background:rgba(255,255,255,.10);
+    border:1px solid var(--border);
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    color:var(--muted); font-size:12px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--r);
+    box-shadow:var(--shadow);
+    padding:18px;
+    backdrop-filter: blur(10px);
+  }
+  h1,h2{margin:0 0 10px}
+  h1{font-size:24px}
+  h2{font-size:18px}
+  .sub{color:var(--muted); font-size:13px; line-height:1.35; margin-top:-4px}
+  .grid{display:grid; gap:12px}
+  .two{grid-template-columns:1fr 1fr;}
+  @media (max-width:480px){ .two{grid-template-columns:1fr;} }
+  .label{display:block; font-size:12px; color:var(--muted); margin:4px 2px 6px;}
+  .input, textarea, select{
+    width:100%; border:0; border-radius:16px;
+    padding:14px 14px; background:var(--field); color:var(--fieldTxt);
+    outline:none; font-size:15px; box-shadow:0 6px 18px rgba(0,0,0,.18);
+  }
+  textarea{min-height:92px; resize:vertical}
+  .btnRow{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;}
+  .btn{
+    flex:1; min-width:140px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.12);
+    color:var(--txt);
+    padding:14px 14px;
+    border-radius:16px;
+    font-size:15px; font-weight:800;
+    cursor:pointer;
+  }
+  .btn.primary{background:rgba(255,255,255,.20); border-color:rgba(255,255,255,.26);}
+  .btn.danger{background:rgba(255,90,90,.22); border-color:rgba(255,120,120,.32);}
+  .hint{color:var(--muted); font-size:12px; line-height:1.35; margin-top:10px}
+  .mono{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:16px;
+    padding:12px;
+    white-space:pre-wrap;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    font-size:13px; line-height:1.35;
+  }
+  .list{margin:0; padding:0; list-style:none; display:grid; gap:10px;}
+  .item{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:16px;
+    padding:12px;
+    display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+  }
+  .item b{display:block}
+  .item small{color:var(--muted)}
+  .itemActions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+  .chipRow{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+  .chip{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:8px 10px; border-radius:999px;
+    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.14);
+    color:var(--muted); font-size:12px;
+  }
+  .sigBox{
+    background:#f1f3f6;
+    border-radius:12px;
+    border:0;
+    width:100%;
+    height:140px;
+    touch-action:none;
+  }
 </style>
+</head>
 
+<body>
+
+<!-- HOME -->
+<section class="screen active" id="home">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">Prévia</div>
+        <div class="tag">Histórico • Visão rápida • PDF premium</div>
+      </div>
+      <div class="pill">Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542</div>
+    </div>
+
+    <div class="card">
+      <h1>Home</h1>
+      <div class="sub">Salvar avaliações, abrir em segundos, gerar PDF com cara de hospital grande.</div>
+
+      <div class="btnRow">
+        <button class="btn primary" onclick="newCase()">Nova avaliação</button>
+        <button class="btn" onclick="go('history')">Histórico</button>
+      </div>
+
+      <div class="hint">
+        QR Code na capa do PDF abre a <b>Visão Rápida</b> dessa avaliação (no mesmo iPhone).
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="screen" id="form">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">Prévia</div>
+        <div class="tag" id="formTag">Nova avaliação</div>
+      </div>
+      <div class="pill">Apto • Ressalvas • Adiar</div>
+    </div>
+
+    <div class="card">
+      <h1>Dados</h1>
+
+      <div class="grid">
+
+        <div>
+          <label class="label">Paciente</label>
+          <input class="input" id="nome" placeholder="Nome completo" />
+        </div>
+
+        <div class="two">
+          <div>
+            <label class="label">Idade</label>
+            <input class="input" id="idade" inputmode="numeric" placeholder="Ex: 32" />
+          </div>
+          <div>
+            <label class="label">ASA</label>
+            <select class="input" id="asa">
+              <option value="">Selecione</option>
+              <option>ASA I</option><option>ASA II</option><option>ASA III</option><option>ASA IV</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="two">
+          <div>
+            <label class="label">Procedimento</label>
+            <input class="input" id="procedimento" placeholder="Ex: Mamoplastia" />
+          </div>
+          <div>
+            <label class="label">Jejum (h)</label>
+            <input class="input" id="jejum" inputmode="numeric" placeholder="Ex: 8" />
+          </div>
+        </div>
+
+        <div class="two">
+          <div>
+            <label class="label">Mallampati</label>
+            <select class="input" id="mallampati">
+              <option value="">Selecione</option>
+              <option>I</option><option>II</option><option>III</option><option>IV</option>
+            </select>
+          </div>
+          <div>
+            <label class="label">Tipo anestésico</label>
+            <select class="input" id="tipo">
+              <option>Geral</option>
+              <option>Raqui</option>
+              <option>Peridural</option>
+              <option>Sedação</option>
+              <option>Bloqueio</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="label">Comorbidades relevantes</label>
+          <input class="input" id="comorb" placeholder="Ex: HAS / DM / Asma / Nenhuma" />
+        </div>
+
+        <div>
+          <label class="label">Medicações</label>
+          <input class="input" id="meds" placeholder="Ex: Losartana / Metformina / etc" />
+        </div>
+
+        <div class="two">
+          <div>
+            <label class="label">GLP-1 (Ozempic/análogo)</label>
+            <input class="input" id="glp1" placeholder="Ex: semanal; última dose..." />
+          </div>
+          <div>
+            <label class="label">Anticoagulante / antiagregante</label>
+            <input class="input" id="anticoag" placeholder="Ex: rivaroxabana..." />
+          </div>
+        </div>
+
+        <div class="two">
+          <div>
+            <label class="label">Suspender</label>
+            <input class="input" id="suspender" placeholder="Ex: GLP-1 / anticoag (se aplicável)" />
+          </div>
+          <div>
+            <label class="label">Manter</label>
+            <input class="input" id="manter" placeholder="Ex: anti-hipertensivo..." />
+          </div>
+        </div>
+
+        <div>
+          <label class="label">Conduta</label>
+          <textarea class="input" id="conduta" placeholder="Plano/conduta objetiva"></textarea>
+        </div>
+
+        <div>
+          <label class="label">Status</label>
+          <select class="input" id="status">
+            <option>Apto</option>
+            <option>Apto com ressalvas</option>
+            <option>Adiar</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="label">Foto do paciente (opcional)</label>
+          <input class="input" type="file" id="foto" accept="image/*" />
+          <div class="hint">A foto entra na capa do PDF. Use com consentimento/LGPD.</div>
+        </div>
+
+        <div>
+          <label class="label">Assinatura do paciente (no dedo)</label>
+          <canvas id="sig" class="sigBox" width="920" height="360"></canvas>
+          <div class="btnRow">
+            <button class="btn" type="button" onclick="clearSig()">Limpar assinatura</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="btnRow">
+        <button class="btn" onclick="go('home')">Cancelar</button>
+        <button class="btn primary" onclick="saveCurrent()">Salvar avaliação</button>
+        <button class="btn" onclick="openQuickFromForm()">Visão rápida</button>
+        <button class="btn" onclick="generatePDF()">Gerar PDF premium</button>
+      </div>
+
+      <div class="hint">
+        PDF abre em nova aba e chama impressão. No iPhone: Compartilhar → Imprimir → “pinça/zoom” → Salvar PDF.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section class="screen" id="history">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">Prévia</div>
+        <div class="tag">Histórico (local)</div>
+      </div>
+      <div class="pill" id="countPill">0 avaliações</div>
+    </div>
+
+    <div class="card">
+      <h1>Histórico</h1>
+      <div class="sub">Salvo no aparelho (localStorage). Para sincronizar entre aparelhos: fase 2 (backend).</div>
+
+      <ul class="list" id="histList"></ul>
+
+      <div class="btnRow">
+        <button class="btn" onclick="go('home')">Home</button>
+        <button class="btn primary" onclick="newCase()">Nova avaliação</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUICK VIEW -->
+<section class="screen" id="quick">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">Prévia</div>
+        <div class="tag">Visão rápida do anestesista</div>
+      </div>
+      <div class="pill" id="quickPill">—</div>
+    </div>
+
+    <div class="card">
+      <h1 id="qTitle">—</h1>
+      <div class="sub" id="qSub">—</div>
+
+      <div class="chipRow" id="qChips"></div>
+
+      <h2 style="margin-top:14px;">Resumo</h2>
+      <div class="mono" id="qResumo">—</div>
+
+      <h2 style="margin-top:14px;">Estratégia anestésica</h2>
+      <div class="mono" id="qStrategy">—</div>
+
+      <div class="btnRow">
+        <button class="btn" onclick="go('history')">Voltar</button>
+        <button class="btn primary" onclick="openInForm()">Editar</button>
+        <button class="btn" onclick="generatePDF()">Gerar PDF premium</button>
+      </div>
+
+      <div class="hint" id="qHint"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* -------------------------
+   STORAGE
+--------------------------*/
+const KEY = "previa_cases_v1";
+let currentId = null;
+
+function loadAll(){
+  try{ return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+  catch(e){ return []; }
+}
+function saveAll(arr){
+  localStorage.setItem(KEY, JSON.stringify(arr));
+}
+function upsertCase(obj){
+  const arr = loadAll();
+  const i = arr.findIndex(x => x.id === obj.id);
+  if(i>=0) arr[i] = obj; else arr.unshift(obj);
+  saveAll(arr);
+  return arr;
+}
+function deleteCase(id){
+  const arr = loadAll().filter(x => x.id !== id);
+  saveAll(arr);
+  if(currentId===id) currentId=null;
+}
+
+/* -------------------------
+   NAV
+--------------------------*/
+function go(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(id==="history") renderHistory();
+}
+
+/* -------------------------
+   FORM
+--------------------------*/
+function newCase(){
+  currentId = "C" + Date.now();
+  document.getElementById("formTag").textContent = "Nova avaliação";
+  clearForm();
+  go("form");
+}
+function clearForm(){
+  ["nome","idade","asa","procedimento","jejum","mallampati","tipo","comorb","meds","glp1","anticoag","suspender","manter","conduta","status"]
+    .forEach(id => document.getElementById(id).value = (id==="status" ? "Apto" : ""));
+  document.getElementById("foto").value = "";
+  clearSig();
+}
+function collect(){
+  const sigData = getSigData();
+  return {
+    id: currentId || ("C"+Date.now()),
+    createdAt: new Date().toISOString(),
+    nome: v("nome"),
+    idade: v("idade"),
+    asa: v("asa"),
+    procedimento: v("procedimento"),
+    jejum: v("jejum"),
+    mallampati: v("mallampati"),
+    tipo: v("tipo"),
+    comorb: v("comorb"),
+    meds: v("meds"),
+    glp1: v("glp1"),
+    anticoag: v("anticoag"),
+    suspender: v("suspender"),
+    manter: v("manter"),
+    conduta: v("conduta"),
+    status: v("status"),
+    fotoDataUrl: null, // preenchido async se tiver foto
+    sigDataUrl: sigData
+  };
+}
+function v(id){ return (document.getElementById(id).value || "").trim(); }
+
+async function saveCurrent(){
+  const obj = collect();
+  currentId = obj.id;
+  obj.createdAt = obj.createdAt || new Date().toISOString();
+
+  // foto (opcional)
+  const file = document.getElementById("foto").files?.[0];
+  if(file){
+    obj.fotoDataUrl = await fileToDataURL(file);
+  }else{
+    // se já existir salvo com foto, mantém
+    const prev = loadAll().find(x=>x.id===obj.id);
+    if(prev?.fotoDataUrl) obj.fotoDataUrl = prev.fotoDataUrl;
+  }
+
+  upsertCase(obj);
+  alert("Avaliação salva ✅");
+  return obj;
+}
+
+function openQuickFromForm(){
+  // salva e abre visão rápida
+  saveCurrent().then(obj=>{
+    renderQuick(obj);
+    go("quick");
+  });
+}
+
+/* -------------------------
+   HISTORY
+--------------------------*/
+function renderHistory(){
+  const arr = loadAll();
+  document.getElementById("countPill").textContent = `${arr.length} avaliações`;
+  const ul = document.getElementById("histList");
+  ul.innerHTML = "";
+
+  if(!arr.length){
+    ul.innerHTML = `<li class="item"><div><b>Nenhuma avaliação ainda</b><small>Crie uma “Nova avaliação”.</small></div></li>`;
+    return;
+  }
+
+  arr.forEach(item=>{
+    const dt = new Date(item.createdAt || Date.now());
+    const when = dt.toLocaleString("pt-BR");
+    const title = item.nome || "Paciente";
+    const sub = `${when} • ${item.asa||"ASA —"} • ${item.status||"—"}`;
+
+    const li = document.createElement("li");
+    li.className = "item";
+    li.innerHTML = `
+      <div>
+        <b>${escapeHtml(title)}</b>
+        <small>${escapeHtml(sub)}</small>
+        <div class="chipRow">
+          ${chip(item.procedimento || "Procedimento —")}
+          ${chip(item.tipo || "Anestesia —")}
+          ${chip(item.mallampati ? ("Mallampati " + item.mallampati) : "Mallampati —")}
+        </div>
+      </div>
+      <div class="itemActions">
+        <button class="btn primary" style="min-width:110px" onclick="openCase('${item.id}')">Abrir</button>
+        <button class="btn" style="min-width:110px" onclick="openQuick('${item.id}')">Visão</button>
+        <button class="btn danger" style="min-width:110px" onclick="removeCase('${item.id}')">Excluir</button>
+      </div>
+    `;
+    ul.appendChild(li);
+  });
+}
+function chip(text){ return `<span class="chip">${escapeHtml(text)}</span>`; }
+
+function openCase(id){
+  const obj = loadAll().find(x=>x.id===id);
+  if(!obj){ alert("Não achei essa avaliação."); return; }
+  currentId = obj.id;
+  document.getElementById("formTag").textContent = "Editando avaliação";
+  fillForm(obj);
+  go("form");
+}
+function openQuick(id){
+  const obj = loadAll().find(x=>x.id===id);
+  if(!obj){ alert("Não achei essa avaliação."); return; }
+  currentId = obj.id;
+  renderQuick(obj);
+  go("quick");
+}
+function removeCase(id){
+  if(!confirm("Excluir esta avaliação?")) return;
+  deleteCase(id);
+  renderHistory();
+}
+
+/* -------------------------
+   QUICK VIEW
+--------------------------*/
+function renderQuick(obj){
+  const dt = new Date(obj.createdAt || Date.now()).toLocaleString("pt-BR");
+  document.getElementById("quickPill").textContent = obj.asa || "ASA —";
+  document.getElementById("qTitle").textContent = obj.nome || "Paciente";
+  document.getElementById("qSub").textContent = `${dt} • ${obj.status || "—"} • ${obj.tipo || "—"}`;
+
+  const chips = document.getElementById("qChips");
+  chips.innerHTML = [
+    obj.procedimento ? `🧾 ${obj.procedimento}` : "🧾 Procedimento —",
+    obj.mallampati ? `🫁 Mallampati ${obj.mallampati}` : "🫁 Mallampati —",
+    obj.jejum ? `⏳ Jejum ${obj.jejum}h` : "⏳ Jejum —",
+    obj.glp1 ? `💉 GLP-1` : "💉 GLP-1 —",
+    obj.anticoag ? `🩸 Anticoag` : "🩸 Anticoag —",
+  ].map(t=>chip(t)).join("");
+
+  document.getElementById("qResumo").textContent = buildResumo(obj);
+  document.getElementById("qStrategy").textContent = buildStrategy(obj);
+
+  // QR deep link (hash)
+  const link = makeCaseLink(obj.id);
+  document.getElementById("qHint").innerHTML =
+    `QR/Link desta avaliação: <span class="mono" style="display:block;margin-top:8px">${escapeHtml(link)}</span>`;
+}
+
+function openInForm(){
+  if(!currentId){ go("history"); return; }
+  openCase(currentId);
+}
+
+/* -------------------------
+   TEXT BUILDERS
+--------------------------*/
+function buildResumo(d){
+  const lines = [];
+  lines.push(`${d.nome||"Paciente"}${d.idade?(", "+d.idade+" anos"):""}${d.asa?(", "+d.asa):""}.`);
+  if(d.procedimento) lines.push(`Procedimento: ${d.procedimento}.`);
+  lines.push("");
+  if(d.comorb) lines.push(`Comorbidades: ${d.comorb}.`);
+  if(d.meds) lines.push(`Medicações: ${d.meds}.`);
+  if(d.glp1) lines.push(`GLP-1: ${d.glp1}.`);
+  if(d.anticoag) lines.push(`Anticoagulante/antiagregante: ${d.anticoag}.`);
+  lines.push(`Via aérea: ${d.mallampati ? "Mallampati "+d.mallampati : "—"}.`);
+  if(d.jejum) lines.push(`Jejum: ${d.jejum} h.`);
+  lines.push("");
+  if(d.conduta) lines.push(`Conduta: ${d.conduta}`);
+  lines.push(`STATUS: ${d.status || "—"}`);
+  return lines.join("\n").trim();
+}
+
+function buildStrategy(d){
+  const lines = [];
+  lines.push("ESTRATÉGIA ANESTÉSICA");
+  lines.push("");
+  lines.push(`Procedimento: ${d.procedimento || "—"}`);
+  lines.push(`Tipo anestésico: ${d.tipo || "—"}`);
+  lines.push("");
+  lines.push("Classificação clínica");
+  lines.push(`• ASA: ${d.asa || "—"}`);
+  lines.push(`• Jejum: ${d.jejum ? d.jejum+" h" : "—"}`);
+  lines.push(`• Mallampati: ${d.mallampati || "—"}`);
+  lines.push("");
+  lines.push("Comorbidades relevantes");
+  lines.push(`${d.comorb || "—"}`);
+  lines.push("");
+  lines.push("Medicações de impacto");
+  lines.push(`• GLP-1: ${d.glp1 || "—"}`);
+  lines.push(`• Anticoagulante/antiagregante: ${d.anticoag || "—"}`);
+  lines.push(`• Outras: ${d.meds || "—"}`);
+  lines.push("");
+  lines.push("Orientações pré-operatórias");
+  lines.push(`• Suspender: ${d.suspender || "—"}`);
+  lines.push(`• Manter: ${d.manter || "—"}`);
+  lines.push("");
+  lines.push("Status pré-operatório");
+  lines.push(`${d.status || "—"}`);
+  return lines.join("\n").trim();
+}
+
+function termoPorTipo(tipo){
+  const base = `TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO – ANESTESIA
+
+Declaro que recebi explicações sobre o plano anestésico e alternativas possíveis, tive espaço para perguntas e autorizo a realização da anestesia e medidas necessárias para minha segurança durante o procedimento.
+
+Paciente/Responsável: ______________________________   Data: ____/____/______
+Assinatura: _______________________________________
+
+Anestesiologista: Dr Leonardo Alves Araújo – CRM-MG 47310 – RQE 40542
+Assinatura: _______________________________________  Data: ____/____/______
+`;
+
+  const map = {
+    "Geral": `ANESTESIA GERAL
+Efeitos comuns: sonolência, náuseas/vômitos, dor de garganta.
+Menos comuns: reações a medicamentos, broncoespasmo, aspiração, alterações hemodinâmicas, necessidade de suporte avançado.`,
+    "Raqui": `RAQUIANESTESIA
+Comuns: queda de pressão, náuseas, tremores, coceira, retenção urinária transitória.
+Outros: cefaleia pós-punção, falha parcial/total e possível conversão.`,
+    "Peridural": `PERIDURAL
+Comuns: queda de pressão, falha parcial/total, necessidade de ajustes.
+Outros: punção inadvertida com cefaleia, hematoma/infecção (raros).`,
+    "Sedação": `SEDAÇÃO
+Riscos: sonolência prolongada, queda de pressão, depressão respiratória e possível conversão para anestesia geral.`,
+    "Bloqueio": `BLOQUEIO REGIONAL
+Comuns: dormência/fraqueza transitórias, hematoma/dor local.
+Outros: falha do bloqueio, reação a anestésico local, lesão nervosa transitória (raro).`
+  };
+  return base + "\n" + (map[tipo] || map["Geral"]);
+}
+
+/* -------------------------
+   PDF PREMIUM (3 pages)
+   Uses print window + CSS @page
+--------------------------*/
+async function generatePDF(){
+  // se estiver no quick, usa o objeto atual do storage; senão, salva e usa o do form
+  let obj = null;
+
+  if(currentId){
+    obj = loadAll().find(x=>x.id===currentId) || null;
+  }
+
+  // se não tem salvo, salva agora
+  if(!obj){
+    obj = await saveCurrent();
+  }else{
+    // se está no form, salva por cima (atualiza) antes do PDF
+    if(document.getElementById("form").classList.contains("active")){
+      obj = await saveCurrent();
+    }
+  }
+
+  const resumo = buildResumo(obj);
+  const strategy = buildStrategy(obj);
+  const termo = termoPorTipo(obj.tipo || "Geral");
+
+  // QR link (hash)
+  const link = makeCaseLink(obj.id);
+  const qrUrl = makeQrUrl(link);
+
+  const capaFoto = obj.fotoDataUrl ? `<img class="foto" src="${obj.fotoDataUrl}" alt="Foto"/>` : `<div class="fotoPlaceholder">Sem foto</div>`;
+  const sig = obj.sigDataUrl ? `<img class="sigImg" src="${obj.sigDataUrl}" alt="Assinatura"/>` : `<div class="sigLine"></div>`;
+
+  const html = `
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Prévia PDF</title>
+<style>
+  @page { size: A4; margin: 14mm; }
+  body{ font-family: Arial, Helvetica, sans-serif; color:#0b1b2b; margin:0; }
+  .page{ page-break-after:always; }
+  .cover{
+    border-radius:18px;
+    padding:26px;
+    color:#fff;
+    background:
+      radial-gradient(760px 460px at 20% 25%, rgba(86,140,200,.35), transparent 60%),
+      linear-gradient(180deg,#0b2d4b,#071a2f);
+    min-height: 245mm;
+    box-sizing:border-box;
+  }
+  .logo{ font-weight:900; letter-spacing:5px; font-size:22px; }
+  .title{ font-size:26px; font-weight:900; margin:18px 0 8px; }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+  .pill{ display:inline-block; padding:10px 12px; border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); font-size:12px; }
+  .grid{ display:flex; gap:16px; align-items:flex-start; margin-top:18px; flex-wrap:wrap; }
+  .foto{
+    width:170px; height:170px; border-radius:18px; object-fit:cover;
+    border:1px solid rgba(255,255,255,.22);
+    background: rgba(255,255,255,.08);
+  }
+  .fotoPlaceholder{
+    width:170px; height:170px; border-radius:18px;
+    border:1px dashed rgba(255,255,255,.35);
+    display:flex; align-items:center; justify-content:center; opacity:.85; font-size:12px;
+  }
+  .qrBox{
+    margin-left:auto;
+    text-align:center;
+    background: rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:18px;
+    padding:12px;
+  }
+  .qrBox img{ width:140px; height:140px; background:#fff; border-radius:12px; }
+  .qrBox small{ display:block; margin-top:8px; opacity:.85; font-size:11px; }
+  .doc{ margin-top:14px; opacity:.9; font-size:12px; line-height:1.35; }
+  .box{
+    border:1px solid #d7dfe8; border-radius:14px; padding:14px;
+    margin-top:12px;
+  }
+  h2{ margin:0 0 10px; font-size:16px; }
+  pre{ margin:0; white-space:pre-wrap; font-size:12.8px; line-height:1.35; font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .sigArea{ margin-top:14px; }
+  .sigLine{ width:260px; height:1px; background:#333; margin-top:28px; }
+  .sigImg{ width:260px; border-bottom:1px solid #333; margin-top:10px; }
+  .foot{ margin-top:10px; color:#54677a; font-size:11px; }
+</style>
 </head>
 <body>
 
-<div class="container">
+<!-- PAGE 1: COVER -->
+<div class="page cover">
+  <div class="logo">PRÉVIA</div>
+  <div class="title">Relatório Pré-anestésico</div>
 
-<h1>Prévia</h1>
+  <div class="row">
+    <span class="pill">${escapeHtml(obj.nome || "Paciente")}</span>
+    <span class="pill">${escapeHtml(obj.idade ? obj.idade + " anos" : "idade —")}</span>
+    <span class="pill">${escapeHtml(obj.asa || "ASA —")}</span>
+    <span class="pill">${escapeHtml(obj.tipo || "Anestesia —")}</span>
+    <span class="pill">${new Date(obj.createdAt || Date.now()).toLocaleDateString("pt-BR")}</span>
+  </div>
 
-<div class="card">
+  <div class="grid">
+    ${capaFoto}
+    <div class="qrBox">
+      <img src="${qrUrl}" alt="QR"/>
+      <small>Escaneie para abrir<br/>a visão rápida</small>
+    </div>
+  </div>
 
-<label>Paciente</label>
-<input id="nome">
+  <div class="box" style="background:rgba(255,255,255,.10); border-color:rgba(255,255,255,.18); color:#fff;">
+    <h2 style="color:#fff;">Resumo</h2>
+    <pre style="color:#fff;">${escapeHtml(resumo)}</pre>
+  </div>
 
-<label>Idade</label>
-<input id="idade">
-
-<label>Procedimento</label>
-<input id="procedimento">
-
-<label>ASA</label>
-<select id="asa">
-<option>I</option>
-<option>II</option>
-<option>III</option>
-<option>IV</option>
-</select>
-
-<label>Comorbidades</label>
-<input id="comorb">
-
-<label>Medicações</label>
-<input id="meds">
-
-<label>GLP-1</label>
-<input id="glp1">
-
-<label>Anticoagulante</label>
-<input id="anticoag">
-
-<label>Jejum (h)</label>
-<input id="jejum">
-
-<label>Mallampati</label>
-<select id="mallampati">
-<option>I</option>
-<option>II</option>
-<option>III</option>
-<option>IV</option>
-</select>
-
-<label>Tipo anestésico</label>
-<select id="tipo">
-<option>Geral</option>
-<option>Raqui</option>
-<option>Sedação</option>
-</select>
-
-<label>Conduta</label>
-<textarea id="conduta"></textarea>
-
-<label>Status</label>
-<select id="status">
-<option>Apto</option>
-<option>Apto com ressalvas</option>
-<option>Adiar</option>
-</select>
-
-<label>Foto do paciente</label>
-<input type="file" id="foto" accept="image/*">
-
-<button class="primary" onclick="gerarResumo()">Gerar PDF</button>
-
+  <div class="doc">
+    Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542<br/>
+    Documento gerado digitalmente no Prévia
+  </div>
 </div>
 
-<div id="resumoBox" class="card">
-<h2>Resumo anestésico</h2>
-<div id="textoResumo"></div>
+<!-- PAGE 2: STRATEGY -->
+<div class="page">
+  <div class="box">
+    <h2>Estratégia anestésica</h2>
+    <pre>${escapeHtml(strategy)}</pre>
+    <div class="foot">*Conteúdo estruturado para leitura rápida pelo anestesista.</div>
+  </div>
 </div>
 
+<!-- PAGE 3: CONSENT -->
+<div class="page">
+  <div class="box">
+    <h2>Consentimento (${escapeHtml(obj.tipo || "Anestesia")})</h2>
+    <pre>${escapeHtml(termo)}</pre>
+
+    <div class="sigArea">
+      <div style="font-size:12px;color:#333;"><b>Assinatura capturada no app (opcional)</b></div>
+      ${sig}
+    </div>
+
+    <div class="foot">Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542</div>
+  </div>
 </div>
 
 <script>
-function gerarResumo(){
-
-const nome = document.getElementById("nome").value;
-const idade = document.getElementById("idade").value;
-const proc = document.getElementById("procedimento").value;
-const asa = document.getElementById("asa").value;
-const comorb = document.getElementById("comorb").value;
-const meds = document.getElementById("meds").value;
-const glp1 = document.getElementById("glp1").value;
-const anticoag = document.getElementById("anticoag").value;
-const jejum = document.getElementById("jejum").value;
-const mall = document.getElementById("mallampati").value;
-const tipo = document.getElementById("tipo").value;
-const conduta = document.getElementById("conduta").value;
-const status = document.getElementById("status").value;
-
-let texto =
-`Paciente: ${nome}, ${idade} anos
-Procedimento: ${proc}
-
-ASA ${asa}
-Mallampati ${mall}
-Jejum ${jejum} h
-
-Comorbidades: ${comorb}
-Medicações: ${meds}
-
-GLP-1: ${glp1}
-Anticoagulante: ${anticoag}
-
-Conduta: ${conduta}
-
-STATUS: ${status}`;
-
-document.getElementById("textoResumo").innerText = texto;
-document.getElementById("resumoBox").style.display="block";
-
-gerarPDF(nome,idade,proc,asa,comorb,meds,glp1,anticoag,jejum,mall,tipo,conduta,status);
-}
-
-function gerarPDF(nome,idade,proc,asa,comorb,meds,glp1,anticoag,jejum,mall,tipo,conduta,status){
-
-const file = document.getElementById("foto").files[0];
-const reader = new FileReader();
-
-reader.onload = function(){
-
-const img = reader.result;
-
-const w = window.open("");
-
-w.document.write(`
-<html>
-<head>
-<style>
-body{font-family:Arial;margin:0}
-.page{
-width:794px;
-height:1123px;
-padding:60px;
-box-sizing:border-box;
-page-break-after:always;
-}
-
-.capa{
-background:#0f2747;
-color:white;
-text-align:center;
-}
-
-.foto{
-width:180px;
-height:180px;
-border-radius:100px;
-object-fit:cover;
-margin-top:40px;
-}
-
-.logo{
-font-size:34px;
-letter-spacing:8px;
-margin-top:40px;
-}
-
-.titulo{
-margin-top:80px;
-font-size:28px;
-}
-
-.bloco{
-margin-top:40px;
-line-height:1.6;
-}
-
-h2{margin-top:0}
-</style>
-</head>
-<body>
-
-<div class="page capa">
-<div class="logo">PRÉVIA</div>
-<img src="${img}" class="foto">
-<div class="titulo">${nome}</div>
-<div>${proc}</div>
-</div>
-
-<div class="page">
-<h2>Estratégia anestésica</h2>
-
-<div class="bloco">
-<b>Classificação</b><br>
-ASA ${asa}<br>
-Mallampati ${mall}<br>
-Jejum ${jejum} h
-</div>
-
-<div class="bloco">
-<b>Comorbidades</b><br>
-${comorb}
-</div>
-
-<div class="bloco">
-<b>Medicações</b><br>
-${meds}<br>
-GLP-1: ${glp1}<br>
-Anticoagulante: ${anticoag}
-</div>
-
-<div class="bloco">
-<b>Técnica proposta</b><br>
-${tipo}
-</div>
-
-<div class="bloco">
-<b>Conduta</b><br>
-${conduta}
-</div>
-
-<div class="bloco">
-<b>Status</b><br>
-${status}
-</div>
-
-</div>
-
+  setTimeout(()=>{ try{ window.print(); }catch(e){} }, 450);
+<\/script>
 </body>
 </html>
-`);
+`;
 
-w.document.close();
-w.print();
+  const win = window.open("", "_blank");
+  if(!win){
+    alert("Pop-up bloqueado. Permita pop-ups para gerar o PDF.");
+    return;
+  }
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
 }
 
-if(file) reader.readAsDataURL(file);
-else alert("Selecione a foto do paciente");
+/* -------------------------
+   HASH LINK + QR
+--------------------------*/
+function makeCaseLink(id){
+  const base = location.origin + location.pathname;
+  return base + "#case=" + encodeURIComponent(id);
+}
+function makeQrUrl(data){
+  // Serviço simples de QR (online). Se estiver sem internet, o QR não carrega.
+  const enc = encodeURIComponent(data);
+  return "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + enc;
+}
 
+/* -------------------------
+   HASH ROUTE: open quick by QR
+--------------------------*/
+window.addEventListener("hashchange", handleHash);
+document.addEventListener("DOMContentLoaded", handleHash);
+
+function handleHash(){
+  const h = location.hash || "";
+  if(!h.startsWith("#case=")) return;
+  const id = decodeURIComponent(h.replace("#case=",""));
+  const obj = loadAll().find(x=>x.id===id);
+  if(!obj){
+    alert("Este iPhone não tem essa avaliação salva localmente.");
+    return;
+  }
+  currentId = id;
+  renderQuick(obj);
+  go("quick");
+}
+
+/* -------------------------
+   UTIL
+--------------------------*/
+function escapeHtml(s){
+  return String(s||"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function fileToDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const r = new FileReader();
+    r.onload = ()=>resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+/* -------------------------
+   SIGNATURE (finger)
+--------------------------*/
+const sigCanvas = document.getElementById("sig");
+const sigCtx = sigCanvas.getContext("2d");
+sigCtx.lineWidth = 6;
+sigCtx.lineCap = "round";
+sigCtx.strokeStyle = "#102a4a";
+let drawing = false;
+
+function p(e){
+  const r = sigCanvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return {
+    x: (t.clientX - r.left) * (sigCanvas.width / r.width),
+    y: (t.clientY - r.top) * (sigCanvas.height / r.height),
+  };
+}
+function startDraw(e){ drawing = true; const pt=p(e); sigCtx.beginPath(); sigCtx.moveTo(pt.x, pt.y); e.preventDefault(); }
+function moveDraw(e){ if(!drawing) return; const pt=p(e); sigCtx.lineTo(pt.x, pt.y); sigCtx.stroke(); e.preventDefault(); }
+function endDraw(){ drawing=false; }
+
+sigCanvas.addEventListener("mousedown", startDraw);
+sigCanvas.addEventListener("mousemove", moveDraw);
+sigCanvas.addEventListener("mouseup", endDraw);
+sigCanvas.addEventListener("mouseleave", endDraw);
+sigCanvas.addEventListener("touchstart", startDraw, {passive:false});
+sigCanvas.addEventListener("touchmove", moveDraw, {passive:false});
+sigCanvas.addEventListener("touchend", endDraw);
+
+function clearSig(){ sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height); }
+function getSigData(){
+  // se vazio, retorna null
+  const img = sigCtx.getImageData(0,0,sigCanvas.width,sigCanvas.height).data;
+  let hasInk=false;
+  for(let i=3;i<img.length;i+=4){ if(img[i]!==0){ hasInk=true; break; } }
+  return hasInk ? sigCanvas.toDataURL("image/png") : null;
 }
 </script>
-
 </body>
 </html>
