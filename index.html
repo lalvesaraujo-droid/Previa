@@ -1,124 +1,107 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Prévia</title>
   <link rel="stylesheet" href="styles.css" />
+</head>
 
 <body>
-<section id="splash" class="screen active">
-
-  <div class="logo-block">
-    <div class="logo-title">Prévia</div>
-    <div class="logo-sub">
-      <div>Pré-</div>
-      <div>anestésico</div>
-      <div>digital</div>
+  <!-- SPLASH -->
+  <section id="splash" class="screen active">
+    <div class="logo-block">
+      <div class="logo-title">Prévia</div>
+      <div class="logo-sub">
+        <div>Pré-</div>
+        <div>anestésico</div>
+        <div>digital</div>
+      </div>
     </div>
-  </div>
 
-  <button onclick="go('login')">Entrar</button>
+    <button onclick="go('login')">Entrar</button>
+  </section>
 
-</section>
+  <!-- LOGIN -->
+  <section id="login" class="screen">
+    <h2>Login</h2>
 
-<section id="login" class="screen">
-  <h2>Login</h2>
+    <input id="email" placeholder="E-mail" autocomplete="username" />
+    <input id="senha" type="password" placeholder="Senha" autocomplete="current-password" />
 
-  <input id="email" placeholder="E-mail" autocomplete="username" />
-  <input id="senha" type="password" placeholder="Senha" autocomplete="current-password" />
+    <p id="login-erro" style="display:none; margin-top:12px;"></p>
 
-  <p id="login-erro" style="display:none; margin:12px 0 0; opacity:.9;"></p>
+    <button onclick="loginDemo()">Entrar</button>
+    <button class="link" onclick="go('splash')">Voltar</button>
+  </section>
 
-  <button onclick="loginDemo()">Entrar</button>
-  <button class="link" onclick="go('splash')">Voltar</button>
-</section>
+  <!-- HOME -->
+  <section id="home" class="screen">
+    <h2>Home</h2>
 
-<section id="home" class="screen">
-  <h2>Home</h2>
+    <button onclick="go('avaliacao')">Nova avaliação</button>
+    <button class="link" onclick="go('about')">Sobre</button>
+    <button class="link" onclick="logout()">Sair</button>
+  </section>
 
-  <button onclick="go('avaliacao')">Nova avaliação</button>
+  <!-- AVALIAÇÃO -->
+  <section id="avaliacao" class="screen">
+    <h2>Nova avaliação</h2>
+    <p>Formulário em construção</p>
+    <button class="link" onclick="go('home')">Voltar</button>
+  </section>
 
-  <button class="link" onclick="go('about')">Sobre</button>
+  <!-- ABOUT -->
+  <section id="about" class="screen">
+    <h2>Prévia</h2>
+    <p>Plataforma de avaliação pré-anestésica</p>
 
-  <button class="link" onclick="logout()">Sair</button>
+    <div class="card">
+      <b>RT: Dr. Leonardo Alves Araújo</b><br />
+      Anestesiologia<br />
+      CRM-MG 47310<br />
+      RQE 40542
+    </div>
 
-</section>
+    <button class="link" onclick="go('home')">Voltar</button>
+  </section>
 
-<section id="avaliacao" class="screen">
-  <h2>Nova avaliação</h2>
-  <p>Formulário em construção</p>
-  <button class="link" onclick="go('home')">Voltar</button>
-</section>
+  <script>
+    function show(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      const el = document.getElementById(id);
+      if (el) el.classList.add("active");
+    }
 
-<section id="about" class="screen">
-  <h2>Prévia</h2>
-  <p>plataforma de avaliação pré-anestésica</p>
+    function go(id) {
+      // Protege a Home: só entra se estiver "logado"
+      if (id === "home" && !localStorage.getItem("previa_auth")) {
+        show("login");
+        return;
+      }
 
-  <div class="card">
-    <b>RT: Dr. Leonardo Alves Araújo</b><br/>
-    Anestesiologia<br/>
-    CRM-MG 47310<br/>
-    RQE 40542
-  </div>
+      // limpa mensagem de erro ao trocar de tela
+      const err = document.getElementById("login-erro");
+      if (err) err.style.display = "none";
 
-  <button class="link" onclick="go('home')">Voltar</button>
-</section>
-function show(id){
-  document.querySelectorAll(".screen").forEach(s=>{
-    s.classList.remove("active");
-  });
+      show(id);
+    }
 
-  const el = document.getElementById(id);
-  if(el) el.classList.add("active");
-}
+    function loginDemo() {
+      // Demo: aceita qualquer coisa (pra você testar o fluxo)
+      localStorage.setItem("previa_auth", "ok");
+      show("home");
+    }
 
-function go(id){
-  if(id==="home" && !localStorage.getItem("previa_auth")){
-    show("login");
-    return;
-  }
-  show(id);
-}
+    function logout() {
+      localStorage.removeItem("previa_auth");
+      show("login");
+    }
 
-function loginDemo(){
-  localStorage.setItem("previa_auth","1");
-  show("home");
-}
-function logout(){
-  localStorage.removeItem("previa_auth");
-  show("login");
-</section>
-<script>
-function show(id){
-  document.querySelectorAll(".screen").forEach(s=>{
-    s.classList.remove("active");
-  });
-  const el = document.getElementById(id);
-  if(el) el.classList.add("active");
-}
-function go(id){
-  if(id==="home" && !localStorage.getItem("previa_auth")){
-    show("login");
-    return;
-  }
-  show(id);
-}
-function loginDemo(){
-  localStorage.setItem("previa_auth","ok");
-  show("home");
-}
-function logout(){
-  localStorage.removeItem("previa_auth");
-  show("login");
-}
-document.addEventListener("DOMContentLoaded", ()=>{
-  if(localStorage.getItem("previa_auth")){
-    show("home");
-  } else {
-    show("splash");
-  }
-});
-</script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (localStorage.getItem("previa_auth")) show("home");
+      else show("splash");
+    });
+  </script>
 </body>
 </html>
