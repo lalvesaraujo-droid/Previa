@@ -1,215 +1,239 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prévia</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
 body{
+font-family:Inter, sans-serif;
+background:#0f2747;
 margin:0;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
-background:linear-gradient(180deg,#1F3F73,#2E5FA7);
-color:#fff;
+padding:20px;
+color:#1a1a1a;
 }
 
-.container{max-width:720px;margin:auto;padding:24px}
 .card{
-background:#ffffff10;
+background:#fff;
 border-radius:18px;
-padding:18px;
-margin-bottom:18px;
-backdrop-filter:blur(8px);
+padding:22px;
+margin-bottom:16px;
+box-shadow:0 10px 30px rgba(0,0,0,.12);
 }
 
-input,select,textarea{
+h1{margin:0;color:#0f2747}
+h2{margin:10px 0 6px;color:#0f2747}
+label{font-weight:600;font-size:14px}
+
+input,textarea{
 width:100%;
 padding:10px;
-margin:6px 0 12px 0;
 border-radius:10px;
-border:none;
+border:1px solid #ccc;
+margin-top:4px;
+margin-bottom:10px;
 font-size:14px;
 }
 
 button{
-background:#fff;
-color:#1F3F73;
+background:#1f4f9b;
+color:white;
 border:none;
-padding:12px 16px;
+padding:14px;
 border-radius:12px;
-font-weight:600;
+font-size:16px;
 width:100%;
 margin-top:10px;
 }
 
-h1{font-size:32px;margin-bottom:4px}
-h2{margin:0 0 8px 0}
-.step{display:none}
-.step.active{display:block}
-.nav{display:flex;gap:10px;margin-top:10px}
-.small{font-size:12px;color:#ddd}
+.logo{
+text-align:center;
+margin-bottom:10px;
+}
+
+.logo img{
+width:90px;
+}
+
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
-<div class="container">
 
+<div class="card logo">
+<img src="logo_previa.png">
 <h1>Prévia</h1>
-<div class="small">plataforma de avaliação pré-anestésica</div>
-
-<!-- STEP 1 -->
-<div class="card step active" id="s1">
-<h2>Identificação</h2>
-<input id="nome" placeholder="Nome do paciente">
-<input id="idade" placeholder="Idade">
-<input id="sexo" placeholder="Sexo">
-<input id="procedimento" placeholder="Procedimento">
-<div class="nav">
-<button onclick="next(2)">Próximo</button>
-</div>
+<div>plataforma de avaliação pré-anestésica</div>
 </div>
 
-<!-- STEP 2 -->
-<div class="card step" id="s2">
-<h2>Dados clínicos</h2>
-<textarea id="comorbidades" placeholder="Comorbidades"></textarea>
-<textarea id="medicacoes" placeholder="Medicações"></textarea>
-<textarea id="alergias" placeholder="Alergias"></textarea>
-<textarea id="cirurgias" placeholder="Passado cirúrgico"></textarea>
-<textarea id="intercorrencias" placeholder="Intercorrências anestésicas"></textarea>
-<div class="nav">
-<button onclick="back(1)">Voltar</button>
-<button onclick="next(3)">Próximo</button>
-</div>
-</div>
-
-<!-- STEP 3 -->
-<div class="card step" id="s3">
-<h2>Via aérea</h2>
-<input id="mallampati" placeholder="Mallampati">
-<input id="abertura" placeholder="Abertura oral">
-<input id="denticao" placeholder="Dentição">
-<input id="mobilidade" placeholder="Mobilidade cervical">
-<div class="nav">
-<button onclick="back(2)">Voltar</button>
-<button onclick="next(4)">Próximo</button>
-</div>
-</div>
-
-<!-- STEP 4 -->
-<div class="card step" id="s4">
-<h2>Classificação</h2>
+<div class="card">
+<h2>Paciente</h2>
+<input id="nome" placeholder="Nome">
+<input id="proced" placeholder="Procedimento">
 <input id="asa" placeholder="ASA">
-<input id="risco" placeholder="Risco anestésico">
-<div class="nav">
-<button onclick="back(3)">Voltar</button>
-<button onclick="next(5)">Próximo</button>
-</div>
+<input id="mall" placeholder="Mallampati">
 </div>
 
-<!-- STEP 5 -->
-<div class="card step" id="s5">
-<h2>Estratégia anestésica</h2>
-<textarea id="tecnica" placeholder="Técnica"></textarea>
-<textarea id="analgesia" placeholder="Analgesia"></textarea>
-<textarea id="profilaxia" placeholder="Profilaxia"></textarea>
-<div class="nav">
-<button onclick="back(4)">Voltar</button>
-<button onclick="next(6)">Próximo</button>
-</div>
+<div class="card">
+<h2>Dados clínicos</h2>
+<textarea id="comorb" placeholder="Comorbidades"></textarea>
+<textarea id="meds" placeholder="Medicações"></textarea>
+<textarea id="alerg" placeholder="Alergias"></textarea>
+<textarea id="cirurg" placeholder="Passado cirúrgico"></textarea>
+<textarea id="interc" placeholder="Intercorrências anestésicas"></textarea>
 </div>
 
-<!-- STEP 6 -->
-<div class="card step" id="s6">
-<h2>Orientações</h2>
-<textarea id="jejum" placeholder="Jejum"></textarea>
-<textarea id="orientacoes" placeholder="Orientações adicionais"></textarea>
-<div class="nav">
-<button onclick="back(5)">Voltar</button>
-<button onclick="next(7)">Próximo</button>
-</div>
+<div class="card">
+<h2>Estratégia</h2>
+<textarea id="estrat" placeholder="Estratégia anestésica"></textarea>
+<textarea id="cond" placeholder="Conduta"></textarea>
 </div>
 
-<!-- STEP 7 -->
-<div class="card step" id="s7">
-<h2>Anexos</h2>
-<input type="file" id="fotoPaciente">
-<input type="file" id="fotoViaAerea">
-<div class="nav">
-<button onclick="back(6)">Voltar</button>
-<button onclick="next(8)">Próximo</button>
-</div>
-</div>
-
-<!-- STEP 8 -->
-<div class="card step" id="s8">
+<div class="card">
 <h2>Consentimento</h2>
-<textarea id="consentimento" placeholder="Texto do consentimento"></textarea>
-<div class="nav">
-<button onclick="back(7)">Voltar</button>
-<button onclick="next(9)">Resumo</button>
-</div>
+<textarea id="consent"></textarea>
 </div>
 
-<!-- STEP 9 -->
-<div class="card step" id="s9">
-<h2>Resumo</h2>
-<div id="resumo"></div>
-<button onclick="gerarPDF()">Gerar relatório Prévia</button>
+<div class="card">
+<h2>Anexos</h2>
+<label>Via aérea</label>
+<input type="file" id="fotoVia">
+<label>Exames</label>
+<input type="file" id="exames" multiple>
 </div>
 
-</div>
+<button onclick="gerarPDF()">Gerar PDF final</button>
 
 <script>
-function next(n){
-document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'))
-document.getElementById('s'+n).classList.add('active')
-if(n===9) montarResumo()
-}
-function back(n){
-document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'))
-document.getElementById('s'+n).classList.add('active')
-}
-
-function montarResumo(){
-resumo.innerHTML=`
-<b>${nome.value}</b><br>
-${procedimento.value}<br>
-ASA ${asa.value} — Mallampati ${mallampati.value}<br><br>
-
-<b>Risco:</b> ${risco.value}<br>
-<b>Técnica:</b> ${tecnica.value}<br>
-<b>Analgesia:</b> ${analgesia.value}<br>
-<b>Profilaxia:</b> ${profilaxia.value}<br>
-`
-}
-
 async function gerarPDF(){
-const {jsPDF}=window.jspdf
-const pdf=new jsPDF()
 
-pdf.setFillColor(31,63,115)
-pdf.rect(0,0,210,60,'F')
+const { jsPDF } = window.jspdf;
+const pdf = new jsPDF("p","mm","a4");
 
-pdf.setTextColor(255,255,255)
-pdf.setFontSize(28)
-pdf.text("Prévia",20,30)
+const nome = document.getElementById("nome").value;
+const proced = document.getElementById("proced").value;
+const asa = document.getElementById("asa").value;
+const mall = document.getElementById("mall").value;
+const comorb = document.getElementById("comorb").value;
+const meds = document.getElementById("meds").value;
+const alerg = document.getElementById("alerg").value;
+const cirurg = document.getElementById("cirurg").value;
+const interc = document.getElementById("interc").value;
+const estrat = document.getElementById("estrat").value;
+const cond = document.getElementById("cond").value;
+let consent = document.getElementById("consent").value;
 
-pdf.setFontSize(12)
-pdf.text("plataforma de avaliação pré-anestésica",20,40)
+if(!consent){
+consent =
+"Declaro ter sido informado(a) sobre a anestesia proposta, riscos, benefícios, alternativas e cuidados perioperatórios. " +
+"Autorizo a realização da anestesia pelo Dr. Leonardo Alves Araújo CRM-MG 47310 RQE 40542.";
+}
 
-pdf.setTextColor(0,0,0)
-pdf.setFontSize(14)
-pdf.text(nome.value,20,80)
-pdf.text(procedimento.value,20,90)
-pdf.text("ASA "+asa.value+" Mallampati "+mallampati.value,20,100)
+function bloco(titulo,txt){
+pdf.setFont("helvetica","bold");
+pdf.text(titulo,20,y);
+y+=6;
+pdf.setFont("helvetica","normal");
+const linhas = pdf.splitTextToSize(txt,170);
+pdf.text(linhas,20,y);
+y+=linhas.length*6+2;
+}
 
-pdf.text("Dados clínicos",20,120)
-pdf.text(comorbidades.value,20,130)
+let y = 20;
 
-pdf.save("Previa.pdf")
+/* CAPA */
+pdf.setFillColor(15,39,71);
+pdf.rect(0,0,210,60,"F");
+pdf.setTextColor(255,255,255);
+pdf.setFontSize(22);
+pdf.text("Prévia",20,25);
+pdf.setFontSize(11);
+pdf.text("plataforma de avaliação pré-anestésica",20,32);
+pdf.text("RT: Dr. Leonardo Alves Araújo",20,40);
+pdf.text("CRM-MG 47310 • RQE 40542",20,46);
+
+pdf.setTextColor(0,0,0);
+y=70;
+
+/* RESUMO */
+pdf.setFontSize(14);
+pdf.setFont("helvetica","bold");
+pdf.text(nome,20,y); y+=6;
+pdf.setFont("helvetica","normal");
+pdf.text(proced,20,y); y+=6;
+pdf.text("ASA "+asa+"   Mallampati "+mall,20,y); y+=10;
+
+pdf.setFont("helvetica","bold");
+pdf.text("Dados clínicos",20,y); y+=6;
+pdf.setFont("helvetica","normal");
+pdf.text(comorb,20,y); y+=6;
+pdf.text(meds,20,y); y+=6;
+pdf.text(alerg,20,y); y+=6;
+pdf.text(cirurg,20,y); y+=6;
+pdf.text(interc,20,y); y+=10;
+
+/* ESTRATÉGIA */
+pdf.setFont("helvetica","bold");
+pdf.text("Estratégia anestésica",20,y); y+=6;
+pdf.setFont("helvetica","normal");
+pdf.text(estrat,20,y); y+=8;
+
+pdf.setFont("helvetica","bold");
+pdf.text("Conduta",20,y); y+=6;
+pdf.setFont("helvetica","normal");
+pdf.text(cond,20,y); y+=10;
+
+/* CONSENTIMENTO */
+pdf.setFont("helvetica","bold");
+pdf.text("Consentimento informado",20,y); y+=6;
+pdf.setFont("helvetica","normal");
+const c = pdf.splitTextToSize(consent,170);
+pdf.text(c,20,y);
+
+/* ANEXOS */
+const foto = document.getElementById("fotoVia").files[0];
+const exames = document.getElementById("exames").files;
+
+if(foto || exames.length){
+pdf.addPage();
+pdf.setFontSize(16);
+pdf.text("Anexos",20,20);
+
+let y2=30;
+
+if(foto){
+const img = await readImg(foto);
+pdf.text("Via aérea",20,y2);
+pdf.addImage(img,"JPEG",20,y2+4,60,60);
+y2+=70;
+}
+
+if(exames.length){
+pdf.text("Exames",20,y2);
+y2+=6;
+for(let i=0;i<exames.length;i++){
+const img = await readImg(exames[i]);
+const x = 20+(i%3)*60;
+const yy = y2+Math.floor(i/3)*60;
+pdf.addImage(img,"JPEG",x,yy,50,50);
+}
+}
+}
+
+pdf.save("Previa_"+nome+".pdf");
+}
+
+function readImg(file){
+return new Promise(res=>{
+const r = new FileReader();
+r.onload=e=>res(e.target.result);
+r.readAsDataURL(file);
+});
 }
 </script>
 
