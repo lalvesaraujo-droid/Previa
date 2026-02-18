@@ -1,188 +1,700 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prévia</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prévia</title>
 
-<style>
-body{
-  margin:0;
-  font-family:-apple-system, BlinkMacSystemFont;
-  background:linear-gradient(180deg,#0e2a47,#153a5c);
-  color:white;
-}
+  <!-- Se você já tem styles.css, mantém -->
+  <link rel="stylesheet" href="styles.css" />
 
-.container{
-  max-width:500px;
-  margin:auto;
-  padding:20px;
-}
+  <style>
+    /* Fallback caso seu styles.css não tenha tudo */
+    :root{
+      --bg1:#0b2a3a;
+      --bg2:#0f3e59;
+      --card:rgba(255,255,255,.08);
+      --card2:rgba(255,255,255,.12);
+      --txt:#eaf3ff;
+      --muted:rgba(234,243,255,.75);
+      --white:#fff;
+      --btn:rgba(255,255,255,.12);
+      --btn2:rgba(255,255,255,.18);
+      --primary:#2f8cff;
+      --danger:#ff4d4d;
+      --ok:#31d17c;
+      --radius:18px;
+    }
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--txt);
+      background:
+        radial-gradient(900px 600px at 25% 30%, rgba(255,255,255,.10), transparent 55%),
+        radial-gradient(900px 600px at 70% 60%, rgba(255,255,255,.08), transparent 60%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+    .wrap{
+      width:min(560px, 92vw);
+      padding:22px 0 40px;
+    }
+    .topbar{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      margin:0 6px 14px;
+    }
+    .brand h1{margin:0; font-size:38px; letter-spacing:.2px;}
+    .brand p{margin:4px 0 0; color:var(--muted); font-size:14px; line-height:1.2;}
+    .badge{
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.15);
+      padding:10px 12px; border-radius:999px;
+      font-size:13px; color:var(--muted);
+      max-width:65%;
+      overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
 
-.card{
-  background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(12px);
-  border-radius:20px;
-  padding:20px;
-  margin-top:20px;
-}
+    .card{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      padding:18px;
+      backdrop-filter: blur(10px);
+      box-shadow:0 18px 45px rgba(0,0,0,.25);
+      margin:14px 6px;
+    }
+    .card h2{margin:0 0 6px; font-size:34px;}
+    .card p{margin:6px 0 0; color:var(--muted); font-size:14px; line-height:1.25;}
+    .row{display:flex; gap:12px; flex-wrap:wrap;}
+    .btn{
+      width:100%;
+      border:1px solid rgba(255,255,255,.16);
+      background:var(--btn);
+      color:var(--txt);
+      padding:14px 16px;
+      border-radius:16px;
+      font-size:18px;
+      cursor:pointer;
+    }
+    .btn:hover{background:var(--btn2);}
+    .btn.primary{background:rgba(47,140,255,.25); border-color:rgba(47,140,255,.55);}
+    .btn.primary:hover{background:rgba(47,140,255,.33);}
+    .btn.ok{background:rgba(49,209,124,.18); border-color:rgba(49,209,124,.45);}
+    .btn.danger{background:rgba(255,77,77,.15); border-color:rgba(255,77,77,.45);}
+    .btn.half{width:calc(50% - 6px);}
 
-input,textarea,select{
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:none;
-  margin-top:8px;
-  margin-bottom:16px;
-  font-size:16px;
-}
+    .screen{display:none;}
+    .screen.active{display:block;}
 
-button{
-  width:100%;
-  padding:16px;
-  border-radius:14px;
-  border:none;
-  font-size:18px;
-  margin-top:12px;
-}
+    .stepHeader{
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:10px;
+    }
+    .stepHeader h3{
+      margin:0;
+      font-size:26px;
+      letter-spacing:.2px;
+    }
+    .pill{
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
+      padding:8px 10px;
+      border-radius:999px;
+      color:var(--muted);
+      font-size:12px;
+    }
 
-.primary{background:#2d8cff;color:white;}
-.secondary{background:rgba(255,255,255,0.2);color:white;}
+    label{
+      display:block;
+      font-size:14px;
+      color:var(--muted);
+      margin:12px 2px 6px;
+    }
+    input, select, textarea{
+      width:100%;
+      box-sizing:border-box;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.92);
+      color:#0b1a24;
+      padding:14px 14px;
+      font-size:16px;
+      outline:none;
+    }
+    textarea{min-height:90px; resize:vertical;}
+    .small{font-size:12px; color:var(--muted); margin-top:8px;}
+    .divider{
+      height:1px; background:rgba(255,255,255,.14);
+      margin:14px 0;
+    }
 
-h1,h2{margin:0 0 10px 0;}
-
-.hidden{display:none;}
-</style>
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+      margin-top:10px;
+    }
+    .item{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      padding:12px 12px;
+    }
+    .item b{display:block; font-size:16px;}
+    .item span{display:block; color:var(--muted); font-size:13px; margin-top:4px;}
+  </style>
 </head>
 
 <body>
+  <div class="wrap">
 
-<div class="container">
+    <!-- TOP -->
+    <div class="topbar">
+      <div class="brand">
+        <h1>Prévia</h1>
+        <p>Histórico • Visão rápida • PDF premium</p>
+      </div>
+      <div class="badge" id="assinaturaTopo">
+        Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542
+      </div>
+    </div>
 
-<!-- HOME -->
-<div id="home">
-  <h1>Prévia</h1>
-  <div class="card">
-    <h2>Home</h2>
-    <button class="primary" onclick="show('form')">Nova avaliação</button>
-    <button class="secondary" onclick="show('historico')">Histórico</button>
+    <!-- HOME -->
+    <div class="screen active" id="home">
+      <div class="card">
+        <h2>Home</h2>
+        <p>Salvar avaliações, abrir em segundos, gerar PDF com cara de hospital grande.</p>
+
+        <div class="row" style="margin-top:14px;">
+          <button class="btn primary half" onclick="go('avaliacao'); startNew();">Nova avaliação</button>
+          <button class="btn half" onclick="go('historico'); renderHistorico();">Histórico</button>
+        </div>
+
+        <p class="small" style="margin-top:12px;">
+          Dica: no iPhone, se algo “sumir”, abra com <b>?v=1</b> no final do link pra evitar cache.
+        </p>
+      </div>
+    </div>
+
+    <!-- HISTÓRICO -->
+    <div class="screen" id="historico">
+      <div class="card">
+        <div class="stepHeader">
+          <h3>Histórico</h3>
+          <span class="pill" id="countHist">0</span>
+        </div>
+
+        <div id="listaHistorico" class="list"></div>
+
+        <div class="row" style="margin-top:14px;">
+          <button class="btn half" onclick="go('home')">Voltar</button>
+          <button class="btn danger half" onclick="limparHistorico()">Limpar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AVALIAÇÃO (8 ETAPAS) -->
+    <div class="screen" id="avaliacao">
+      <div class="card">
+        <div class="stepHeader">
+          <h3>Nova avaliação</h3>
+          <span class="pill" id="stepPill">Etapa 1/8</span>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="step" data-step="1">
+          <label>Paciente</label>
+          <input id="paciente" placeholder="Nome completo" />
+
+          <div class="row">
+            <div style="flex:1">
+              <label>Idade</label>
+              <input id="idade" placeholder="Ex: 32" inputmode="numeric" />
+            </div>
+            <div style="flex:1">
+              <label>ASA</label>
+              <select id="asa">
+                <option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option>
+              </select>
+            </div>
+          </div>
+
+          <label>Procedimento</label>
+          <input id="procedimento" placeholder="Ex: Mamoplastia redutora" />
+
+          <label>Foto do paciente (opcional)</label>
+          <input type="file" id="foto" accept="image/*" />
+          <p class="small">Vai para a capa do PDF (premium).</p>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step" data-step="2" style="display:none;">
+          <label>Passado cirúrgico</label>
+          <textarea id="passado_cir" placeholder="Ex: Colecistectomia (2019), Cesárea (2014)"></textarea>
+
+          <label>Intercorrências anestésicas anteriores</label>
+          <textarea id="intercorrencias" placeholder="Ex: PONV, intubação difícil, nenhuma"></textarea>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step" data-step="3" style="display:none;">
+          <label>Alergias</label>
+          <input id="alergias" placeholder="Ex: Dipirona (urticária) / Nenhuma" />
+
+          <label>Comorbidades</label>
+          <textarea id="comorbidades" placeholder="Ex: HAS / DM / Asma / Ansiedade / Nenhuma"></textarea>
+
+          <label>Medicações em uso</label>
+          <textarea id="meds" placeholder="Ex: Losartana 50mg, Metformina..."></textarea>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step" data-step="4" style="display:none;">
+          <div class="divider"></div>
+          <label>GLP-1 (Ozempic / análogos)</label>
+          <input id="glp1" placeholder="Ex: Semanal; última dose 10/02" />
+
+          <label>Anticoagulante / antiagregante</label>
+          <input id="anticoag" placeholder="Ex: Rivaroxabana; última dose ontem 20h" />
+
+          <label>Jejum (horas)</label>
+          <input id="jejum" placeholder="Ex: 8" inputmode="numeric" />
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="step" data-step="5" style="display:none;">
+          <label>Via aérea (Mallampati)</label>
+          <select id="mallampati">
+            <option>I</option><option>II</option><option>III</option><option>IV</option>
+          </select>
+
+          <label>Comentário de via aérea</label>
+          <input id="viaaerea_obs" placeholder="Ex: Mallampati 2/3 (vide foto), sem sinais de VAD" />
+        </div>
+
+        <!-- STEP 6 -->
+        <div class="step" data-step="6" style="display:none;">
+          <label>Exames / observações relevantes</label>
+          <textarea id="exames" placeholder="Ex: ECG ok; HbA1c 7,1; UTI tratada"></textarea>
+
+          <label>Capacidade funcional</label>
+          <select id="mets">
+            <option>Boa (&gt; 4 MET)</option>
+            <option>Limitada (&lt; 4 MET)</option>
+          </select>
+        </div>
+
+        <!-- STEP 7 -->
+        <div class="step" data-step="7" style="display:none;">
+          <label>Estratégia anestésica</label>
+          <textarea id="estrategia" placeholder="Ex: Anestesia geral balanceada; profilaxia PONV; analgesia multimodal"></textarea>
+
+          <label>Condição</label>
+          <input id="condicao" placeholder="Apto / Pendência" />
+
+          <label>Conduta</label>
+          <textarea id="conduta" placeholder="Ex: Jejum 8h; chegar 1h antes; suspender X; manter Y"></textarea>
+        </div>
+
+        <!-- STEP 8 -->
+        <div class="step" data-step="8" style="display:none;">
+          <div class="divider"></div>
+          <h3 style="margin:0 0 8px;">Resumo anestésico</h3>
+
+          <div style="background:rgba(255,255,255,.92); color:#0b1a24; border-radius:16px; padding:14px; border:1px solid rgba(255,255,255,.16);">
+            <pre id="resumo" style="white-space:pre-wrap; margin:0; font-family:inherit; font-size:15px; line-height:1.35;"></pre>
+          </div>
+
+          <div class="row" style="margin-top:12px;">
+            <button class="btn half ok" onclick="copiarResumo()">Copiar</button>
+            <button class="btn half primary" onclick="gerarPDFPremium()">Gerar PDF</button>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <button class="btn" onclick="salvarNoHistorico()">Salvar no histórico</button>
+          </div>
+
+          <p class="small">PDF abre em uma página de impressão (sem link externo = sem 404).</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <button class="btn half" onclick="prevStep()">Voltar</button>
+          <button class="btn primary half" onclick="nextStep()">Próximo</button>
+        </div>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn" onclick="go('home')">Home</button>
+        </div>
+      </div>
+    </div>
+
   </div>
-</div>
-
-<!-- FORM -->
-<div id="form" class="hidden">
-  <h2>Nova avaliação</h2>
-
-  <div class="card">
-    <label>Paciente</label>
-    <input id="paciente">
-
-    <label>Idade</label>
-    <input id="idade">
-
-    <label>ASA</label>
-    <select id="asa">
-      <option>I</option><option>II</option><option>III</option><option>IV</option>
-    </select>
-
-    <label>Procedimento</label>
-    <input id="procedimento">
-
-    <label>Comorbidades</label>
-    <textarea id="comorbidades"></textarea>
-
-    <label>Medicações</label>
-    <textarea id="medicacoes"></textarea>
-
-    <label>Mallampati</label>
-    <select id="mallampati">
-      <option>I</option><option>II</option><option>III</option><option>IV</option>
-    </select>
-
-    <label>Estratégia anestésica</label>
-    <textarea id="estrategia"></textarea>
-
-    <label>Condição</label>
-    <input id="condicao">
-
-    <label>Conduta</label>
-    <textarea id="conduta"></textarea>
-
-    <button class="primary" onclick="gerarPDF()">Gerar PDF</button>
-    <button class="secondary" onclick="salvar()">Salvar</button>
-    <button class="secondary" onclick="show('home')">Voltar</button>
-  </div>
-</div>
-
-<!-- HISTÓRICO -->
-<div id="historico" class="hidden">
-  <h2>Histórico</h2>
-  <div id="lista"></div>
-  <button class="secondary" onclick="show('home')">Voltar</button>
-</div>
-
-</div>
 
 <script>
-function show(id){
-  document.querySelectorAll('#home,#form,#historico')
-  .forEach(el=>el.classList.add('hidden'))
-  document.getElementById(id).classList.remove('hidden')
-  if(id==="historico") carregar()
-}
+  // ====== Router simples (sem múltiplas páginas => sem 404)
+  function go(id){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
 
-function dados(){
-return {
-paciente:paciente.value,
-idade:idade.value,
-asa:asa.value,
-procedimento:procedimento.value,
-comorbidades:comorbidades.value,
-medicacoes:medicacoes.value,
-mallampati:mallampati.value,
-estrategia:estrategia.value,
-condicao:condicao.value,
-conduta:conduta.value
-}
-}
+  // ====== Wizard (8 etapas)
+  let step = 1;
+  const totalSteps = 8;
 
-function salvar(){
-let h=JSON.parse(localStorage.previas||"[]")
-h.push(dados())
-localStorage.previas=JSON.stringify(h)
-alert("Salvo")
-}
+  function updateStepUI(){
+    document.getElementById('stepPill').textContent = `Etapa ${step}/${totalSteps}`;
+    document.querySelectorAll('.step').forEach(div => {
+      div.style.display = (Number(div.dataset.step) === step) ? 'block' : 'none';
+    });
+    // Na etapa 8, sempre atualiza resumo
+    if(step === 8) renderResumo();
+  }
 
-function carregar(){
-let h=JSON.parse(localStorage.previas||"[]")
-lista.innerHTML=""
-h.reverse().forEach(p=>{
-let div=document.createElement("div")
-div.className="card"
-div.innerHTML="<b>"+p.paciente+"</b><br>"+p.procedimento
-lista.appendChild(div)
-})
-}
+  function startNew(){
+    step = 1;
+    // limpa campos (mantém assinatura topo)
+    [
+      'paciente','idade','procedimento','passado_cir','intercorrencias','alergias','comorbidades',
+      'meds','glp1','anticoag','jejum','viaaerea_obs','exames','estrategia','condicao','conduta'
+    ].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('asa').value = 'I';
+    document.getElementById('mallampati').value = 'I';
+    document.getElementById('mets').value = 'Boa (> 4 MET)';
+    document.getElementById('foto').value = '';
+    updateStepUI();
+  }
 
-function gerarPDF(){
-let p=dados()
+  function nextStep(){
+    if(step < totalSteps) step++;
+    updateStepUI();
+  }
+  function prevStep(){
+    if(step > 1) step--;
+    updateStepUI();
+  }
 
-let w=window.open("")
-w.document.write(`
-<html><body style="font-family:Arial;padding:40px">
-<h1>Prévia anestésica</h1>
-<p><b>${p.paciente}</b>, ${p.idade} anos, ASA ${p.asa}</p>
-<p><b>Procedimento:</b> ${p.procedimento}</p>
-<p><b>Comorbidades:</b> ${p.comorbidades}</p>
-<p><b>Medicações:</b> ${p.medicacoes}</p>
-<p><b>Mallampati:</b> ${p.mallampati}</p>
-<p><b>Estratégia:</b> ${p.estrategia}</p>
-<p><b>Condição:</b> ${p.condicao}</p>
-<p><b>Conduta:</b> ${p.conduta}</p>
-</body></html>
-`)
-w.print()
-}
+  // ====== Resumo
+  function val(id){ return (document.getElementById(id)?.value || '').trim(); }
+  function safeLine(label, value){
+    if(!value) return `${label}: —`;
+    return `${label}: ${value}`;
+  }
+
+  function renderResumo(){
+    const paciente = val('paciente');
+    const idade = val('idade');
+    const asa = document.getElementById('asa').value;
+    const procedimento = val('procedimento');
+
+    const comorb = val('comorbidades');
+    const meds = val('meds');
+    const mall = document.getElementById('mallampati').value;
+    const viaObs = val('viaaerea_obs');
+
+    const glp1 = val('glp1');
+    const anticoag = val('anticoag');
+    const jejum = val('jejum');
+
+    const estrategia = val('estrategia');
+    const condicao = val('condicao');
+    const conduta = val('conduta');
+
+    const linhas = [];
+    linhas.push(`Paciente: ${paciente || '—'}${idade ? `, ${idade} anos` : ''} • ASA ${asa}`);
+    linhas.push(safeLine('Procedimento', procedimento));
+    linhas.push('');
+    linhas.push(safeLine('Comorbidades', comorb));
+    linhas.push(safeLine('Medicações', meds));
+    linhas.push(`Via aérea: Mallampati ${mall}${viaObs ? ` (${viaObs})` : ''}`);
+    linhas.push('');
+    if(glp1) linhas.push(`GLP-1: ${glp1}`);
+    if(anticoag) linhas.push(`Anticoagulante/antiagregante: ${anticoag}`);
+    if(jejum) linhas.push(`Jejum: ${jejum} h`);
+    if(glp1 || anticoag || jejum) linhas.push('');
+    linhas.push(safeLine('Estratégia anestésica', estrategia));
+    linhas.push(safeLine('Condição', condicao));
+    linhas.push(safeLine('Conduta', conduta));
+
+    document.getElementById('resumo').textContent = linhas.join('\n');
+  }
+
+  function copiarResumo(){
+    const txt = document.getElementById('resumo').textContent;
+    navigator.clipboard.writeText(txt).then(()=>alert('Resumo copiado ✅'));
+  }
+
+  // ====== Histórico (localStorage)
+  const KEY = 'previa_avaliacoes_v1';
+
+  function getAll(){
+    try{ return JSON.parse(localStorage.getItem(KEY) || '[]'); }catch{ return []; }
+  }
+  function setAll(arr){
+    localStorage.setItem(KEY, JSON.stringify(arr));
+  }
+
+  function salvarNoHistorico(){
+    renderResumo();
+    const item = {
+      id: crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()),
+      when: new Date().toISOString(),
+      paciente: val('paciente') || 'Sem nome',
+      procedimento: val('procedimento') || '—',
+      asa: document.getElementById('asa').value,
+      resumo: document.getElementById('resumo').textContent,
+      // foto será guardada como base64 para usar no PDF
+      foto: null
+    };
+
+    const file = document.getElementById('foto').files?.[0];
+    if(file){
+      const reader = new FileReader();
+      reader.onload = () => {
+        item.foto = reader.result;
+        const arr = getAll();
+        arr.unshift(item);
+        setAll(arr);
+        alert('Salvo no histórico ✅');
+      };
+      reader.readAsDataURL(file);
+    }else{
+      const arr = getAll();
+      arr.unshift(item);
+      setAll(arr);
+      alert('Salvo no histórico ✅');
+    }
+  }
+
+  function renderHistorico(){
+    const arr = getAll();
+    document.getElementById('countHist').textContent = String(arr.length);
+    const box = document.getElementById('listaHistorico');
+    box.innerHTML = '';
+
+    if(arr.length === 0){
+      box.innerHTML = `<div class="item"><b>Sem avaliações ainda</b><span>Faça uma nova avaliação e salve.</span></div>`;
+      return;
+    }
+
+    arr.forEach(it => {
+      const d = new Date(it.when);
+      const data = d.toLocaleString('pt-BR');
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.innerHTML = `
+        <b>${escapeHtml(it.paciente)} • ASA ${escapeHtml(it.asa)}</b>
+        <span>${escapeHtml(it.procedimento)} • ${escapeHtml(data)}</span>
+        <div class="row" style="margin-top:10px;">
+          <button class="btn half ok" onclick="abrirItem('${it.id}')">Abrir</button>
+          <button class="btn half primary" onclick="pdfDeItem('${it.id}')">PDF</button>
+        </div>
+      `;
+      box.appendChild(div);
+    });
+  }
+
+  function abrirItem(id){
+    const arr = getAll();
+    const it = arr.find(x => x.id === id);
+    if(!it) return;
+
+    // joga resumo no step 8 para copiar/gerar PDF
+    go('avaliacao');
+    step = 8;
+    updateStepUI();
+    document.getElementById('resumo').textContent = it.resumo;
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function limparHistorico(){
+    if(confirm('Apagar todo o histórico?')){
+      localStorage.removeItem(KEY);
+      renderHistorico();
+    }
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  // ====== PDF Premium (sem depender de páginas externas => sem 404)
+  async function gerarPDFPremium(){
+    // cria HTML “premium” e abre janela de impressão
+    renderResumo();
+    const resumo = document.getElementById('resumo').textContent;
+    const paciente = val('paciente') || 'Paciente';
+    const procedimento = val('procedimento') || '';
+    const asa = document.getElementById('asa').value;
+
+    const assinatura = document.getElementById('assinaturaTopo').textContent;
+
+    // Foto (se houver)
+    const file = document.getElementById('foto').files?.[0];
+    let fotoData = null;
+    if(file){
+      fotoData = await new Promise((resolve)=>{
+        const r = new FileReader();
+        r.onload = ()=>resolve(r.result);
+        r.readAsDataURL(file);
+      });
+    }
+
+    const html = `
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Prévia • PDF</title>
+<style>
+  @page{ size:A4; margin:18mm; }
+  body{ font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; color:#0b1a24; }
+  .cap{
+    border:1px solid #d8e2ee; border-radius:16px; padding:18px; margin-bottom:14px;
+    background: linear-gradient(135deg, #0b2a3a, #0f3e59);
+    color:#fff;
+    position: relative;
+    overflow:hidden;
+  }
+  .cap h1{ margin:0; font-size:28px; letter-spacing:.2px; }
+  .cap p{ margin:6px 0 0; opacity:.85; }
+  .logo{
+    position:absolute; top:14px; right:14px;
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:999px;
+    padding:8px 10px;
+    font-size:12px;
+    opacity:.9;
+  }
+  .grid{ display:flex; gap:12px; margin-top:14px; align-items:stretch; }
+  .foto{
+    width:120px; height:140px; border-radius:14px;
+    background: rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.22);
+    overflow:hidden;
+    flex: 0 0 auto;
+  }
+  .foto img{ width:100%; height:100%; object-fit:cover; }
+  .info{ flex:1; }
+  .tag{
+    display:inline-block;
+    border:1px solid rgba(255,255,255,.28);
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:12px;
+    margin-top:8px;
+    opacity:.95;
+  }
+  .box{
+    border:1px solid #d8e2ee; border-radius:16px; padding:14px;
+    background:#fff;
+  }
+  pre{ white-space:pre-wrap; margin:0; font-family:inherit; font-size:13.8px; line-height:1.35; }
+  .foot{
+    margin-top:12px; font-size:11px; color:#4a5b6b;
+  }
+  .line{ height:1px; background:#e5eef7; margin:12px 0; }
+</style>
+</head>
+<body>
+  <div class="cap">
+    <div class="logo">Prévia • Premium</div>
+    <h1>Consulta Pré-Anestésica</h1>
+    <p>${escapeHtml(assinatura)}</p>
+
+    <div class="grid">
+      <div class="foto">
+        ${fotoData ? `<img src="${fotoData}" alt="Foto do paciente"/>` : ``}
+      </div>
+      <div class="info">
+        <div class="tag">${escapeHtml(paciente)} • ASA ${escapeHtml(asa)}</div><br/>
+        ${procedimento ? `<div class="tag">Procedimento: ${escapeHtml(procedimento)}</div>` : ``}
+        <div class="foot">Documento gerado eletronicamente • ${new Date().toLocaleString('pt-BR')}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <pre>${escapeHtml(resumo)}</pre>
+    <div class="line"></div>
+    <div class="foot">
+      Orientações finais devem ser confirmadas no dia do procedimento conforme evolução clínica e avaliação do cirurgião/anestesiologista.
+    </div>
+  </div>
+
+  <script>
+    // abre a tela de impressão automaticamente
+    window.onload = () => setTimeout(()=>window.print(), 300);
+  </script>
+</body>
+</html>
+    `.trim();
+
+    const w = window.open('', '_blank');
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+  }
+
+  function pdfDeItem(id){
+    const arr = getAll();
+    const it = arr.find(x => x.id === id);
+    if(!it) return;
+
+    const assinatura = document.getElementById('assinaturaTopo').textContent;
+
+    const html = `
+<!doctype html><html><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Prévia • PDF</title>
+<style>
+@page{ size:A4; margin:18mm; }
+body{ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; color:#0b1a24; }
+.cap{border:1px solid #d8e2ee;border-radius:16px;padding:18px;margin-bottom:14px;background:linear-gradient(135deg,#0b2a3a,#0f3e59);color:#fff;position:relative;overflow:hidden;}
+.cap h1{margin:0;font-size:28px;}
+.cap p{margin:6px 0 0;opacity:.85;}
+.logo{position:absolute;top:14px;right:14px;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:8px 10px;font-size:12px;opacity:.9;}
+.grid{display:flex;gap:12px;margin-top:14px;align-items:stretch;}
+.foto{width:120px;height:140px;border-radius:14px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.22);overflow:hidden;flex:0 0 auto;}
+.foto img{width:100%;height:100%;object-fit:cover;}
+.info{flex:1;}
+.tag{display:inline-block;border:1px solid rgba(255,255,255,.28);padding:6px 10px;border-radius:999px;font-size:12px;margin-top:8px;opacity:.95;}
+.box{border:1px solid #d8e2ee;border-radius:16px;padding:14px;background:#fff;}
+pre{white-space:pre-wrap;margin:0;font-family:inherit;font-size:13.8px;line-height:1.35;}
+.foot{margin-top:12px;font-size:11px;color:#4a5b6b;}
+.line{height:1px;background:#e5eef7;margin:12px 0;}
+</style></head><body>
+<div class="cap">
+  <div class="logo">Prévia • Premium</div>
+  <h1>Consulta Pré-Anestésica</h1>
+  <p>${escapeHtml(assinatura)}</p>
+  <div class="grid">
+    <div class="foto">${it.foto ? `<img src="${it.foto}"/>` : ``}</div>
+    <div class="info">
+      <div class="tag">${escapeHtml(it.paciente)} • ASA ${escapeHtml(it.asa)}</div><br/>
+      <div class="tag">Procedimento: ${escapeHtml(it.procedimento)}</div>
+      <div class="foot">Documento gerado eletronicamente • ${new Date(it.when).toLocaleString('pt-BR')}</div>
+    </div>
+  </div>
+</div>
+<div class="box">
+  <pre>${escapeHtml(it.resumo)}</pre>
+  <div class="line"></div>
+  <div class="foot">Orientações finais devem ser confirmadas no dia do procedimento conforme evolução clínica.</div>
+</div>
+<script>window.onload=()=>setTimeout(()=>window.print(),300);</script>
+</body></html>`.trim();
+
+    const w = window.open('', '_blank');
+    w.document.open(); w.document.write(html); w.document.close();
+  }
+
+  // ====== Inicialização
+  updateStepUI();
 </script>
 
 </body>
