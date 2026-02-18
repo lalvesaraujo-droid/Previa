@@ -1,198 +1,291 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prévia</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prévia</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* fallback simples caso seu styles.css não tenha tudo */
+    body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial; }
+    .app { padding: 18px; max-width: 760px; margin: 0 auto; }
+    .header { margin-bottom: 14px; color: #fff; }
+    .header h1 { margin: 0; font-size: 34px; letter-spacing: .2px; }
+    .sub { opacity:.85; margin-top:6px; font-size: 14px; }
+    .card { background: rgba(255,255,255,.10); border-radius: 18px; padding: 18px; backdrop-filter: blur(8px); color:#fff; border: 1px solid rgba(255,255,255,.10); }
+    h2 { margin: 0 0 12px 0; font-size: 28px; }
+    label { display:block; margin: 12px 0 6px; opacity:.9; }
+    input, select, textarea {
+      width: 100%; box-sizing: border-box;
+      border-radius: 14px; border: 1px solid rgba(255,255,255,.15);
+      padding: 12px 12px; font-size: 16px;
+      background: rgba(255,255,255,.92); color:#111;
+      outline: none;
+    }
+    textarea { min-height: 70px; resize: vertical; }
+    .btnRow { display:flex; gap: 12px; margin-top: 14px; }
+    .btn { flex:1; padding: 14px 14px; border-radius: 14px; font-size: 17px; border: 1px solid rgba(255,255,255,.18); }
+    .btnPrimary { background: rgba(60,140,255,.95); color: #fff; }
+    .btnGhost { background: rgba(255,255,255,.12); color: #fff; }
+    .btnDanger { background: rgba(255,80,80,.88); color: #fff; }
+    .histItem { background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 12px; margin: 10px 0; }
+    .histItem button { margin-top: 8px; width: 100%; padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.15); color:#fff; font-size: 16px;}
+    .topActions { display:flex; gap:10px; margin-top: 10px; }
+    .hint { opacity:.85; font-size: 14px; margin-top: 8px; line-height: 1.35; }
+    .toast {
+      position: fixed; left: 50%; transform: translateX(-50%);
+      bottom: 18px; background: rgba(0,0,0,.75); color:#fff;
+      padding: 10px 14px; border-radius: 999px; font-size: 14px;
+      opacity: 0; pointer-events:none; transition: .25s;
+    }
+    .toast.show { opacity: 1; }
+    /* fundo simples */
+    body { background: radial-gradient(circle at 20% 20%, #2d5d86 0%, #0b2a3d 70%, #071e2b 100%); }
+  </style>
 </head>
 
 <body>
+  <div class="app">
 
-<div class="app">
+    <header class="header">
+      <h1>Prévia</h1>
+      <div class="sub">Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542</div>
+    </header>
 
-<header class="header">
-  <h1>Prévia</h1>
-  <div class="sub">
-    Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542
+    <!-- HOME -->
+    <div class="card" id="screenHome">
+      <h2>Home</h2>
+      <div class="hint">Salvar avaliações, abrir em segundos e manter histórico no aparelho (localStorage).</div>
+
+      <div class="topActions">
+        <button class="btn btnPrimary" id="btnNova">Nova avaliação</button>
+        <button class="btn btnGhost" id="btnHist">Histórico</button>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="card" id="screenForm" style="display:none">
+      <h2>Nova avaliação</h2>
+
+      <label>Paciente</label>
+      <input id="nome" placeholder="Nome completo" />
+
+      <label>Idade</label>
+      <input id="idade" placeholder="Ex: 35" inputmode="numeric" />
+
+      <label>ASA</label>
+      <select id="asa">
+        <option>I</option><option>II</option><option>III</option><option>IV</option>
+      </select>
+
+      <label>Procedimento</label>
+      <input id="procedimento" placeholder="Ex: Mamoplastia redutora" />
+
+      <label>Comorbidades</label>
+      <textarea id="comorb" placeholder="Ex: HAS; Asma; DM"></textarea>
+
+      <label>Medicações</label>
+      <textarea id="medic" placeholder="Ex: Losartana 50mg; Metformina"></textarea>
+
+      <label>Via aérea (Mallampati)</label>
+      <select id="mallampati">
+        <option>I</option><option>II</option><option>III</option><option>IV</option>
+      </select>
+
+      <label>Estratégia anestésica</label>
+      <textarea id="estrategia" placeholder="Ex: Geral; profilaxia PONV; analgesia multimodal..."></textarea>
+
+      <label>Condição</label>
+      <input id="condicao" placeholder="Apto / Pendência" />
+
+      <label>Conduta</label>
+      <textarea id="conduta" placeholder="Jejum, orientações, ajustes de medicação, chegada ao hospital..."></textarea>
+
+      <label>Foto do paciente</label>
+      <input type="file" id="foto" accept="image/*" />
+
+      <div class="btnRow">
+        <button class="btn btnPrimary" id="btnSalvar">Salvar</button>
+        <button class="btn btnGhost" id="btnVoltar">Voltar</button>
+      </div>
+    </div>
+
+    <!-- HISTÓRICO -->
+    <div class="card" id="screenHistory" style="display:none">
+      <h2>Histórico</h2>
+      <div class="hint">Fica salvo no aparelho. Se limpar o Safari / dados do site, o histórico some.</div>
+      <div id="historyList"></div>
+
+      <div class="btnRow">
+        <button class="btn btnGhost" id="btnHome2">Home</button>
+        <button class="btn btnDanger" id="btnClear">Apagar tudo</button>
+      </div>
+    </div>
+
   </div>
-</header>
 
-<!-- HOME -->
-<div class="card" id="screenHome">
-  <h2>Home</h2>
-
-  <button class="btn btnPrimary" onclick="goNew()">
-    Nova avaliação
-  </button>
-
-  <button class="btn btnGhost" onclick="goHistory()">
-    Histórico
-  </button>
-</div>
-
-<!-- FORM -->
-<div class="card" id="screenForm" style="display:none">
-
-<h2>Nova avaliação</h2>
-
-<label>Paciente</label>
-<input id="nome">
-
-<label>Idade</label>
-<input id="idade">
-
-<label>ASA</label>
-<select id="asa">
-<option>I</option>
-<option>II</option>
-<option>III</option>
-<option>IV</option>
-</select>
-
-<label>Procedimento</label>
-<input id="procedimento">
-
-<label>Comorbidades</label>
-<textarea id="comorb"></textarea>
-
-<label>Medicações</label>
-<textarea id="medic"></textarea>
-
-<label>Via aérea (Mallampati)</label>
-<select id="mallampati">
-<option>I</option>
-<option>II</option>
-<option>III</option>
-<option>IV</option>
-</select>
-
-<label>Estratégia anestésica</label>
-<textarea id="estrategia"></textarea>
-
-<label>Condição</label>
-<input id="condicao" placeholder="Apto / Pendência">
-
-<label>Conduta</label>
-<textarea id="conduta"></textarea>
-
-<label>Foto do paciente</label>
-<input type="file" id="foto" accept="image/*">
-
-<div class="btnRow">
-  <button class="btn btnPrimary" onclick="salvar()">
-    Salvar
-  </button>
-
-  <button class="btn btnGhost" onclick="goHome()">
-    Voltar
-  </button>
-</div>
-
-</div>
-
-<!-- HISTÓRICO -->
-<div class="card" id="screenHistory" style="display:none">
-
-<h2>Histórico</h2>
-
-<div id="historyList"></div>
-
-<div class="btnRow">
-  <button class="btn btnGhost" onclick="goHome()">
-    Home
-  </button>
-
-  <button class="btn btnDanger" onclick="clearHistory()">
-    Apagar tudo
-  </button>
-</div>
-
-</div>
-
-</div>
+  <div class="toast" id="toast">Ok</div>
 
 <script>
+(() => {
+  // ===== refs (isso é o que salva o iPhone) =====
+  const $ = (id) => document.getElementById(id);
 
-function goHome(){
-  screenHome.style.display="block"
-  screenForm.style.display="none"
-  screenHistory.style.display="none"
-}
+  const screenHome = $("screenHome");
+  const screenForm = $("screenForm");
+  const screenHistory = $("screenHistory");
 
-function goNew(){
-  screenHome.style.display="none"
-  screenForm.style.display="block"
-  screenHistory.style.display="none"
-}
+  const nome = $("nome");
+  const idade = $("idade");
+  const asa = $("asa");
+  const procedimento = $("procedimento");
+  const comorb = $("comorb");
+  const medic = $("medic");
+  const mallampati = $("mallampati");
+  const estrategia = $("estrategia");
+  const condicao = $("condicao");
+  const conduta = $("conduta");
+  const foto = $("foto");
 
-function goHistory(){
-  screenHome.style.display="none"
-  screenForm.style.display="none"
-  screenHistory.style.display="block"
-  loadHistory()
-}
+  const historyList = $("historyList");
 
-function salvar(){
+  const toast = $("toast");
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 1100);
+  }
 
-const data = {
-nome:nome.value,
-idade:idade.value,
-asa:asa.value,
-procedimento:procedimento.value,
-comorb:comorb.value,
-medic:medic.value,
-mallampati:mallampati.value,
-estrategia:estrategia.value,
-condicao:condicao.value,
-conduta:conduta.value
-}
+  function show(which){
+    screenHome.style.display = (which==="home") ? "block" : "none";
+    screenForm.style.display = (which==="form") ? "block" : "none";
+    screenHistory.style.display = (which==="history") ? "block" : "none";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
-let lista = JSON.parse(localStorage.getItem("previa")||"[]")
-lista.push(data)
-localStorage.setItem("previa",JSON.stringify(lista))
+  // ===== storage =====
+  const KEY = "previa_avaliacoes_v1";
 
-alert("Avaliação salva")
-goHome()
-}
+  function getList(){
+    try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+    catch(e){ return []; }
+  }
+  function setList(list){
+    localStorage.setItem(KEY, JSON.stringify(list));
+  }
 
-function loadHistory(){
+  function clearForm(){
+    nome.value = "";
+    idade.value = "";
+    asa.value = "I";
+    procedimento.value = "";
+    comorb.value = "";
+    medic.value = "";
+    mallampati.value = "I";
+    estrategia.value = "";
+    condicao.value = "";
+    conduta.value = "";
+    if (foto) foto.value = "";
+  }
 
-let lista = JSON.parse(localStorage.getItem("previa")||"[]")
+  function renderHistory(){
+    const list = getList();
+    historyList.innerHTML = "";
 
-historyList.innerHTML=""
+    if(!list.length){
+      historyList.innerHTML = `<div class="histItem">Nenhuma avaliação salva ainda.</div>`;
+      return;
+    }
 
-lista.forEach((it,i)=>{
+    list.slice().reverse().forEach((it, idxFromEnd) => {
+      const i = list.length - 1 - idxFromEnd;
 
-historyList.innerHTML+=`
-<div class="histItem">
-<b>${it.nome}</b><br>
-ASA ${it.asa} • ${it.procedimento}<br>
-<button onclick="ver(${i})">Abrir</button>
-</div>
-`
+      const linha = document.createElement("div");
+      linha.className = "histItem";
+      linha.innerHTML = `
+        <b>${escapeHtml(it.nome || "Sem nome")}</b><br>
+        ${escapeHtml(it.procedimento || "Procedimento não informado")}<br>
+        ASA ${escapeHtml(it.asa || "-")} • Mallampati ${escapeHtml(it.mallampati || "-")}<br>
+        <button>Ver resumo</button>
+      `;
+      linha.querySelector("button").onclick = () => verResumo(i);
+      historyList.appendChild(linha);
+    });
+  }
 
-})
-}
+  function escapeHtml(s){
+    return String(s || "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
 
-function ver(i){
+  function verResumo(i){
+    const list = getList();
+    const it = list[i];
+    if(!it) return;
 
-let lista = JSON.parse(localStorage.getItem("previa")||"[]")
-let it = lista[i]
+    const txt =
+`Paciente: ${it.nome || ""}
+Idade: ${it.idade || ""}
+ASA: ${it.asa || ""}
+Procedimento: ${it.procedimento || ""}
 
-alert(
-"Paciente: "+it.nome+"\n"+
-"ASA: "+it.asa+"\n"+
-"Procedimento: "+it.procedimento+"\n"+
-"Estratégia: "+it.estrategia
-)
-}
+Comorbidades: ${it.comorb || ""}
+Medicações: ${it.medic || ""}
+Via aérea: Mallampati ${it.mallampati || ""}
 
-function clearHistory(){
-localStorage.removeItem("previa")
-loadHistory()
-}
+Estratégia anestésica: ${it.estrategia || ""}
 
+Condição: ${it.condicao || ""}
+Conduta: ${it.conduta || ""}`;
+
+    alert(txt);
+  }
+
+  function salvar(){
+    const data = {
+      nome: nome.value.trim(),
+      idade: idade.value.trim(),
+      asa: asa.value,
+      procedimento: procedimento.value.trim(),
+      comorb: comorb.value.trim(),
+      medic: medic.value.trim(),
+      mallampati: mallampati.value,
+      estrategia: estrategia.value.trim(),
+      condicao: condicao.value.trim(),
+      conduta: conduta.value.trim(),
+      createdAt: new Date().toISOString()
+    };
+
+    const list = getList();
+    list.push(data);
+    setList(list);
+
+    showToast("Avaliação salva ✅");
+    clearForm();
+    show("home");
+  }
+
+  // ===== events =====
+  $("btnNova").addEventListener("click", () => { show("form"); });
+  $("btnHist").addEventListener("click", () => { renderHistory(); show("history"); });
+
+  $("btnSalvar").addEventListener("click", salvar);
+  $("btnVoltar").addEventListener("click", () => show("home"));
+
+  $("btnHome2").addEventListener("click", () => show("home"));
+  $("btnClear").addEventListener("click", () => {
+    localStorage.removeItem(KEY);
+    renderHistory();
+    showToast("Histórico apagado");
+  });
+
+  // start
+  show("home");
+})();
 </script>
 
 </body>
