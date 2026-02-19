@@ -12,56 +12,36 @@
 
   <style>
     :root{
-      --bg1:#061a28;
-      --bg2:#0a2c44;
-      --card:rgba(255,255,255,.08);
-      --card2:rgba(255,255,255,.06);
+      --bg1:#061a28; --bg2:#0a2c44;
+      --card:rgba(255,255,255,.08); --card2:rgba(255,255,255,.06);
       --stroke:rgba(255,255,255,.12);
-      --text:#eaf3ff;
-      --muted:rgba(234,243,255,.70);
-      --muted2:rgba(234,243,255,.55);
-      --accent:#2f7df6;
-      --ok:#2ecc71;
-      --danger:#e74c3c;
+      --text:#eaf3ff; --muted:rgba(234,243,255,.70); --muted2:rgba(234,243,255,.55);
+      --accent:#2f7df6; --ok:#2ecc71; --danger:#e74c3c;
       --pill:rgba(255,255,255,.10);
       --shadow: 0 20px 60px rgba(0,0,0,.35);
       --radius: 18px;
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--text);
-      background: radial-gradient(1200px 700px at 80% 10%, #164a73 0%, transparent 55%),
-                  radial-gradient(900px 600px at 20% 20%, #0f3a5d 0%, transparent 55%),
-                  linear-gradient(180deg,var(--bg2),var(--bg1));
+      background:
+        radial-gradient(1200px 700px at 80% 10%, #164a73 0%, transparent 55%),
+        radial-gradient(900px 600px at 20% 20%, #0f3a5d 0%, transparent 55%),
+        linear-gradient(180deg,var(--bg2),var(--bg1));
       min-height:100vh;
       padding:22px 14px 40px;
     }
-
-    .wrap{max-width:920px;margin:0 auto}
-    .brand{
-      display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
-      margin-bottom:14px;
-    }
+    .wrap{max-width:980px;margin:0 auto}
+    .brand{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px;flex-wrap:wrap}
     .brand-left{display:flex;flex-direction:column;gap:4px}
-    .logo{
-      font-size:44px;font-weight:900;letter-spacing:-1px;line-height:1;
-      display:flex;align-items:center;gap:10px;
-    }
+    .logo{font-size:44px;font-weight:900;letter-spacing:-1px;line-height:1;display:flex;align-items:center;gap:10px}
     .dot{width:10px;height:10px;border-radius:999px;background:var(--accent);display:inline-block}
     .sub{color:var(--muted);font-size:16px}
     .rt{color:var(--muted2);font-size:15px;margin-top:4px}
-
-    .top-pills{
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end
-    }
-    .pill{
-      background:var(--pill);border:1px solid var(--stroke);
-      padding:10px 12px;border-radius:999px;color:var(--muted);
-      font-size:13px;white-space:nowrap;
-    }
+    .top-pills{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .pill{background:var(--pill);border:1px solid var(--stroke);padding:10px 12px;border-radius:999px;color:var(--muted);font-size:13px;white-space:nowrap}
 
     .card{
       background:linear-gradient(180deg,var(--card),var(--card2));
@@ -77,8 +57,8 @@
 
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media (max-width:760px){.grid2{grid-template-columns:1fr}}
-
     label{display:block;color:var(--muted);font-size:13px;margin:10px 0 6px}
+
     input, select, textarea{
       width:100%;
       padding:14px 14px;
@@ -95,9 +75,7 @@
     .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
     .row > *{flex:1}
 
-    .btns{
-      display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;align-items:center
-    }
+    .btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;align-items:center}
     button{
       border:0;
       padding:14px 16px;
@@ -105,67 +83,82 @@
       font-weight:800;
       cursor:pointer;
       font-size:15px;
+      white-space:nowrap;
     }
     .b-primary{background:var(--accent);color:white}
     .b-ok{background:var(--ok);color:#063016}
-    .b-ghost{
-      background:rgba(255,255,255,.10);
-      border:1px solid var(--stroke);
-      color:var(--text);
-      font-weight:700;
-    }
+    .b-ghost{background:rgba(255,255,255,.10);border:1px solid var(--stroke);color:var(--text);font-weight:700}
     .b-danger{background:var(--danger);color:white}
-
     .divider{height:1px;background:rgba(255,255,255,.12);margin:14px 0}
 
     /* Wizard */
     .wiz-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
     .step-title{font-size:20px;font-weight:800}
     .step-meta{color:var(--muted);font-size:13px}
-    .progress{
-      width:100%;
-      height:10px;
-      background:rgba(255,255,255,.12);
-      border-radius:999px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.14);
-      margin-top:10px;
-    }
-    .bar{
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg,var(--accent),#66a6ff);
-    }
+    .progress{width:100%;height:10px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.14);margin-top:10px}
+    .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#66a6ff)}
     .step{display:none}
     .step.active{display:block}
 
-    /* History list */
+    /* History */
     .hist-item{
       padding:12px 12px;
       border:1px solid rgba(255,255,255,.14);
       background:rgba(255,255,255,.06);
       border-radius:14px;
       margin:10px 0;
-      cursor:pointer;
-      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
     }
-    .hist-item b{font-size:15px}
-    .hist-item span{color:var(--muted);font-size:13px}
+    .hist-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start}
+    .hist-left b{font-size:15px}
+    .hist-left span{color:var(--muted);font-size:13px}
+    .hist-right{color:var(--muted);font-size:12px;text-align:right}
+    .badge{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.10);
+      color:var(--text);
+      font-weight:800;
+      font-size:12px;
+      margin-left:8px;
+    }
+    .hist-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .mini{
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:800;
+      font-size:13px;
+    }
+    .linkish{
+      color:#b9d6ff;
+      text-decoration:underline;
+      cursor:pointer;
+      font-weight:700;
+      font-size:13px;
+    }
+    .versions{
+      margin-top:10px;
+      display:none;
+      padding-top:10px;
+      border-top:1px solid rgba(255,255,255,.12);
+    }
+    .ver-row{
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      margin:8px 0;
+      cursor:pointer;
+    }
+    .ver-row b{font-size:13px}
+    .ver-row span{color:var(--muted);font-size:12px}
 
     /* Signature */
-    .sigbox{
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.92);
-      border-radius:14px;
-      padding:10px;
-    }
+    .sigbox{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.92);border-radius:14px;padding:10px}
     canvas{width:100%;height:180px;border-radius:12px;background:white}
-
-    .note{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.35;
-    }
+    .note{color:var(--muted);font-size:13px;line-height:1.35}
   </style>
 </head>
 
@@ -180,15 +173,14 @@
       <div class="top-pills">
         <div class="pill">8 etapas</div>
         <div class="pill">QR · Assinaturas · PDF Premium</div>
-        <div class="pill">salva no aparelho</div>
+        <div class="pill">Histórico + Versões</div>
       </div>
     </div>
 
+    <!-- HOME -->
     <div class="card">
       <h2>Home</h2>
-      <div class="hint">
-        Preencha em <b>8 etapas</b>. No final: <b>consentimento + assinaturas + QR + PDF premium</b>.
-      </div>
+      <div class="hint">Preencha em <b>8 etapas</b>. No final: <b>consentimento + assinaturas + QR + PDF premium</b>.</div>
 
       <div class="grid2" style="margin-top:10px">
         <div>
@@ -215,15 +207,18 @@
 
       <div class="divider"></div>
 
+      <!-- HISTÓRICO -->
       <div id="painelHistorico" style="display:none">
         <h3>Histórico</h3>
-        <div class="note">Fica salvo no aparelho. Se limpar dados do Safari, o histórico some.</div>
-        <div id="historico"></div>
+        <div class="note">Busca por nome / procedimento / ASA / ID. Mostra <b>só a última versão</b> de cada avaliação.</div>
+
+        <label>Buscar</label>
+        <input id="searchHist" placeholder="Ex.: Maria · lipo · ASA II · PRV-..." oninput="listarHistorico()" />
+
+        <div id="historico" style="margin-top:10px"></div>
       </div>
 
-      <div class="hint">
-        Link certo do Pages: <b>...github.io/Previa/</b>. Se não atualizar, abra em <b>aba privada</b>.
-      </div>
+      <div class="hint">Se não atualizar no iPhone: abre em <b>aba privada</b> (Safari cacheia forte).</div>
     </div>
 
     <!-- WIZARD -->
@@ -232,6 +227,7 @@
         <div>
           <div class="step-title" id="stepTitle">Etapa</div>
           <div class="step-meta" id="stepMeta">1 de 8</div>
+          <div class="step-meta" id="idMeta"></div>
         </div>
         <div class="row" style="max-width:420px">
           <button class="b-ghost" onclick="voltarStep()">Voltar</button>
@@ -269,11 +265,11 @@
         <div class="grid2">
           <div class="small">
             <label>Comorbidades</label>
-            <textarea id="comorb" placeholder="Ex.: HAS, DM, ansiedade, dislipidemia..."></textarea>
+            <textarea id="comorb" placeholder="Ex.: HAS, DM, ansiedade..."></textarea>
           </div>
           <div class="small">
             <label>Medicações</label>
-            <textarea id="medic" placeholder="Ex.: losartana 50 mg, metformina 850 mg..."></textarea>
+            <textarea id="medic" placeholder="Ex.: losartana 50 mg..."></textarea>
           </div>
         </div>
         <div class="grid2">
@@ -283,7 +279,7 @@
           </div>
           <div class="small">
             <label>Passado cirúrgico</label>
-            <textarea id="cirurg" placeholder="Ex.: cesárea (3x), apendicectomia..."></textarea>
+            <textarea id="cirurg" placeholder="Ex.: cesárea, apendicectomia..."></textarea>
           </div>
         </div>
       </div>
@@ -291,23 +287,21 @@
       <!-- STEP 3 -->
       <div class="step" data-title="Intercorrências anestésicas" id="s3">
         <label>Intercorrências anestésicas prévias</label>
-        <textarea id="interc" placeholder="Ex.: PONV importante, hipertermia maligna (se houver), dificuldade de intubação..."></textarea>
-        <div class="hint">Aqui é onde o “hospital grande” percebe que você pensou como anestesista. 😄</div>
+        <textarea id="interc" placeholder="Ex.: PONV importante, dificuldade de intubação..."></textarea>
       </div>
 
       <!-- STEP 4 -->
       <div class="step" data-title="Estratégia anestésica" id="s4">
         <label>Estratégia anestésica</label>
-        <textarea id="estrat" placeholder="Ex.: Anestesia geral + analgesia sistêmica; profilaxia PONV; bloqueios se indicados..."></textarea>
+        <textarea id="estrat" placeholder="Ex.: GA + profilaxia PONV; bloqueios se indicados..."></textarea>
         <label>Conduta (jejum / orientações)</label>
-        <textarea id="cond" placeholder="Ex.: Jejum 8h sólidos; água até 2h; medicações usuais conforme orientação..."></textarea>
+        <textarea id="cond" placeholder="Ex.: jejum 8h sólidos; água até 2h; orientar medicações..."></textarea>
       </div>
 
       <!-- STEP 5 -->
       <div class="step" data-title="Consentimento" id="s5">
         <label>Texto do consentimento (editável)</label>
         <textarea id="consent"></textarea>
-        <div class="hint">Você pode manter um texto padrão e só ajustar caso a caso.</div>
       </div>
 
       <!-- STEP 6 -->
@@ -324,7 +318,7 @@
         </div>
         <label>Exames (múltiplos)</label>
         <input type="file" id="exames" accept="image/*" multiple />
-        <div class="hint">Dica: se o PDF ficar pesado, use 2–4 imagens principais.</div>
+        <div class="hint">Se o PDF ficar pesado, use 2–4 imagens principais.</div>
       </div>
 
       <!-- STEP 7 -->
@@ -332,61 +326,44 @@
         <div class="grid2">
           <div>
             <h3 style="margin:0 0 8px">Paciente</h3>
-            <div class="sigbox">
-              <canvas id="sigPaciente"></canvas>
-            </div>
-            <div class="btns">
-              <button class="b-ghost" onclick="limparAss('pac')">Limpar</button>
-            </div>
+            <div class="sigbox"><canvas id="sigPaciente"></canvas></div>
+            <div class="btns"><button class="b-ghost" onclick="limparAss('pac')">Limpar</button></div>
           </div>
           <div>
             <h3 style="margin:0 0 8px">Médico</h3>
-            <div class="sigbox">
-              <canvas id="sigMedico"></canvas>
-            </div>
-            <div class="btns">
-              <button class="b-ghost" onclick="limparAss('med')">Limpar</button>
-            </div>
+            <div class="sigbox"><canvas id="sigMedico"></canvas></div>
+            <div class="btns"><button class="b-ghost" onclick="limparAss('med')">Limpar</button></div>
           </div>
         </div>
-        <div class="note">Dica: assine em modo horizontal no iPhone. Fica bem mais natural.</div>
+        <div class="note">Assine em modo horizontal no iPhone — fica mais natural.</div>
       </div>
 
       <!-- STEP 8 -->
       <div class="step" data-title="PDF Premium" id="s8">
-        <h3>Checklist</h3>
-        <div class="note">
-          • Foto do paciente (capa)<br/>
-          • Via aérea + exames (anexos)<br/>
-          • Consentimento (1 página)<br/>
-          • Assinaturas desenhadas<br/>
-          • QR na capa (ID + hash + metadados mínimos)
-        </div>
+        <h3>Resumo rápido</h3>
+        <div class="note" id="resumeBox"></div>
 
         <div class="btns">
-          <button class="b-ghost" onclick="visaoRapida()">Visão rápida</button>
-          <button class="b-ghost" onclick="irAssinaturas()">Assinaturas</button>
+          <button class="b-ghost" onclick="atualizarResumo()">Atualizar resumo</button>
           <button class="b-ok" onclick="gerarPDFPremium()">Gerar PDF Premium</button>
         </div>
 
         <div class="divider"></div>
-        <div class="note">
-          Integração: hoje o QR carrega payload mínimo (ID + hash). Quando você plugar um servidor,
-          o QR pode apontar para uma URL do relatório.
-        </div>
-      </div>
 
-      <div class="divider"></div>
-      <div class="btns">
-        <button class="b-ghost" onclick="salvarRascunho()">Salvar no aparelho</button>
-        <button class="b-ghost" onclick="voltarHome()">Voltar Home</button>
+        <h3>Salvar</h3>
+        <div class="note">Aqui está o coração do versionamento: você escolhe “atualizar” (corrigir a versão atual) ou “nova versão” (v+1).</div>
+        <div class="btns">
+          <button class="b-ghost" onclick="salvarAtualizandoVersao()">Salvar (atualizar esta versão)</button>
+          <button class="b-primary" onclick="salvarNovaVersao()">Salvar nova versão (v+1)</button>
+          <button class="b-ghost" onclick="voltarHome()">Voltar Home</button>
+        </div>
       </div>
     </div>
   </div>
 
 <script>
 /* =========================
-   Helpers
+   Helpers / Campos
 ========================= */
 const $ = (id)=>document.getElementById(id);
 const campos = ["modo","logoCapa","nome","proc","asa","mallampati","comorb","medic","alerg","cirurg","interc","estrat","cond","consent"];
@@ -395,7 +372,7 @@ function v(id){ return ($(id)?.value || "").trim(); }
 function setv(id,val){ if($(id)) $(id).value = val ?? ""; }
 
 /* =========================
-   Wizard (8 steps)
+   Wizard
 ========================= */
 let step = 0;
 const steps = ["s1","s2","s3","s4","s5","s6","s7","s8"];
@@ -406,198 +383,73 @@ function updateWizardUI(){
   $("stepTitle").textContent = title;
   $("stepMeta").textContent = `${step+1} de ${steps.length}`;
   $("bar").style.width = `${Math.round(((step+1)/steps.length)*100)}%`;
+  $("idMeta").textContent = `Avaliação: ${window.__baseId || "—"} · Versão: v${window.__version || 1}`;
+  if(step===7) atualizarResumo();
 }
 
-function proximoStep(){
-  if(step < steps.length-1){ step++; updateWizardUI(); window.scrollTo({top:0,behavior:"smooth"}); }
-}
-function voltarStep(){
-  if(step > 0){ step--; updateWizardUI(); window.scrollTo({top:0,behavior:"smooth"}); }
-}
-function irAssinaturas(){ step = 6; updateWizardUI(); window.scrollTo({top:0,behavior:"smooth"}); }
-function visaoRapida(){ alert(resumoTexto()); }
-
-/* =========================
-   Consentimento padrão
-   (curto, claro, editável)
-========================= */
-function consentPadrao(){
-  const modo = v("modo")==="estetica" ? "procedimento eletivo/estético" : "procedimento cirúrgico";
-  return `Declaro que recebi explicações claras sobre a anestesia proposta para o ${modo}, incluindo benefícios, alternativas e possíveis riscos e efeitos adversos (por exemplo: náuseas e vômitos, dor, alergias, alterações de pressão, sangramento, necessidade de oxigênio, punções/hematomas, dor de garganta, lesões dentárias, dificuldades de via aérea e, raramente, eventos graves). 
-
-Fui orientado(a) sobre jejum, uso de medicamentos e cuidados pré e pós-operatórios. Tive oportunidade de fazer perguntas e todas foram respondidas. Autorizo a realização do plano anestésico e de medidas necessárias à minha segurança, caso ocorram intercorrências.
-
-Estou ciente de que resultados e evolução podem variar e que a equipe poderá ajustar condutas conforme avaliação clínica.`;
-}
-
-/* =========================
-   Storage / Histórico
-========================= */
-const KEY = "previa_historico_v2";
-
-function gerarID(){
-  return "PRV-" + Date.now().toString().slice(-10);
-}
-
-function carregarHistorico(){
-  return JSON.parse(localStorage.getItem(KEY) || "[]");
-}
-function salvarHistorico(lista){
-  localStorage.setItem(KEY, JSON.stringify(lista));
-}
-function hashMini(str){
-  let h=0;
-  for(let i=0;i<str.length;i++){ h=(h<<5)-h+str.charCodeAt(i); h|=0; }
-  return Math.abs(h).toString(16).slice(0,10);
-}
-
-function salvarAvaliacao(dados){
-  const lista = carregarHistorico();
-  // se existir id, substitui
-  const idx = lista.findIndex(x=>x.id===dados.id);
-  if(idx>=0) lista[idx]=dados;
-  else lista.push(dados);
-  salvarHistorico(lista);
-  listarHistorico();
-}
-
-function listarHistorico(){
-  const div = $("historico");
-  if(!div) return;
-  const lista = carregarHistorico().slice().reverse();
-  div.innerHTML = "";
-
-  if(lista.length===0){
-    div.innerHTML = `<div class="note" style="margin-top:10px">Sem avaliações salvas ainda.</div>`;
-    return;
-  }
-
-  lista.forEach(a=>{
-    const el = document.createElement("div");
-    el.className = "hist-item";
-    el.innerHTML = `
-      <div>
-        <b>${(a.nome||"Sem nome")}</b><br/>
-        <span>${a.proc||"Procedimento não informado"} · ASA ${a.asa||"-"} · Mallampati ${a.mallampati||"-"}</span>
-      </div>
-      <div style="text-align:right">
-        <span>${a.data||""}</span><br/>
-        <span>ID ${a.id||""}</span>
-      </div>
-    `;
-    el.onclick = ()=>{
-      $("wizard").style.display="block";
-      $("painelHistorico").style.display="none";
-      carregarAvaliacao(a.id);
-      step = 0;
-      updateWizardUI();
-      window.scrollTo({top:0,behavior:"smooth"});
-    };
-    div.appendChild(el);
-  });
-}
-
-function carregarAvaliacao(id){
-  const lista = carregarHistorico();
-  const a = lista.find(x=>x.id===id);
-  if(!a) return;
-
-  // Campos
-  campos.forEach(c=>{
-    if(c in a) setv(c, a[c]);
-  });
-
-  // IDs internos
-  window.__currentId = a.id;
-  window.__currentHash = a.hash;
-
-  // Consent fallback
-  if(!v("consent")) setv("consent", consentPadrao());
-}
-
-/* =========================
-   App controls
-========================= */
-function novaAvaliacao(){
-  $("wizard").style.display="block";
-  $("painelHistorico").style.display="none";
-  step=0;
-  updateWizardUI();
-
-  // limpa campos
-  campos.forEach(c=>{
-    if(c==="modo" || c==="logoCapa") return; // mantém seleções
-    setv(c,"");
-  });
-
-  // texto padrão
-  setv("consent", consentPadrao());
-
-  // limpa anexos
-  if($("fotoCapa")) $("fotoCapa").value="";
-  if($("fotoVia")) $("fotoVia").value="";
-  if($("exames")) $("exames").value="";
-
-  // limpa assinaturas
-  limparAss("pac"); limparAss("med");
-
-  // novo id
-  window.__currentId = gerarID();
-  window.__currentHash = "";
-
-  window.scrollTo({top:0,behavior:"smooth"});
-}
+function proximoStep(){ if(step < steps.length-1){ step++; updateWizardUI(); window.scrollTo({top:0,behavior:"smooth"});} }
+function voltarStep(){ if(step > 0){ step--; updateWizardUI(); window.scrollTo({top:0,behavior:"smooth"});} }
 
 function voltarHome(){
   $("wizard").style.display="none";
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
-function toggleHistorico(){
-  const p = $("painelHistorico");
-  p.style.display = (p.style.display==="none" ? "block" : "none");
-  listarHistorico();
+/* =========================
+   Consentimento padrão
+========================= */
+function consentPadrao(){
+  const modo = v("modo")==="estetica" ? "procedimento eletivo/estético" : "procedimento cirúrgico";
+  return `Declaro que recebi explicações claras sobre a anestesia proposta para o ${modo}, incluindo benefícios, alternativas e possíveis riscos e efeitos adversos (ex.: náuseas e vômitos, dor, alergias, alterações de pressão, punções/hematomas, dor de garganta, lesões dentárias, dificuldades de via aérea e, raramente, eventos graves). 
+
+Fui orientado(a) sobre jejum, uso de medicamentos e cuidados necessários. Tive oportunidade de fazer perguntas e todas foram respondidas. Autorizo a realização do plano anestésico e de medidas necessárias à minha segurança, caso ocorram intercorrências.
+
+Estou ciente de que a equipe poderá ajustar condutas conforme avaliação clínica.`;
 }
 
-function apagarTudo(){
-  if(!confirm("Apagar TODO o histórico salvo neste aparelho?")) return;
-  localStorage.removeItem(KEY);
-  listarHistorico();
-  alert("Histórico apagado.");
+/* =========================
+   Storage / Histórico + Versões
+   Modelo:
+   - baseId: identifica “a avaliação”
+   - versões: [{version, id, createdAt, updatedAt, data...}]
+   - lista de “cards” mostra apenas a última versão por baseId
+========================= */
+const KEY = "previa_store_versions_v1";
+
+function nowISO(){ return new Date().toISOString(); }
+function toPtDate(iso){
+  try{
+    const d = new Date(iso);
+    return d.toLocaleString("pt-BR");
+  }catch(e){ return iso || ""; }
 }
 
-function salvarRascunho(){
-  const dados = coletarDadosBasicos();
-  salvarAvaliacao(dados);
-  alert("Salvo no aparelho.");
+function gerarBaseId(){ return "PRV-" + Date.now().toString().slice(-10); }
+
+function hashMini(str){
+  let h=0;
+  for(let i=0;i<str.length;i++){ h=(h<<5)-h+str.charCodeAt(i); h|=0; }
+  return Math.abs(h).toString(16).slice(0,10);
 }
 
-function resumoTexto(){
-  const nome = v("nome") || "Sem nome";
-  const proc = v("proc") || "Procedimento não informado";
-  const asa = v("asa") || "-";
-  const mal = v("mallampati") || "-";
-  return `Prévia — resumo rápido\n\n${nome}\n${proc}\nASA ${asa} · Mallampati ${mal}\n\nComorbidades: ${v("comorb")||"-"}\nMedicações: ${v("medic")||"-"}\nAlergias: ${v("alerg")||"-"}\nPassado cirúrgico: ${v("cirurg")||"-"}\nIntercorrências: ${v("interc")||"-"}\n\nEstratégia: ${v("estrat")||"-"}\nConduta: ${v("cond")||"-"}`;
+function loadStore(){
+  return JSON.parse(localStorage.getItem(KEY) || "[]"); // array de records
+}
+function saveStore(arr){
+  localStorage.setItem(KEY, JSON.stringify(arr));
 }
 
-function coletarDadosBasicos(){
-  const id = window.__currentId || gerarID();
-  const data = new Date().toLocaleDateString("pt-BR");
-  const payload = JSON.stringify({
-    id, data,
-    nome:v("nome"), proc:v("proc"), asa:v("asa"), mallampati:v("mallampati"),
-    comorb:v("comorb"), medic:v("medic"), alerg:v("alerg"), cirurg:v("cirurg"),
-    interc:v("interc"), estrat:v("estrat"), cond:v("cond"),
-    consent:v("consent"),
-    modo:v("modo"), logoCapa:v("logoCapa")
-  });
-  const hash = hashMini(payload);
+function normalize(s){
+  return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
 
-  window.__currentId = id;
-  window.__currentHash = hash;
+function currentPayload(){
+  const baseId = window.__baseId || gerarBaseId();
+  const version = window.__version || 1;
 
-  return {
-    id, hash, data,
+  const payload = {
+    baseId,
+    version,
     modo:v("modo"),
     logoCapa:v("logoCapa"),
     nome:v("nome"),
@@ -613,6 +465,280 @@ function coletarDadosBasicos(){
     cond:v("cond"),
     consent:v("consent")
   };
+
+  const hash = hashMini(JSON.stringify(payload));
+  payload.hash = hash;
+  payload.id = `${baseId}-v${version}`;
+  payload.updatedAt = nowISO();
+  return payload;
+}
+
+function getLatestVersion(record){
+  if(!record || !record.versions || record.versions.length===0) return null;
+  return record.versions.reduce((a,b)=> (b.version>a.version?b:a), record.versions[0]);
+}
+
+function salvarAtualizandoVersao(){
+  // Atualiza esta versão (não cria v+1)
+  const store = loadStore();
+  const baseId = window.__baseId;
+  const version = window.__version || 1;
+
+  const payload = currentPayload();
+  // mantém createdAt do item se existir
+  let rec = store.find(r=>r.baseId===baseId);
+
+  if(!rec){
+    // se não existe, cria como v1
+    payload.createdAt = nowISO();
+    store.push({ baseId, versions: [payload] });
+  }else{
+    const idx = rec.versions.findIndex(x=>x.version===version);
+    if(idx>=0){
+      payload.createdAt = rec.versions[idx].createdAt || nowISO();
+      rec.versions[idx] = payload;
+    }else{
+      // se não acha a versão, adiciona (raro)
+      payload.createdAt = nowISO();
+      rec.versions.push(payload);
+    }
+  }
+
+  saveStore(store);
+  listarHistorico();
+  alert(`Salvo: ${payload.id} (atualizado)`);
+  updateWizardUI();
+}
+
+function salvarNovaVersao(){
+  // Cria nova versão v+1
+  const store = loadStore();
+  const baseId = window.__baseId;
+  let rec = store.find(r=>r.baseId===baseId);
+
+  let nextV = 1;
+  if(rec){
+    const latest = getLatestVersion(rec);
+    nextV = (latest?.version || 0) + 1;
+  }
+
+  window.__version = nextV;
+  const payload = currentPayload();
+  payload.createdAt = nowISO();
+
+  if(!rec){
+    store.push({ baseId, versions:[payload] });
+  }else{
+    rec.versions.push(payload);
+  }
+
+  saveStore(store);
+  listarHistorico();
+  alert(`Nova versão criada: ${payload.id}`);
+  updateWizardUI();
+}
+
+function carregarVersao(baseId, version){
+  const store = loadStore();
+  const rec = store.find(r=>r.baseId===baseId);
+  if(!rec) return;
+  const item = rec.versions.find(x=>x.version===version);
+  if(!item) return;
+
+  window.__baseId = baseId;
+  window.__version = version;
+
+  campos.forEach(c=>{
+    if(c in item) setv(c, item[c]);
+  });
+
+  // consent fallback
+  if(!v("consent")) setv("consent", consentPadrao());
+
+  $("wizard").style.display="block";
+  $("painelHistorico").style.display="none";
+  step = 0;
+  updateWizardUI();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function toggleVersions(baseId){
+  const el = document.getElementById("vers-"+baseId);
+  if(!el) return;
+  el.style.display = (el.style.display==="none" ? "block" : "none");
+}
+
+function listarHistorico(){
+  const div = $("historico");
+  if(!div) return;
+  const q = normalize($("searchHist")?.value || "");
+
+  const store = loadStore();
+
+  // montar cards só com latest de cada baseId
+  const cards = store
+    .map(rec=>{
+      const latest = getLatestVersion(rec);
+      return { rec, latest };
+    })
+    .filter(x=>x.latest);
+
+  // busca
+  const filtered = cards.filter(({latest})=>{
+    if(!q) return true;
+    const hay = normalize([
+      latest.baseId, latest.id, latest.nome, latest.proc, latest.asa, latest.mallampati
+    ].join(" | "));
+    return hay.includes(q);
+  });
+
+  // ordenar por updatedAt desc
+  filtered.sort((a,b)=>{
+    const da = new Date(a.latest.updatedAt || a.latest.createdAt || 0).getTime();
+    const db = new Date(b.latest.updatedAt || b.latest.createdAt || 0).getTime();
+    return db - da;
+  });
+
+  div.innerHTML = "";
+  if(filtered.length===0){
+    div.innerHTML = `<div class="note" style="margin-top:10px">Nada encontrado. Tenta buscar por ASA, nome, procedimento ou PRV-…</div>`;
+    return;
+  }
+
+  for(const {rec, latest} of filtered){
+    const box = document.createElement("div");
+    box.className = "hist-item";
+
+    const title = (latest.nome || "Sem nome");
+    const subtitle = `${latest.proc || "Procedimento —"} · ASA ${latest.asa||"—"} · Mallampati ${latest.mallampati||"—"}`;
+    const right = `${toPtDate(latest.updatedAt || latest.createdAt)}<br>ID ${latest.baseId}<br><span class="badge">v${latest.version}</span>`;
+
+    const versionsHTML = rec.versions
+      .slice()
+      .sort((a,b)=>b.version-a.version)
+      .map(vv=>`
+        <div class="ver-row" onclick="carregarVersao('${rec.baseId}', ${vv.version})">
+          <div>
+            <b>${vv.id}</b><br/>
+            <span>${vv.proc || "Procedimento —"} · ASA ${vv.asa||"—"} · Mallampati ${vv.mallampati||"—"}</span>
+          </div>
+          <div style="text-align:right">
+            <span>${toPtDate(vv.updatedAt || vv.createdAt)}</span><br/>
+            <span class="badge">v${vv.version}</span>
+          </div>
+        </div>
+      `).join("");
+
+    box.innerHTML = `
+      <div class="hist-head">
+        <div class="hist-left">
+          <b>${escapeHTML(title)}</b><br/>
+          <span>${escapeHTML(subtitle)}</span>
+        </div>
+        <div class="hist-right">${right}</div>
+      </div>
+
+      <div class="hist-actions">
+        <button class="mini b-primary" onclick="carregarVersao('${rec.baseId}', ${latest.version})">Abrir (última)</button>
+        <button class="mini b-ghost" onclick="duplicarDaUltima('${rec.baseId}')">Nova versão a partir desta</button>
+        <span class="linkish" onclick="toggleVersions('${rec.baseId}')">ver versões</span>
+      </div>
+
+      <div class="versions" id="vers-${rec.baseId}">
+        ${versionsHTML}
+      </div>
+    `;
+    div.appendChild(box);
+  }
+}
+
+function duplicarDaUltima(baseId){
+  const store = loadStore();
+  const rec = store.find(r=>r.baseId===baseId);
+  const latest = getLatestVersion(rec);
+  if(!latest) return;
+
+  // carrega última e já seta para criar v+1
+  carregarVersao(baseId, latest.version);
+  // e já coloca passo 8 pra salvar v+1 se quiser
+  step = 7;
+  updateWizardUI();
+  alert("Aberto a última versão. Ajuste o que quiser e clique: Salvar nova versão (v+1).");
+}
+
+/* =========================
+   App controls
+========================= */
+function novaAvaliacao(){
+  $("wizard").style.display="block";
+  $("painelHistorico").style.display="none";
+  step=0;
+
+  // mantém seleções da home
+  const modo = v("modo");
+  const logo = v("logoCapa");
+
+  campos.forEach(c=> setv(c,""));
+  setv("modo", modo);
+  setv("logoCapa", logo);
+
+  // anexos
+  $("fotoCapa").value="";
+  $("fotoVia").value="";
+  $("exames").value="";
+
+  // assinaturas
+  limparAss("pac"); limparAss("med");
+
+  // novo baseId e version 1
+  window.__baseId = gerarBaseId();
+  window.__version = 1;
+
+  // consent padrão
+  setv("consent", consentPadrao());
+
+  updateWizardUI();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function toggleHistorico(){
+  const p = $("painelHistorico");
+  p.style.display = (p.style.display==="none" ? "block" : "none");
+  listarHistorico();
+}
+
+function apagarTudo(){
+  if(!confirm("Apagar TODO o histórico (todas as versões) neste aparelho?")) return;
+  localStorage.removeItem(KEY);
+  listarHistorico();
+  alert("Histórico apagado.");
+}
+
+/* =========================
+   Resumo
+========================= */
+function resumoTexto(){
+  const nome = v("nome") || "Sem nome";
+  const proc = v("proc") || "Procedimento —";
+  const asa  = v("asa") || "—";
+  const mal  = v("mallampati") || "—";
+
+  return `• ${nome}
+• ${proc}
+• ASA ${asa} · Mallampati ${mal}
+
+Comorbidades: ${v("comorb")||"—"}
+Medicações: ${v("medic")||"—"}
+Alergias: ${v("alerg")||"—"}
+Passado cirúrgico: ${v("cirurg")||"—"}
+Intercorrências: ${v("interc")||"—"}
+
+Estratégia: ${v("estrat")||"—"}
+Conduta: ${v("cond")||"—"}`;
+}
+
+function atualizarResumo(){
+  $("resumeBox").textContent = resumoTexto();
 }
 
 /* =========================
@@ -622,10 +748,9 @@ function setupCanvas(id){
   const c = $(id);
   const ctx = c.getContext("2d");
 
-  // fix resolution for crisp drawing
   function resize(){
     const rect = c.getBoundingClientRect();
-    c.width = Math.floor(rect.width * devicePixelRatio);
+    c.width  = Math.floor(rect.width  * devicePixelRatio);
     c.height = Math.floor(rect.height * devicePixelRatio);
     ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
     ctx.lineWidth = 2.5;
@@ -690,13 +815,11 @@ function fileToDataURL(file){
     r.readAsDataURL(file);
   });
 }
-
 async function inputImage(id){
   const inp = $(id);
   if(!inp || !inp.files || inp.files.length===0) return null;
   return await fileToDataURL(inp.files[0]);
 }
-
 async function inputImages(id){
   const inp = $(id);
   if(!inp || !inp.files || inp.files.length===0) return [];
@@ -711,10 +834,34 @@ async function inputImages(id){
 async function gerarPDFPremium(){
   const { jsPDF } = window.jspdf;
 
-  const dados = coletarDadosBasicos();
+  // garante baseId/version
+  if(!window.__baseId) window.__baseId = gerarBaseId();
+  if(!window.__version) window.__version = 1;
 
-  // salva no aparelho antes
-  salvarAvaliacao(dados);
+  // salva (atualiza esta versão) antes de gerar o PDF
+  salvarAtualizandoVersao();
+
+  const payload = {
+    baseId: window.__baseId,
+    version: window.__version,
+    id: `${window.__baseId}-v${window.__version}`,
+    data: new Date().toLocaleDateString("pt-BR"),
+    hash: hashMini(JSON.stringify(currentPayload())),
+    modo: v("modo"),
+    logoCapa: v("logoCapa"),
+    nome: v("nome"),
+    proc: v("proc"),
+    asa: v("asa"),
+    mallampati: v("mallampati"),
+    comorb: v("comorb"),
+    medic: v("medic"),
+    alerg: v("alerg"),
+    cirurg: v("cirurg"),
+    interc: v("interc"),
+    estrat: v("estrat"),
+    cond: v("cond"),
+    consent: v("consent")
+  };
 
   const fotoCapa = await inputImage("fotoCapa");
   const fotoVia  = await inputImage("fotoVia");
@@ -723,156 +870,119 @@ async function gerarPDFPremium(){
   const sigPaciente = sigPac?.toDataURL() || null;
   const sigMedico   = sigMed?.toDataURL() || null;
 
-  // QR payload mínimo (sem dados sensíveis)
-  const baseUrl = location.href.split("#")[0];
-  const qrPayload = `PREVIA|${dados.id}|${dados.hash}|${dados.modo}`;
+  const qrPayload = `PREVIA|${payload.baseId}|v${payload.version}|${payload.hash}|${payload.modo}`;
   const qrDataURL = await QRCode.toDataURL(qrPayload, { margin: 1, width: 220 });
 
   const pdf = new jsPDF({ unit:"mm", format:"a4" });
-  const W = 210, H = 297;
+  const W=210, H=297;
 
-  /* ===== CAPA AZUL ===== */
-  // fundo
-  pdf.setFillColor(10, 44, 68);
-  pdf.rect(0,0,W,H,"F");
-
-  // título
-  const logoMode = dados.logoCapa || "word";
+  /* CAPA */
+  pdf.setFillColor(10,44,68); pdf.rect(0,0,W,H,"F");
   pdf.setTextColor(255,255,255);
   pdf.setFont("helvetica","bold");
-  pdf.setFontSize(logoMode==="word" ? 42 : 30);
+  pdf.setFontSize(payload.logoCapa==="word" ? 42 : 30);
   pdf.text("Prévia", 18, 40);
 
-  pdf.setFont("helvetica","normal");
-  pdf.setFontSize(16);
+  pdf.setFont("helvetica","normal"); pdf.setFontSize(16);
   pdf.setTextColor(210,230,255);
   pdf.text("relatório pré-anestésico", 18, 54);
 
-  // box info
-  pdf.setDrawColor(255,255,255);
-  pdf.setFillColor(255,255,255, 0.08);
-  pdf.roundedRect(18, 72, 174, 68, 6, 6, "F");
+  pdf.setFillColor(255,255,255,0.08);
+  pdf.roundedRect(18, 72, 174, 70, 6, 6, "F");
 
   pdf.setTextColor(255,255,255);
   pdf.setFont("helvetica","bold"); pdf.setFontSize(16);
-  pdf.text((dados.nome||"Paciente"), 24, 88);
+  pdf.text(payload.nome||"Paciente", 24, 88);
 
   pdf.setFont("helvetica","normal"); pdf.setFontSize(12);
   pdf.setTextColor(210,230,255);
-  pdf.text(dados.proc ? `Procedimento: ${dados.proc}` : "Procedimento: —", 24, 98);
-  pdf.text(`ASA: ${dados.asa||"—"}  ·  Mallampati: ${dados.mallampati||"—"}`, 24, 106);
+  pdf.text(payload.proc ? `Procedimento: ${payload.proc}` : "Procedimento: —", 24, 98);
+  pdf.text(`ASA: ${payload.asa||"—"}  ·  Mallampati: ${payload.mallampati||"—"}`, 24, 106);
 
-  pdf.setTextColor(190,215,245);
-  pdf.setFontSize(11);
-  pdf.text(`Modo: ${dados.modo==="estetica" ? "Estética" : "Clínica/Hospital"}`, 24, 116);
-  pdf.text(`Data: ${dados.data}  ·  ID: ${dados.id}`, 24, 124);
-  pdf.text(`Hash: ${dados.hash}`, 24, 132);
+  pdf.setTextColor(190,215,245); pdf.setFontSize(11);
+  pdf.text(`Modo: ${payload.modo==="estetica" ? "Estética" : "Clínica/Hospital"}`, 24, 116);
+  pdf.text(`Data: ${payload.data}  ·  ID: ${payload.baseId}  ·  v${payload.version}`, 24, 124);
+  pdf.text(`Hash: ${payload.hash}`, 24, 132);
 
-  // foto capa
   if(fotoCapa){
     try{
-      // posiciona à direita
-      pdf.addImage(fotoCapa, "JPEG", 132, 80, 52, 52, undefined, "FAST");
+      pdf.addImage(fotoCapa, "JPEG", 132, 82, 52, 52, undefined, "FAST");
       pdf.setDrawColor(255,255,255);
-      pdf.roundedRect(132, 80, 52, 52, 4, 4, "S");
+      pdf.roundedRect(132, 82, 52, 52, 4, 4, "S");
     }catch(e){}
   }
 
-  // QR
   try{
-    pdf.addImage(qrDataURL, "PNG", 150, 150, 40, 40);
-    pdf.setTextColor(210,230,255);
-    pdf.setFontSize(9);
-    pdf.text("QR de verificação", 150, 195);
+    pdf.addImage(qrDataURL,"PNG",150,150,40,40);
+    pdf.setTextColor(210,230,255); pdf.setFontSize(9);
+    pdf.text("QR de verificação",150,195);
   }catch(e){}
 
-  // rodapé RT
-  pdf.setTextColor(210,230,255);
-  pdf.setFontSize(11);
+  pdf.setTextColor(210,230,255); pdf.setFontSize(11);
   pdf.text("Dr Leonardo Alves Araújo · CRM-MG 47310 · RQE 40542", 18, 280);
 
-  /* ===== PÁGINA 2: RESUMO CLÍNICO ===== */
+  /* RESUMO */
   pdf.addPage();
-  pdf.setFillColor(245,248,252);
-  pdf.rect(0,0,W,H,"F");
+  pdf.setFillColor(245,248,252); pdf.rect(0,0,W,H,"F");
+  pdf.setFillColor(10,44,68); pdf.rect(0,0,W,32,"F");
 
-  // header azul
-  pdf.setFillColor(10,44,68);
-  pdf.rect(0,0,W,32,"F");
-  pdf.setTextColor(255,255,255);
-  pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
+  pdf.setTextColor(255,255,255); pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
   pdf.text("Prévia — Resumo clínico", 14, 20);
 
-  pdf.setFont("helvetica","normal");
-  pdf.setFontSize(10);
+  pdf.setFont("helvetica","normal"); pdf.setFontSize(10);
   pdf.setTextColor(220,235,255);
-  pdf.text(`ID: ${dados.id} · ${dados.data} · ${dados.modo==="estetica" ? "Estética" : "Clínica/Hospital"}`, 14, 28);
+  pdf.text(`ID: ${payload.baseId} · v${payload.version} · ${payload.data}`, 14, 28);
 
-  // conteúdo
-  let y = 48;
+  let y=48;
   pdf.setTextColor(20,30,40);
 
   function bloco(titulo, texto){
     pdf.setFont("helvetica","bold"); pdf.setFontSize(12);
-    pdf.text(titulo, 14, y);
-    y += 6;
+    pdf.text(titulo, 14, y); y+=6;
     pdf.setFont("helvetica","normal"); pdf.setFontSize(11);
     const lines = pdf.splitTextToSize(texto || "—", 182);
     pdf.text(lines, 14, y);
     y += (lines.length*5.3) + 6;
   }
 
-  bloco("Identificação", `${dados.nome||"—"}\nProcedimento: ${dados.proc||"—"}\nASA ${dados.asa||"—"} · Mallampati ${dados.mallampati||"—"}`);
-  bloco("Comorbidades", dados.comorb);
-  bloco("Medicações", dados.medic);
-  bloco("Alergias", dados.alerg);
-  bloco("Passado cirúrgico", dados.cirurg);
-  bloco("Intercorrências anestésicas", dados.interc);
-  bloco("Estratégia anestésica", dados.estrat);
-  bloco("Conduta", dados.cond);
+  bloco("Identificação", `${payload.nome||"—"}\nProcedimento: ${payload.proc||"—"}\nASA ${payload.asa||"—"} · Mallampati ${payload.mallampati||"—"}`);
+  bloco("Comorbidades", payload.comorb);
+  bloco("Medicações", payload.medic);
+  bloco("Alergias", payload.alerg);
+  bloco("Passado cirúrgico", payload.cirurg);
+  bloco("Intercorrências anestésicas", payload.interc);
+  bloco("Estratégia anestésica", payload.estrat);
+  bloco("Conduta", payload.cond);
 
-  /* ===== PÁGINA 3: CONSENTIMENTO ===== */
+  /* CONSENTIMENTO */
   pdf.addPage();
-  pdf.setFillColor(245,248,252);
-  pdf.rect(0,0,W,H,"F");
+  pdf.setFillColor(245,248,252); pdf.rect(0,0,W,H,"F");
+  pdf.setFillColor(10,44,68); pdf.rect(0,0,W,32,"F");
 
-  pdf.setFillColor(10,44,68);
-  pdf.rect(0,0,W,32,"F");
-  pdf.setTextColor(255,255,255);
-  pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
+  pdf.setTextColor(255,255,255); pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
   pdf.text("Consentimento informado", 14, 20);
 
   pdf.setFont("helvetica","normal"); pdf.setFontSize(10);
   pdf.setTextColor(220,235,255);
-  pdf.text(`ID: ${dados.id} · ${dados.data}`, 14, 28);
+  pdf.text(`ID: ${payload.baseId} · v${payload.version} · ${payload.data}`, 14, 28);
 
-  pdf.setTextColor(20,30,40);
-  pdf.setFont("helvetica","normal"); pdf.setFontSize(11);
-  const consentLines = pdf.splitTextToSize(dados.consent || consentPadrao(), 182);
+  pdf.setTextColor(20,30,40); pdf.setFont("helvetica","normal"); pdf.setFontSize(11);
+  const consentLines = pdf.splitTextToSize(payload.consent || consentPadrao(), 182);
   pdf.text(consentLines, 14, 48);
 
-  // assinatura textual
-  pdf.setFontSize(10);
-  pdf.setTextColor(80,90,100);
-  pdf.text("Assinaturas na próxima página.", 14, 280);
-
-  /* ===== PÁGINA 4: ASSINATURAS ===== */
+  /* ASSINATURAS */
   pdf.addPage();
-  pdf.setFillColor(245,248,252);
-  pdf.rect(0,0,W,H,"F");
+  pdf.setFillColor(245,248,252); pdf.rect(0,0,W,H,"F");
+  pdf.setFillColor(10,44,68); pdf.rect(0,0,W,32,"F");
 
-  pdf.setFillColor(10,44,68);
-  pdf.rect(0,0,W,32,"F");
-  pdf.setTextColor(255,255,255);
-  pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
+  pdf.setTextColor(255,255,255); pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
   pdf.text("Assinaturas", 14, 20);
 
   pdf.setFont("helvetica","normal"); pdf.setFontSize(10);
   pdf.setTextColor(220,235,255);
-  pdf.text(`ID: ${dados.id} · ${dados.data}`, 14, 28);
+  pdf.text(`ID: ${payload.baseId} · v${payload.version} · ${payload.data}`, 14, 28);
 
-  pdf.setTextColor(20,30,40);
-  pdf.setFont("helvetica","bold"); pdf.setFontSize(12);
+  pdf.setTextColor(20,30,40); pdf.setFont("helvetica","bold"); pdf.setFontSize(12);
   pdf.text("Paciente", 14, 52);
   pdf.text("Médico", 14, 142);
 
@@ -880,89 +990,77 @@ async function gerarPDFPremium(){
   pdf.roundedRect(14, 58, 182, 70, 4, 4, "S");
   pdf.roundedRect(14, 148, 182, 70, 4, 4, "S");
 
-  // desenha assinaturas dentro
-  try{
-    if(sigPaciente) pdf.addImage(sigPaciente, "PNG", 16, 60, 178, 66, undefined, "FAST");
-  }catch(e){}
-  try{
-    if(sigMedico) pdf.addImage(sigMedico, "PNG", 16, 150, 178, 66, undefined, "FAST");
-  }catch(e){}
+  try{ if(sigPaciente) pdf.addImage(sigPaciente,"PNG",16,60,178,66,undefined,"FAST"); }catch(e){}
+  try{ if(sigMedico) pdf.addImage(sigMedico,"PNG",16,150,178,66,undefined,"FAST"); }catch(e){}
 
   pdf.setFont("helvetica","normal"); pdf.setFontSize(10);
   pdf.setTextColor(80,90,100);
   pdf.text("Dr Leonardo Alves Araújo · CRM-MG 47310 · RQE 40542", 14, 232);
 
-  /* ===== PÁGINA 5+: ANEXOS (se houver) ===== */
+  /* ANEXOS */
   const temAnexos = !!fotoVia || (exames && exames.length);
   if(temAnexos){
     pdf.addPage();
-    pdf.setFillColor(245,248,252);
-    pdf.rect(0,0,W,H,"F");
+    pdf.setFillColor(245,248,252); pdf.rect(0,0,W,H,"F");
+    pdf.setFillColor(10,44,68); pdf.rect(0,0,W,32,"F");
 
-    pdf.setFillColor(10,44,68);
-    pdf.rect(0,0,W,32,"F");
-    pdf.setTextColor(255,255,255);
-    pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
+    pdf.setTextColor(255,255,255); pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
     pdf.text("Anexos", 14, 20);
 
     pdf.setFont("helvetica","normal"); pdf.setFontSize(10);
     pdf.setTextColor(220,235,255);
-    pdf.text(`ID: ${dados.id} · ${dados.data}`, 14, 28);
+    pdf.text(`ID: ${payload.baseId} · v${payload.version} · ${payload.data}`, 14, 28);
 
     let yy = 48;
 
     if(fotoVia){
-      pdf.setTextColor(20,30,40);
-      pdf.setFont("helvetica","bold"); pdf.setFontSize(12);
-      pdf.text("Via aérea", 14, yy);
-      yy += 6;
-      try{
-        pdf.addImage(fotoVia, "JPEG", 14, yy, 80, 80, undefined, "FAST");
-      }catch(e){}
+      pdf.setTextColor(20,30,40); pdf.setFont("helvetica","bold"); pdf.setFontSize(12);
+      pdf.text("Via aérea", 14, yy); yy += 6;
+      try{ pdf.addImage(fotoVia,"JPEG",14,yy,80,80,undefined,"FAST"); }catch(e){}
       yy += 88;
     }
 
     if(exames && exames.length){
       pdf.setFont("helvetica","bold"); pdf.setFontSize(12);
       pdf.setTextColor(20,30,40);
-      pdf.text("Exames", 14, yy);
-      yy += 6;
+      pdf.text("Exames", 14, yy); yy += 6;
 
-      let x = 14;
-      let col = 0;
-      const size = 52;
+      let x=14, col=0;
+      const size=52;
 
       for(let i=0;i<exames.length;i++){
-        try{
-          pdf.addImage(exames[i], "JPEG", x, yy, size, size, undefined, "FAST");
-        }catch(e){}
-
-        col++;
-        x += (size + 6);
-
+        try{ pdf.addImage(exames[i],"JPEG",x,yy,size,size,undefined,"FAST"); }catch(e){}
+        col++; x += (size+6);
         if(col===3){
           col=0; x=14; yy += (size+8);
-          if(yy > 230 && i < exames.length-1){
+          if(yy>230 && i<exames.length-1){
             pdf.addPage();
-            pdf.setFillColor(245,248,252);
-            pdf.rect(0,0,W,H,"F");
+            pdf.setFillColor(245,248,252); pdf.rect(0,0,W,H,"F");
             pdf.setFillColor(10,44,68); pdf.rect(0,0,W,32,"F");
             pdf.setTextColor(255,255,255);
             pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
             pdf.text("Anexos (continuação)", 14, 20);
             pdf.setFont("helvetica","normal"); pdf.setFontSize(10);
             pdf.setTextColor(220,235,255);
-            pdf.text(`ID: ${dados.id} · ${dados.data}`, 14, 28);
-            yy = 48;
+            pdf.text(`ID: ${payload.baseId} · v${payload.version} · ${payload.data}`, 14, 28);
+            yy=48;
           }
         }
       }
     }
   }
 
-  // Salva
-  const safeName = (dados.nome || "Paciente").replace(/[^\p{L}\p{N}\s_-]/gu,"").trim().slice(0,40) || "Paciente";
-  pdf.save(`Previa_${safeName}_${dados.id}.pdf`);
+  const safeName = (payload.nome || "Paciente").replace(/[^\p{L}\p{N}\s_-]/gu,"").trim().slice(0,40) || "Paciente";
+  pdf.save(`Previa_${safeName}_${payload.baseId}_v${payload.version}.pdf`);
+}
+
+/* =========================
+   Escape HTML
+========================= */
+function escapeHTML(s){
+  return (s||"").replace(/[&<>"']/g, m=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
 }
 
 /* =========================
@@ -970,18 +1068,19 @@ async function gerarPDFPremium(){
 ========================= */
 function init(){
   listarHistorico();
-  $("painelHistorico").style.display="none";
 
-  // signatures
   sigPac = setupCanvas("sigPaciente");
   sigMed = setupCanvas("sigMedico");
 
-  // update consent when mode changes (only if user hasn't edited much)
+  // modo -> consent padrão (se vazio)
   $("modo").addEventListener("change", ()=>{
     const c = v("consent");
-    // se estiver vazio ou ainda igual ao padrão anterior, atualiza
     if(!c || c.length < 20) setv("consent", consentPadrao());
   });
+
+  // se abrir direto e clicar nova avaliação, baseId nasce
+  window.__baseId = null;
+  window.__version = 1;
 
   updateWizardUI();
 }
@@ -989,4 +1088,4 @@ init();
 </script>
 
 </body>
-</html>
+</html> 
