@@ -1,241 +1,1536 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prévia</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Prévia</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-<style>
-body{
-font-family:Inter, sans-serif;
-background:#0f2747;
-margin:0;
-padding:20px;
-color:#1a1a1a;
-}
+  <!-- jsPDF -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <!-- QR -->
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+  <!-- Signature -->
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 
-.card{
-background:#fff;
-border-radius:18px;
-padding:22px;
-margin-bottom:16px;
-box-shadow:0 10px 30px rgba(0,0,0,.12);
-}
+  <style>
+    :root{
+      --bg1:#071a2b;
+      --bg2:#0b2a47;
+      --card: rgba(255,255,255,.08);
+      --line: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --accent:#2f86ff;
+      --danger:#ff4d4d;
+      --ok:#4cd964;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 35% 10%, #0e3a63 0%, var(--bg2) 30%, var(--bg1) 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{max-width:1040px;margin:0 auto;padding:22px 14px 36px}
+    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .brand{display:flex;gap:10px;align-items:flex-start}
+    .dot{
+      width:14px;height:14px;border-radius:99px;background:var(--accent);
+      box-shadow:0 0 0 6px rgba(47,134,255,.15);
+      margin-top:12px;
+    }
+    h1{margin:0;font-size:46px;letter-spacing:-.02em}
+    .subtitle{margin:4px 0 0;color:var(--muted)}
+    .idline{margin-top:10px;color:rgba(255,255,255,.78);font-size:14px}
+    .pill{
+      align-self:flex-start;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      padding:10px 14px;
+      color:rgba(255,255,255,.85);
+      font-size:13px;
+      backdrop-filter: blur(8px);
+    }
 
-h1{margin:0;color:#0f2747}
-h2{margin:10px 0 6px;color:#0f2747}
-label{font-weight:600;font-size:14px}
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      margin-top:14px;
+    }
+    @media (min-width:900px){
+      .grid{grid-template-columns: 1.25fr .75fr}
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      padding:18px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 40px rgba(0,0,0,.25);
+    }
+    .card h2{margin:0 0 8px;font-size:26px;letter-spacing:-.01em}
+    .hint{margin:0 0 14px;color:var(--muted);line-height:1.35}
+    .row{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
+    @media (min-width:760px){
+      .row.cols2{grid-template-columns:1fr 1fr}
+      .row.cols3{grid-template-columns:1fr 1fr 1fr}
+    }
+    label{font-size:13px;color:rgba(255,255,255,.82);display:block;margin-bottom:6px}
+    input, select, textarea{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.92);
+      padding:12px 12px;
+      font-size:15px;
+      outline:none;
+      color:#0b1a2b;
+    }
+    textarea{min-height:92px;resize:vertical}
+    input:focus, select:focus, textarea:focus{
+      border-color: rgba(47,134,255,.75);
+      box-shadow: 0 0 0 4px rgba(47,134,255,.18);
+    }
+    .btnRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .btn{
+      border:0;border-radius:16px;
+      padding:12px 14px;
+      font-weight:800;
+      cursor:pointer;
+      background: rgba(255,255,255,.14);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.14);
+      min-width:132px;
+    }
+    .btnPrimary{background: var(--accent); color:#fff; border-color: rgba(47,134,255,.5)}
+    .btnGhost{background: rgba(255,255,255,.08)}
+    .btnDanger{background: var(--danger); color:#fff; border-color: rgba(255,77,77,.55)}
+    .btnOk{background: rgba(76,217,100,.92); color:#06250f; border-color: rgba(76,217,100,.55)}
+    .btnSoft{background: rgba(255,255,255,.12); color:var(--text)}
 
-input,textarea{
-width:100%;
-padding:10px;
-border-radius:10px;
-border:1px solid #ccc;
-margin-top:4px;
-margin-bottom:10px;
-font-size:14px;
-}
+    .stepBar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0 0;color:rgba(255,255,255,.85);font-size:13px}
+    .progress{flex:1;height:10px;border-radius:999px;background: rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);overflow:hidden}
+    .progress > div{height:100%;width:0%;background: linear-gradient(90deg, rgba(47,134,255,.95), rgba(47,134,255,.55));border-radius:999px;transition: width .25s ease}
 
-button{
-background:#1f4f9b;
-color:white;
-border:none;
-padding:14px;
-border-radius:12px;
-font-size:16px;
-width:100%;
-margin-top:10px;
-}
+    .screen{display:none}
+    .screen.active{display:block}
+    .divider{height:1px;background:rgba(255,255,255,.12);margin:12px 0}
+    .small{font-size:12px;color:rgba(255,255,255,.72)}
 
-.logo{
-text-align:center;
-margin-bottom:10px;
-}
+    .historyList{display:grid;gap:10px;margin-top:10px}
+    .histItem{background: rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:12px}
+    .histItem b{display:block}
+    .histMeta{color:rgba(255,255,255,.74);font-size:13px;margin-top:4px}
 
-.logo img{
-width:90px;
-}
+    .toast{
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+      background:rgba(0,0,0,.75);color:#fff;padding:10px 14px;border-radius:14px;
+      font-size:13px;display:none;z-index:9999
+    }
 
-</style>
+    /* Modal assinaturas */
+    .modal{
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,.62); z-index:9999; padding:16px;
+    }
+    .modal .box{
+      max-width:920px; margin:0 auto; background:#fff; border-radius:16px; padding:14px; color:#0b1a2b;
+    }
+    .modal .head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .modal .head b{font-size:16px}
+    .modal canvas{width:100%;border:1px solid #ddd;border-radius:12px}
+    .modal .miniBtn{
+      padding:10px 12px;border-radius:10px;border:1px solid #ddd;background:#f7f7f7;font-weight:800;cursor:pointer
+    }
+    .modal .miniBtnPrimary{
+      padding:10px 12px;border-radius:10px;border:none;background:#1f4f9b;color:white;font-weight:900;cursor:pointer
+    }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    /* Mini capa */
+    .coverMini{
+      width:190px;height:120px;border-radius:18px;
+      background: linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.14);
+      overflow:hidden;
+      position:relative;
+    }
+    .coverMini .top{
+      position:absolute;inset:0;
+      background: radial-gradient(240px 160px at 20% 20%, rgba(47,134,255,.55), transparent 55%),
+                  linear-gradient(180deg, rgba(10,40,75,.96), rgba(5,18,35,.96));
+    }
+    .coverMini .logoP{
+      position:absolute;left:14px;top:10px;font-weight:900;font-size:26px;color:white;
+      letter-spacing:-.02em;
+    }
+    .coverMini .tag{
+      position:absolute;right:10px;top:10px;
+      font-size:11px;color:rgba(255,255,255,.78);
+      background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);
+      padding:6px 10px;border-radius:999px;
+    }
+    .coverMini .boxTxt{
+      position:absolute;left:14px;right:14px;bottom:12px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:14px;padding:10px 10px;
+      font-size:11px;color:rgba(255,255,255,.82);
+      line-height:1.25;
+    }
+  </style>
 </head>
 
 <body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <div class="dot"></div>
+      <div>
+        <h1>Prévia</h1>
+        <div class="subtitle">plataforma de avaliação pré-anestésica</div>
+        <div class="idline">Dr Leonardo Alves Araújo · CRM-MG 47310 · RQE 40542</div>
+      </div>
+    </div>
+    <div class="pill">QR · Assinatura · PDF Premium</div>
+  </div>
 
-<div class="card logo">
-<img src="logo_previa.png">
-<h1>Prévia</h1>
-<div>plataforma de avaliação pré-anestésica</div>
+  <div class="grid">
+    <!-- esquerda -->
+    <div>
+      <!-- HOME -->
+      <div class="screen active" id="screenHome">
+        <div class="card">
+          <h2>Home</h2>
+          <p class="hint">Escolha o modo (Hospital ou Estética) e preencha em <b>8 etapas</b>. No final: consentimento + assinaturas + QR + PDF premium.</p>
+
+          <div class="row cols2">
+            <div>
+              <label>Modo</label>
+              <select id="mode">
+                <option value="hospital" selected>Clínica / Hospital</option>
+                <option value="estetica">Estética</option>
+              </select>
+            </div>
+            <div>
+              <label>Logo na capa</label>
+              <select id="logoMode">
+                <option value="PREVIA" selected>“Prévia” grande</option>
+                <option value="P">“P” grande</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="btnRow">
+            <button class="btn btnPrimary" onclick="startNew()">Nova avaliação</button>
+            <button class="btn btnGhost" onclick="goHistory()">Histórico</button>
+          </div>
+
+          <div class="divider"></div>
+          <div class="small">Link certo do Pages: <b>...github.io/Previa/</b>. Se não atualizar, abre em aba privada.</div>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="screen" id="screenHistory">
+        <div class="card">
+          <h2>Histórico</h2>
+          <p class="hint">Salvo no aparelho (localStorage). Dá pra reabrir, editar e gerar PDF de novo.</p>
+          <div class="historyList" id="historyList"></div>
+
+          <div class="btnRow">
+            <button class="btn btnGhost" onclick="goHome()">Home</button>
+            <button class="btn btnDanger" onclick="clearHistory()">Apagar tudo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEPS -->
+      <div class="screen" id="screenSteps">
+        <div class="card">
+          <div class="stepBar">
+            <div><b id="stepTitle">Etapa</b> <span class="small" id="stepCount"></span></div>
+            <div class="progress"><div id="progressFill"></div></div>
+          </div>
+
+          <div id="stepBody" style="margin-top:14px;"></div>
+
+          <div class="btnRow">
+            <button class="btn btnGhost" onclick="prevStep()">Voltar</button>
+            <button class="btn btnPrimary" onclick="nextStep()" id="btnNext">Próximo</button>
+            <button class="btn btnOk" onclick="saveEval()" id="btnSave" style="display:none;">Salvar</button>
+            <button class="btn btnGhost" onclick="goHome()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK -->
+      <div class="screen" id="screenQuick">
+        <div class="card">
+          <h2>Visão rápida</h2>
+          <p class="hint">Revisão em segundos (pra anestesista): risco, via aérea, comorbidades, estratégia e conduta.</p>
+          <div id="quickBox" class="card" style="background:rgba(255,255,255,.06);border-radius:18px"></div>
+
+          <div class="btnRow">
+            <button class="btn btnGhost" onclick="backToSteps()">Voltar</button>
+            <button class="btn btnSoft" onclick="openConsent()">Termo</button>
+            <button class="btn btnSoft" onclick="openSig()">Assinaturas</button>
+            <button class="btn btnOk" onclick="generatePDF()">Gerar PDF final</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONSENT -->
+      <div class="screen" id="screenConsent">
+        <div class="card">
+          <h2>Consentimento</h2>
+          <p class="hint">Texto padrão já vem preenchido (modo Hospital ou Estética). Você pode editar.</p>
+          <div class="row">
+            <div>
+              <label>Texto do consentimento</label>
+              <textarea id="consentText"></textarea>
+            </div>
+          </div>
+          <div class="btnRow">
+            <button class="btn btnGhost" onclick="closeConsent()">Voltar</button>
+            <button class="btn btnPrimary" onclick="goQuick()">Resumo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- direita -->
+    <div>
+      <div class="card">
+        <h2>PDF Premium</h2>
+        <p class="hint">Capa azul, QR de verificação, assinaturas, consentimento e anexos.</p>
+
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <div class="coverMini" aria-hidden="true">
+            <div class="top"></div>
+            <div class="logoP" id="miniLogo">Prévia</div>
+            <div class="tag">Relatório</div>
+            <div class="boxTxt">
+              Capa + QR<br/>Resumo<br/>Termo + Assinaturas
+            </div>
+          </div>
+          <div class="small" style="max-width:260px">
+            Dica: assine em modo horizontal no iPhone. O QR não leva dados sensíveis — só ID e verificação.
+          </div>
+        </div>
+
+        <div class="btnRow" style="margin-top:16px">
+          <button class="btn btnSoft" onclick="goQuick()">Visão rápida</button>
+          <button class="btn btnSoft" onclick="openSig()">Assinaturas</button>
+          <button class="btn btnOk" onclick="generatePDF()">Gerar PDF final</button>
+        </div>
+
+        <div class="divider"></div>
+        <div class="small">
+          <b>Integração:</b> o QR carrega um payload mínimo (ID + hash + metadados). Quando você plugar um servidor, o QR pode apontar pra URL do relatório.
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h2>Checklist</h2>
+        <div class="small">
+          • Foto do paciente (capa)<br/>
+          • Via aérea + exames (anexos)<br/>
+          • Consentimento (1 página)<br/>
+          • Assinaturas desenhadas<br/>
+          • QR na capa<br/>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="card">
-<h2>Paciente</h2>
-<input id="nome" placeholder="Nome">
-<input id="proced" placeholder="Procedimento">
-<input id="asa" placeholder="ASA">
-<input id="mall" placeholder="Mallampati">
-</div>
+<div class="toast" id="toast">Ok</div>
 
-<div class="card">
-<h2>Dados clínicos</h2>
-<textarea id="comorb" placeholder="Comorbidades"></textarea>
-<textarea id="meds" placeholder="Medicações"></textarea>
-<textarea id="alerg" placeholder="Alergias"></textarea>
-<textarea id="cirurg" placeholder="Passado cirúrgico"></textarea>
-<textarea id="interc" placeholder="Intercorrências anestésicas"></textarea>
-</div>
+<!-- MODAL ASSINATURA -->
+<div class="modal" id="sigModal">
+  <div class="box">
+    <div class="head">
+      <b>Assinaturas (desenho)</b>
+      <button class="miniBtn" onclick="closeSig()">Fechar</button>
+    </div>
 
-<div class="card">
-<h2>Estratégia</h2>
-<textarea id="estrat" placeholder="Estratégia anestésica"></textarea>
-<textarea id="cond" placeholder="Conduta"></textarea>
-</div>
+    <p style="margin:10px 0 6px;color:#444;"><b>Paciente / responsável</b></p>
+    <canvas id="sigPaciente" width="900" height="200"></canvas>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 14px;">
+      <button class="miniBtn" onclick="clearSig('paciente')">Limpar</button>
+      <button class="miniBtnPrimary" onclick="saveSig('paciente')">Salvar assinatura</button>
+    </div>
 
-<div class="card">
-<h2>Consentimento</h2>
-<textarea id="consent"></textarea>
-</div>
+    <p style="margin:10px 0 6px;color:#444;"><b>Médico</b></p>
+    <canvas id="sigMedico" width="900" height="200"></canvas>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;">
+      <button class="miniBtn" onclick="clearSig('medico')">Limpar</button>
+      <button class="miniBtnPrimary" onclick="saveSig('medico')">Salvar assinatura</button>
+    </div>
 
-<div class="card">
-<h2>Anexos</h2>
-<label>Via aérea</label>
-<input type="file" id="fotoVia">
-<label>Exames</label>
-<input type="file" id="exames" multiple>
+    <p style="margin-top:10px;color:#666;font-size:12px;">
+      Dica: gire o iPhone na horizontal pra assinar melhor.
+    </p>
+  </div>
 </div>
-
-<button onclick="gerarPDF()">Gerar PDF final</button>
 
 <script>
-async function gerarPDF(){
-
-const { jsPDF } = window.jspdf;
-const pdf = new jsPDF("p","mm","a4");
-
-const nome = document.getElementById("nome").value;
-const proced = document.getElementById("proced").value;
-const asa = document.getElementById("asa").value;
-const mall = document.getElementById("mall").value;
-const comorb = document.getElementById("comorb").value;
-const meds = document.getElementById("meds").value;
-const alerg = document.getElementById("alerg").value;
-const cirurg = document.getElementById("cirurg").value;
-const interc = document.getElementById("interc").value;
-const estrat = document.getElementById("estrat").value;
-const cond = document.getElementById("cond").value;
-let consent = document.getElementById("consent").value;
-
-if(!consent){
-consent =
-"Declaro ter sido informado(a) sobre a anestesia proposta, riscos, benefícios, alternativas e cuidados perioperatórios. " +
-"Autorizo a realização da anestesia pelo Dr. Leonardo Alves Araújo CRM-MG 47310 RQE 40542.";
+/* ========= Helpers ========= */
+const $ = (id)=>document.getElementById(id);
+const toast = (msg)=>{
+  const t=$("toast");
+  t.textContent=msg;
+  t.style.display="block";
+  clearTimeout(window.__toastT);
+  window.__toastT=setTimeout(()=>t.style.display="none",1600);
+};
+const showScreen = (name)=>{
+  ["Home","History","Steps","Quick","Consent"].forEach(s=>{
+    const el = $("screen"+s);
+    if(!el) return;
+    el.classList.toggle("active", s===name);
+  });
+};
+function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m])); }
+function escapeAttr(s){ return escapeHtml(s).replace(/"/g,"&quot;"); }
+function opt(current, v, label){
+  const sel = (String(current)===String(v)) ? "selected" : "";
+  return `<option value="${escapeAttr(v)}" ${sel}>${escapeHtml(label)}</option>`;
+}
+function val(id){
+  const el = $(id);
+  return el ? (el.value || "").trim() : "";
 }
 
-function bloco(titulo,txt){
-pdf.setFont("helvetica","bold");
-pdf.text(titulo,20,y);
-y+=6;
-pdf.setFont("helvetica","normal");
-const linhas = pdf.splitTextToSize(txt,170);
-pdf.text(linhas,20,y);
-y+=linhas.length*6+2;
+/* ========= Estado ========= */
+const STORAGE_KEY = "previa_history_v1";
+const steps = [
+  { key:"ident", title:"Identificação", render: renderIdent },
+  { key:"proc", title:"Procedimento", render: renderProc },
+  { key:"clin", title:"Clínico", render: renderClinico },
+  { key:"alto", title:"Alto impacto", render: renderAltoImpacto },
+  { key:"via",  title:"Via aérea + anexos", render: renderViaAerea },
+  { key:"estr", title:"Estratégia", render: renderEstrategia },
+  { key:"cond", title:"Conduta + jejum", render: renderConduta },
+  { key:"final", title:"Finalização", render: renderFinalStep }
+];
+
+let currentStep = 0;
+let lastLoadedId = null;
+
+let evalData = {};
+let photoPatientData = ""; // base64
+let photoViaData = "";     // base64
+let examsData = [];        // base64 list
+
+// assinaturas desenhadas (base64 PNG)
+let sigPacienteData = null;
+let sigMedicoData = null;
+let padPaciente = null;
+let padMedico = null;
+
+/* ========= Textos padrão ========= */
+const CONSENT_HOSPITAL =
+`CONSENTIMENTO INFORMADO – ANESTESIA (CLÍNICA/HOSPITAL)
+
+Declaro que fui avaliado(a) e orientado(a) sobre o plano anestésico proposto, incluindo possíveis técnicas (anestesia geral, regional e/ou sedação), conforme necessidade clínica e segurança.
+
+Fui informado(a) de que a anestesia envolve riscos e possíveis intercorrências, incluindo: náuseas e vômitos, dor, coceira, tremores, alterações de pressão/frequência cardíaca, reações alérgicas, dificuldade de acesso venoso, necessidade de dispositivos para respiração e via aérea, lesões dentárias, cefaleia pós-raqui, retenção urinária, complicações neurológicas raras, complicações cardiopulmonares e, excepcionalmente, eventos graves.
+
+Compreendo que o plano anestésico poderá ser ajustado durante o procedimento para preservar minha segurança.
+
+Autorizo a realização de medidas adicionais necessárias em situações imprevistas, inclusive em urgência.
+
+Declaro que forneci informações verdadeiras sobre minha saúde, alergias e medicações, e que recebi orientações sobre jejum, uso de medicamentos e cuidados no pós-operatório, incluindo necessidade de acompanhante.
+
+Assinatura do(a) paciente/responsável: ______________________________
+Data: ____/____/______`;
+
+const CONSENT_ESTETICA =
+`CONSENTIMENTO INFORMADO – ANESTESIA (ESTÉTICA)
+
+Declaro que fui avaliado(a) e orientado(a) sobre o plano anestésico proposto para meu procedimento estético, incluindo técnica(s) anestésica(s) indicadas e possibilidade de ajustes conforme evolução clínica e segurança.
+
+Fui informado(a) sobre riscos e intercorrências possíveis, incluindo: sonolência, náuseas e vômitos (PONV), dor, coceira, tremores, alterações de pressão/frequência cardíaca, reações alérgicas, dificuldade de acesso venoso, necessidade de dispositivos para respiração e via aérea, lesões dentárias, cefaleia pós-raqui, retenção urinária, complicações neurológicas raras e, excepcionalmente, eventos graves.
+
+Fui orientado(a) quanto a jejum, medicações, necessidade de acompanhante, e que não devo dirigir/decidir assuntos importantes por 24h após anestesia/sedação.
+
+Declaro que forneci informações verdadeiras sobre minha saúde, alergias e medicações.
+
+Assinatura do(a) paciente/responsável: ______________________________
+Data: ____/____/______`;
+
+/* ========= Navegação ========= */
+function goHome(){ showScreen("Home"); }
+function goHistory(){ renderHistory(); showScreen("History"); }
+function backToSteps(){ showScreen("Steps"); }
+function goQuick(){ renderQuick(); showScreen("Quick"); }
+
+function startNew(){
+  lastLoadedId=null;
+  const mode = $("mode").value;
+
+  evalData = {
+    mode,
+    nome:"",
+    idade:"",
+    sexo:"",
+    documento:"",
+    telefone:"",
+    email:"",
+    peso:"",
+    altura:"",
+    imc:"",
+    asa:"II",
+    procedimento:"",
+    cirurgiao:"",
+    local:"",
+    dataCirurgia:"",
+    comorb:"",
+    meds:"",
+    alerg:"",
+    cirurg:"",
+    interc:"",
+    ozempic:"Não",
+    anticoagulante:"Não",
+    altoImpacto:"Não",
+    motivoAltoImpacto:"",
+    mallampati:"II",
+    boca:"",
+    pescoco:"",
+    denticao:"",
+    viaObs:"",
+    estrat: (mode==="estetica" ? "Sedação / geral conforme procedimento e segurança." : "Geral e/ou regional conforme indicação clínica."),
+    ponv: (mode==="estetica" ? "Profilaxia ativa de PONV conforme risco." : "Profilaxia conforme risco."),
+    analgesia:"Analgesia multimodal.",
+    condicao:"Apto",
+    jejumSolidos:"8",
+    aguaAte:"2",
+    conduta: (mode==="estetica" ? "Acompanhante obrigatório. Não dirigir 24h. Jejum conforme orientado." : "Jejum conforme orientado. Chegar com antecedência. Trazer exames."),
+    assinaturaMedico:"Dr Leonardo Alves Araújo · CRM-MG 47310 · RQE 40542"
+  };
+
+  photoPatientData="";
+  photoViaData="";
+  examsData=[];
+  sigPacienteData=null;
+  sigMedicoData=null;
+
+  ensureConsentDefault();
+  currentStep=0;
+  updateStepUI();
+  showScreen("Steps");
 }
 
-let y = 20;
-
-/* CAPA */
-pdf.setFillColor(15,39,71);
-pdf.rect(0,0,210,60,"F");
-pdf.setTextColor(255,255,255);
-pdf.setFontSize(22);
-pdf.text("Prévia",20,25);
-pdf.setFontSize(11);
-pdf.text("plataforma de avaliação pré-anestésica",20,32);
-pdf.text("RT: Dr. Leonardo Alves Araújo",20,40);
-pdf.text("CRM-MG 47310 • RQE 40542",20,46);
-
-pdf.setTextColor(0,0,0);
-y=70;
-
-/* RESUMO */
-pdf.setFontSize(14);
-pdf.setFont("helvetica","bold");
-pdf.text(nome,20,y); y+=6;
-pdf.setFont("helvetica","normal");
-pdf.text(proced,20,y); y+=6;
-pdf.text("ASA "+asa+"   Mallampati "+mall,20,y); y+=10;
-
-pdf.setFont("helvetica","bold");
-pdf.text("Dados clínicos",20,y); y+=6;
-pdf.setFont("helvetica","normal");
-pdf.text(comorb,20,y); y+=6;
-pdf.text(meds,20,y); y+=6;
-pdf.text(alerg,20,y); y+=6;
-pdf.text(cirurg,20,y); y+=6;
-pdf.text(interc,20,y); y+=10;
-
-/* ESTRATÉGIA */
-pdf.setFont("helvetica","bold");
-pdf.text("Estratégia anestésica",20,y); y+=6;
-pdf.setFont("helvetica","normal");
-pdf.text(estrat,20,y); y+=8;
-
-pdf.setFont("helvetica","bold");
-pdf.text("Conduta",20,y); y+=6;
-pdf.setFont("helvetica","normal");
-pdf.text(cond,20,y); y+=10;
-
-/* CONSENTIMENTO */
-pdf.setFont("helvetica","bold");
-pdf.text("Consentimento informado",20,y); y+=6;
-pdf.setFont("helvetica","normal");
-const c = pdf.splitTextToSize(consent,170);
-pdf.text(c,20,y);
-
-/* ANEXOS */
-const foto = document.getElementById("fotoVia").files[0];
-const exames = document.getElementById("exames").files;
-
-if(foto || exames.length){
-pdf.addPage();
-pdf.setFontSize(16);
-pdf.text("Anexos",20,20);
-
-let y2=30;
-
-if(foto){
-const img = await readImg(foto);
-pdf.text("Via aérea",20,y2);
-pdf.addImage(img,"JPEG",20,y2+4,60,60);
-y2+=70;
+function prevStep(){
+  if(currentStep===0){ goHome(); return; }
+  collectStep();
+  currentStep--;
+  updateStepUI();
+}
+function nextStep(){
+  if(!collectStep()) return;
+  if(currentStep < steps.length-1){
+    currentStep++;
+    updateStepUI();
+    return;
+  }
+  // fim
+  $("btnNext").style.display="none";
+  $("btnSave").style.display="inline-block";
+  toast("Final. Pode salvar ou gerar PDF.");
+}
+function saveEval(){
+  collectStep();
+  const id = lastLoadedId || ("eval_"+Date.now());
+  const payload = {
+    id,
+    createdAt: new Date().toISOString(),
+    data: evalData,
+    photoPatientData,
+    photoViaData,
+    examsData,
+    consent: $("consentText").value || "",
+    sigPacienteData,
+    sigMedicoData
+  };
+  const list = loadList();
+  const idx = list.findIndex(x=>x.id===id);
+  if(idx>=0) list[idx]=payload; else list.unshift(payload);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  lastLoadedId=id;
+  toast("Salvo no histórico.");
+  $("btnSave").style.display="none";
+  $("btnNext").style.display="inline-block";
+  goQuick();
 }
 
-if(exames.length){
-pdf.text("Exames",20,y2);
-y2+=6;
-for(let i=0;i<exames.length;i++){
-const img = await readImg(exames[i]);
-const x = 20+(i%3)*60;
-const yy = y2+Math.floor(i/3)*60;
-pdf.addImage(img,"JPEG",x,yy,50,50);
-}
-}
+/* ========= UI Etapas ========= */
+function updateStepUI(){
+  const s = steps[currentStep];
+  $("stepTitle").textContent = s.title;
+  $("stepCount").textContent = `· ${currentStep+1} de ${steps.length}`;
+  $("progressFill").style.width = `${Math.round(((currentStep+1)/steps.length)*100)}%`;
+
+  $("btnSave").style.display="none";
+  $("btnNext").style.display="inline-block";
+
+  $("stepBody").innerHTML="";
+  s.render($("stepBody"));
+
+  // mini logo
+  const lm = $("logoMode").value;
+  $("miniLogo").textContent = (lm==="P") ? "P" : "Prévia";
 }
 
-pdf.save("Previa_"+nome+".pdf");
+function renderIdent(root){
+  root.innerHTML = `
+    <div class="row cols2">
+      <div>
+        <label>Nome do paciente</label>
+        <input id="nome" value="${escapeAttr(evalData.nome)}" placeholder="Nome completo"/>
+      </div>
+      <div>
+        <label>Documento (CPF/RG)</label>
+        <input id="documento" value="${escapeAttr(evalData.documento||"")}" placeholder="Opcional"/>
+      </div>
+    </div>
+    <div class="row cols3">
+      <div>
+        <label>Idade</label>
+        <input id="idade" value="${escapeAttr(evalData.idade)}" placeholder="Ex: 34" inputmode="numeric"/>
+      </div>
+      <div>
+        <label>Sexo</label>
+        <select id="sexo">
+          ${opt(evalData.sexo,"","Selecionar")}
+          ${opt(evalData.sexo,"F","Feminino")}
+          ${opt(evalData.sexo,"M","Masculino")}
+          ${opt(evalData.sexo,"O","Outro")}
+        </select>
+      </div>
+      <div>
+        <label>ASA</label>
+        <select id="asa">
+          ${opt(evalData.asa,"I","ASA I")}
+          ${opt(evalData.asa,"II","ASA II")}
+          ${opt(evalData.asa,"III","ASA III")}
+          ${opt(evalData.asa,"IV","ASA IV")}
+        </select>
+      </div>
+    </div>
+    <div class="row cols3">
+      <div>
+        <label>Peso (kg)</label>
+        <input id="peso" value="${escapeAttr(evalData.peso)}" placeholder="Ex: 72" inputmode="decimal"/>
+      </div>
+      <div>
+        <label>Altura (cm)</label>
+        <input id="altura" value="${escapeAttr(evalData.altura)}" placeholder="Ex: 168" inputmode="numeric"/>
+      </div>
+      <div>
+        <label>IMC (auto)</label>
+        <input id="imc" value="${escapeAttr(evalData.imc||"")}" placeholder="Calculado" disabled/>
+      </div>
+    </div>
+    <div class="row cols2">
+      <div>
+        <label>Telefone</label>
+        <input id="telefone" value="${escapeAttr(evalData.telefone||"")}" placeholder="Opcional"/>
+      </div>
+      <div>
+        <label>E-mail</label>
+        <input id="email" type="email" value="${escapeAttr(evalData.email||"")}" placeholder="Opcional"/>
+      </div>
+    </div>
+    <div class="row cols2">
+      <div>
+        <label>Foto do paciente (capa do PDF)</label>
+        <input type="file" id="fotoPaciente" accept="image/*"/>
+        <div class="small" style="margin-top:6px;color:#0b1a2b">Sugestão: rosto centralizado, sem distorcer.</div>
+      </div>
+      <div>
+        <label>Assinatura do médico (texto)</label>
+        <input id="assinaturaMedico" value="${escapeAttr(evalData.assinaturaMedico||"")}" placeholder="Dr ... CRM ..."/>
+      </div>
+    </div>
+  `;
+
+  ["peso","altura"].forEach(id=>{
+    $(id).addEventListener("input", calcIMC);
+  });
+  calcIMC();
+
+  $("fotoPaciente").addEventListener("change", async (e)=>{
+    const file = e.target.files && e.target.files[0];
+    if(!file) return;
+    photoPatientData = await fileToDataURL(file);
+    toast("Foto do paciente OK.");
+  });
 }
 
-function readImg(file){
-return new Promise(res=>{
-const r = new FileReader();
-r.onload=e=>res(e.target.result);
-r.readAsDataURL(file);
-});
+function renderProc(root){
+  root.innerHTML = `
+    <div class="row cols2">
+      <div>
+        <label>Procedimento</label>
+        <input id="procedimento" value="${escapeAttr(evalData.procedimento)}" placeholder="Ex: Mamoplastia redutora"/>
+      </div>
+      <div>
+        <label>Cirurgião</label>
+        <input id="cirurgiao" value="${escapeAttr(evalData.cirurgiao||"")}" placeholder="Opcional"/>
+      </div>
+    </div>
+    <div class="row cols2">
+      <div>
+        <label>Local (hospital/clínica)</label>
+        <input id="local" value="${escapeAttr(evalData.local||"")}" placeholder="Opcional"/>
+      </div>
+      <div>
+        <label>Data da cirurgia</label>
+        <input id="dataCirurgia" value="${escapeAttr(evalData.dataCirurgia||"")}" placeholder="Opcional"/>
+      </div>
+    </div>
+  `;
 }
+
+function renderClinico(root){
+  root.innerHTML = `
+    <div class="row cols2">
+      <div>
+        <label>Comorbidades</label>
+        <textarea id="comorb" placeholder="Ex: HAS; Asma; DM">${escapeHtml(evalData.comorb||"")}</textarea>
+      </div>
+      <div>
+        <label>Medicações em uso</label>
+        <textarea id="meds" placeholder="Ex: Losartana 50mg; Metformina">${escapeHtml(evalData.meds||"")}</textarea>
+      </div>
+    </div>
+    <div class="row cols2">
+      <div>
+        <label>Alergias</label>
+        <textarea id="alerg" placeholder="Ex: Dipirona (urticária) / Nega">${escapeHtml(evalData.alerg||"")}</textarea>
+      </div>
+      <div>
+        <label>Passado cirúrgico</label>
+        <textarea id="cirurg" placeholder="Ex: Cesárea; apendicectomia">${escapeHtml(evalData.cirurg||"")}</textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Intercorrências anestésicas prévias</label>
+        <textarea id="interc" placeholder="Ex: PONV intenso; difícil punção; etc.">${escapeHtml(evalData.interc||"")}</textarea>
+      </div>
+    </div>
+  `;
+}
+
+function renderAltoImpacto(root){
+  root.innerHTML = `
+    <div class="row cols3">
+      <div>
+        <label>Ozempic / análogos</label>
+        <select id="ozempic">
+          ${opt(evalData.ozempic,"Não","Não")}
+          ${opt(evalData.ozempic,"Sim","Sim")}
+        </select>
+      </div>
+      <div>
+        <label>Anticoagulante/antiagregante</label>
+        <select id="anticoagulante">
+          ${opt(evalData.anticoagulante,"Não","Não")}
+          ${opt(evalData.anticoagulante,"Sim","Sim")}
+        </select>
+      </div>
+      <div>
+        <label>Alto impacto?</label>
+        <select id="altoImpacto">
+          ${opt(evalData.altoImpacto,"Não","Não")}
+          ${opt(evalData.altoImpacto,"Sim","Sim")}
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Motivo / alerta (se alto impacto)</label>
+        <input id="motivoAltoImpacto" value="${escapeAttr(evalData.motivoAltoImpacto||"")}" placeholder="Ex: cardiopatia, anticoagulação, via aérea difícil"/>
+      </div>
+    </div>
+  `;
+}
+
+function renderViaAerea(root){
+  root.innerHTML = `
+    <div class="row cols2">
+      <div>
+        <label>Mallampati</label>
+        <select id="mallampati">
+          ${opt(evalData.mallampati,"I","I")}
+          ${opt(evalData.mallampati,"II","II")}
+          ${opt(evalData.mallampati,"III","III")}
+          ${opt(evalData.mallampati,"IV","IV")}
+        </select>
+      </div>
+      <div>
+        <label>Abertura de boca</label>
+        <input id="boca" value="${escapeAttr(evalData.boca||"")}" placeholder="Ex: 3 dedos / 4 cm"/>
+      </div>
+    </div>
+    <div class="row cols2">
+      <div>
+        <label>Mobilidade cervical / pescoço</label>
+        <input id="pescoco" value="${escapeAttr(evalData.pescoco||"")}" placeholder="Ex: adequada / reduzida"/>
+      </div>
+      <div>
+        <label>Dentição</label>
+        <input id="denticao" value="${escapeAttr(evalData.denticao||"")}" placeholder="Ex: prótese / dente frágil / normal"/>
+      </div>
+    </div>
+    <div class="row cols2">
+      <div>
+        <label>Foto via aérea (opcional)</label>
+        <input type="file" id="fotoVia" accept="image/*"/>
+      </div>
+      <div>
+        <label>Exames/fotos relevantes (múltiplos)</label>
+        <input type="file" id="exames" accept="image/*" multiple/>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Observações de via aérea</label>
+        <textarea id="viaObs" placeholder="Ex: barba, ronco, pescoço curto...">${escapeHtml(evalData.viaObs||"")}</textarea>
+      </div>
+    </div>
+  `;
+
+  $("fotoVia").addEventListener("change", async (e)=>{
+    const f = e.target.files && e.target.files[0];
+    if(!f) return;
+    photoViaData = await fileToDataURL(f);
+    toast("Foto via aérea OK.");
+  });
+
+  $("exames").addEventListener("change", async (e)=>{
+    const files = Array.from(e.target.files||[]);
+    if(!files.length) return;
+    for(const f of files){
+      examsData.push(await fileToDataURL(f));
+    }
+    toast(`Exames anexados: ${files.length}`);
+  });
+}
+
+function renderEstrategia(root){
+  root.innerHTML = `
+    <div class="row cols2">
+      <div>
+        <label>Estratégia anestésica</label>
+        <textarea id="estrat" placeholder="Plano objetivo">${escapeHtml(evalData.estrat||"")}</textarea>
+      </div>
+      <div>
+        <label>PONV / profilaxia</label>
+        <textarea id="ponv" placeholder="Profilaxia conforme risco">${escapeHtml(evalData.ponv||"")}</textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Analgesia</label>
+        <textarea id="analgesia" placeholder="Analgesia multimodal">${escapeHtml(evalData.analgesia||"")}</textarea>
+      </div>
+    </div>
+    <div class="row cols2">
+      <div>
+        <label>Condição</label>
+        <select id="condicao">
+          ${opt(evalData.condicao,"Apto","Apto")}
+          ${opt(evalData.condicao,"Pendência","Pendência")}
+        </select>
+      </div>
+      <div>
+        <label>Assinatura do paciente (texto opcional)</label>
+        <input id="assinaturaPacienteTxt" value="${escapeAttr(evalData.assinaturaPacienteTxt||"")}" placeholder="Se quiser, além do desenho"/>
+      </div>
+    </div>
+  `;
+}
+
+function renderConduta(root){
+  root.innerHTML = `
+    <div class="row cols2">
+      <div>
+        <label>Jejum (sólidos - horas)</label>
+        <input id="jejumSolidos" value="${escapeAttr(evalData.jejumSolidos||"8")}" inputmode="numeric"/>
+      </div>
+      <div>
+        <label>Água até (horas antes)</label>
+        <input id="aguaAte" value="${escapeAttr(evalData.aguaAte||"2")}" inputmode="numeric"/>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Conduta / orientações</label>
+        <textarea id="conduta" placeholder="Jejum, medicações, chegada, acompanhante...">${escapeHtml(evalData.conduta||"")}</textarea>
+      </div>
+    </div>
+  `;
+}
+
+function renderFinalStep(root){
+  root.innerHTML = `
+    <div class="row cols2">
+      <div>
+        <label>Consentimento</label>
+        <button class="btn btnSoft" style="width:100%" onclick="openConsent()">Abrir / editar termo</button>
+      </div>
+      <div>
+        <label>Assinaturas desenhadas</label>
+        <button class="btn btnSoft" style="width:100%" onclick="openSig()">Capturar assinaturas</button>
+      </div>
+    </div>
+    <div class="row cols2">
+      <div>
+        <label>Visão rápida</label>
+        <button class="btn btnPrimary" style="width:100%" onclick="goQuick()">Abrir resumo</button>
+      </div>
+      <div>
+        <label>PDF final</label>
+        <button class="btn btnOk" style="width:100%" onclick="generatePDF()">Gerar PDF final</button>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="small" style="color:#fff">
+      No PDF: capa premium + QR + relatório + termo + assinaturas + anexos.
+    </div>
+  `;
+}
+
+/* ========= Coleta ========= */
+function collectStep(){
+  const k = steps[currentStep].key;
+  if(k==="ident"){
+    evalData.nome = val("nome");
+    evalData.documento = val("documento");
+    evalData.idade = val("idade");
+    evalData.sexo = val("sexo");
+    evalData.asa = val("asa");
+    evalData.peso = val("peso");
+    evalData.altura = val("altura");
+    evalData.imc = $("imc")?.value || "";
+    evalData.telefone = val("telefone");
+    evalData.email = val("email");
+    evalData.assinaturaMedico = val("assinaturaMedico") || evalData.assinaturaMedico;
+
+    if(!evalData.nome){ toast("Coloca o nome do paciente."); return false; }
+    return true;
+  }
+  if(k==="proc"){
+    evalData.procedimento = val("procedimento");
+    evalData.cirurgiao = val("cirurgiao");
+    evalData.local = val("local");
+    evalData.dataCirurgia = val("dataCirurgia");
+    return true;
+  }
+  if(k==="clin"){
+    evalData.comorb = val("comorb");
+    evalData.meds = val("meds");
+    evalData.alerg = val("alerg");
+    evalData.cirurg = val("cirurg");
+    evalData.interc = val("interc");
+    return true;
+  }
+  if(k==="alto"){
+    evalData.ozempic = val("ozempic");
+    evalData.anticoagulante = val("anticoagulante");
+    evalData.altoImpacto = val("altoImpacto");
+    evalData.motivoAltoImpacto = val("motivoAltoImpacto");
+    return true;
+  }
+  if(k==="via"){
+    evalData.mallampati = val("mallampati");
+    evalData.boca = val("boca");
+    evalData.pescoco = val("pescoco");
+    evalData.denticao = val("denticao");
+    evalData.viaObs = val("viaObs");
+    return true;
+  }
+  if(k==="estr"){
+    evalData.estrat = val("estrat");
+    evalData.ponv = val("ponv");
+    evalData.analgesia = val("analgesia");
+    evalData.condicao = val("condicao");
+    evalData.assinaturaPacienteTxt = val("assinaturaPacienteTxt");
+    return true;
+  }
+  if(k==="cond"){
+    evalData.jejumSolidos = val("jejumSolidos");
+    evalData.aguaAte = val("aguaAte");
+    evalData.conduta = val("conduta");
+    return true;
+  }
+  if(k==="final"){
+    return true;
+  }
+  return true;
+}
+
+/* ========= Consentimento ========= */
+function ensureConsentDefault(){
+  const mode = ($("mode")?.value || evalData.mode || "hospital");
+  const t = $("consentText");
+  if(!t) return;
+  if(!t.value || !t.value.trim()){
+    t.value = (mode==="estetica") ? CONSENT_ESTETICA : CONSENT_HOSPITAL;
+  }
+}
+function openConsent(){ ensureConsentDefault(); showScreen("Consent"); }
+function closeConsent(){ showScreen("Steps"); }
+
+/* ========= IMC ========= */
+function calcIMC(){
+  const p = parseFloat(val("peso").replace(",","."));
+  const a = parseFloat(val("altura").replace(",","."));
+  if(!p || !a){ if($("imc")) $("imc").value=""; return; }
+  const m = a/100;
+  const imc = (p/(m*m));
+  if($("imc")) $("imc").value = imc.toFixed(1);
+  evalData.imc = imc.toFixed(1);
+}
+
+/* ========= Histórico ========= */
+function loadList(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]"); }
+  catch(e){ return []; }
+}
+function clearHistory(){
+  if(!confirm("Apagar todo o histórico local?")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  renderHistory();
+  toast("Histórico apagado.");
+}
+function renderHistory(){
+  const list = loadList();
+  const box = $("historyList");
+  box.innerHTML = "";
+  if(!list.length){
+    box.innerHTML = `<div class="small">Nenhuma avaliação salva ainda.</div>`;
+    return;
+  }
+  list.forEach(item=>{
+    const d = item.data || {};
+    const el = document.createElement("div");
+    el.className="histItem";
+    el.innerHTML = `
+      <b>${escapeHtml(d.nome||"Sem nome")}</b>
+      <div class="histMeta">${escapeHtml(d.procedimento||"—")}<br/>ASA ${escapeHtml(d.asa||"—")} · Mallampati ${escapeHtml(d.mallampati||"—")}</div>
+      <div class="btnRow" style="margin-top:10px">
+        <button class="btn btnSoft" onclick="loadEval('${item.id}')">Abrir</button>
+        <button class="btn btnPrimary" onclick="quickFromHistory('${item.id}')">Resumo</button>
+      </div>
+    `;
+    box.appendChild(el);
+  });
+}
+function loadEval(id){
+  const list = loadList();
+  const item = list.find(x=>x.id===id);
+  if(!item){ toast("Não achei esse item."); return; }
+
+  lastLoadedId = id;
+  evalData = item.data || {};
+  photoPatientData = item.photoPatientData || "";
+  photoViaData = item.photoViaData || "";
+  examsData = item.examsData || [];
+  sigPacienteData = item.sigPacienteData || null;
+  sigMedicoData = item.sigMedicoData || null;
+
+  // modo
+  if(evalData.mode) $("mode").value = evalData.mode;
+
+  showScreen("Steps");
+  currentStep=0;
+  updateStepUI();
+
+  // consent
+  ensureConsentDefault();
+  $("consentText").value = item.consent || $("consentText").value;
+
+  toast("Avaliação carregada.");
+}
+function quickFromHistory(id){
+  const list = loadList();
+  const item = list.find(x=>x.id===id);
+  if(!item){ toast("Não achei esse item."); return; }
+
+  lastLoadedId = id;
+  evalData = item.data || {};
+  photoPatientData = item.photoPatientData || "";
+  photoViaData = item.photoViaData || "";
+  examsData = item.examsData || [];
+  sigPacienteData = item.sigPacienteData || null;
+  sigMedicoData = item.sigMedicoData || null;
+
+  if(evalData.mode) $("mode").value = evalData.mode;
+  ensureConsentDefault();
+  $("consentText").value = item.consent || $("consentText").value;
+
+  goQuick();
+}
+
+/* ========= Resumo ========= */
+function renderQuick(){
+  const d = evalData;
+  const mode = d.mode || $("mode").value;
+  const flags = [];
+  if(d.ozempic==="Sim") flags.push("Ozempic/análogos");
+  if(d.anticoagulante==="Sim") flags.push("Anticoagulante");
+  if(d.altoImpacto==="Sim") flags.push("Alto impacto: "+(d.motivoAltoImpacto||"—"));
+
+  $("quickBox").innerHTML = `
+    <div class="row cols2">
+      <div><b>${escapeHtml(d.nome||"")}</b><div class="small">${escapeHtml(d.procedimento||"")}</div></div>
+      <div class="small">
+        Modo: ${escapeHtml(mode)}<br/>
+        ASA ${escapeHtml(d.asa||"—")} · Mallampati ${escapeHtml(d.mallampati||"—")}<br/>
+        ${escapeHtml(d.condicao||"—")}
+      </div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="small"><b>Comorbidades:</b><br/>${escapeHtml((d.comorb||"").trim()||"—")}</div>
+    <div class="small" style="margin-top:8px"><b>Medicações:</b><br/>${escapeHtml((d.meds||"").trim()||"—")}</div>
+    <div class="small" style="margin-top:8px"><b>Alergias:</b><br/>${escapeHtml((d.alerg||"").trim()||"—")}</div>
+    <div class="small" style="margin-top:8px"><b>Passado cirúrgico:</b><br/>${escapeHtml((d.cirurg||"").trim()||"—")}</div>
+    <div class="small" style="margin-top:8px"><b>Intercorrências:</b><br/>${escapeHtml((d.interc||"").trim()||"—")}</div>
+
+    <div class="divider"></div>
+    <div class="small"><b>Via aérea:</b><br/>
+      Boca: ${escapeHtml(d.boca||"—")} · Pescoço: ${escapeHtml(d.pescoco||"—")} · Dentição: ${escapeHtml(d.denticao||"—")}<br/>
+      Obs: ${escapeHtml((d.viaObs||"").trim()||"—")}
+    </div>
+
+    <div class="divider"></div>
+    <div class="small"><b>Estratégia:</b><br/>${escapeHtml((d.estrat||"").trim()||"—")}</div>
+    <div class="small" style="margin-top:8px"><b>PONV:</b><br/>${escapeHtml((d.ponv||"").trim()||"—")}</div>
+    <div class="small" style="margin-top:8px"><b>Analgesia:</b><br/>${escapeHtml((d.analgesia||"").trim()||"—")}</div>
+
+    <div class="divider"></div>
+    <div class="small"><b>Conduta:</b><br/>
+      Jejum: ${escapeHtml(d.jejumSolidos||"8")}h sólidos · água até ${escapeHtml(d.aguaAte||"2")}h antes<br/>
+      ${escapeHtml((d.conduta||"").trim()||"—")}
+    </div>
+
+    <div class="divider"></div>
+    <div class="small"><b>Alertas:</b><br/>${escapeHtml(flags.length?flags.join(" · "):"—")}</div>
+  `;
+}
+
+/* ========= QR ========= */
+function makeQrDataUrl(text){
+  const canvas = document.createElement("canvas");
+  new QRious({ element: canvas, value: text, size: 240 });
+  return canvas.toDataURL("image/png");
+}
+
+/* hash simples (não criptográfico) só pra verificação rápida */
+function simpleHash(str){
+  let h = 2166136261;
+  for(let i=0;i<str.length;i++){
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return (h>>>0).toString(16);
+}
+
+/* ========= PDF ========= */
+async function generatePDF(){
+  // coleta etapa atual se estiver nas etapas
+  if($("screenSteps").classList.contains("active")){
+    if(!collectStep()) return;
+  }
+  ensureConsentDefault();
+
+  const mode = evalData.mode || $("mode").value || "hospital";
+  const logoMode = $("logoMode").value || "PREVIA";
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ unit:"mm", format:"a4" });
+  const W=210, H=297;
+
+  // ID do relatório
+  const reportId = (crypto.randomUUID ? crypto.randomUUID() : ("id_"+Date.now()));
+  const basePayload = `PREVIA|${reportId}|${(new Date()).toISOString().slice(0,10)}|ASA${evalData.asa||""}|M${evalData.mallampati||""}|${mode}`;
+  const hash = simpleHash(basePayload);
+  const qrPayload = basePayload + `|H${hash}`;
+  const qrImg = makeQrDataUrl(qrPayload);
+
+  // ===== CAPA =====
+  drawCover(pdf, {mode, logoMode, qrImg, reportId, hash});
+
+  // ===== RELATÓRIO =====
+  pdf.addPage();
+  drawHeader(pdf, "Relatório pré-anestésico");
+
+  let y = 34;
+  y = sec(pdf, "Identificação", y);
+  y = kv(pdf, "Paciente", evalData.nome, y);
+  y = kv(pdf, "Procedimento", evalData.procedimento||"—", y);
+  y = kv(pdf, "ASA", "ASA "+(evalData.asa||"—"), y);
+  y = kv(pdf, "Via aérea", "Mallampati "+(evalData.mallampati||"—"), y);
+  y = kv(pdf, "Idade/Sexo", `${evalData.idade||"—"} / ${evalData.sexo||"—"}`, y);
+  y = kv(pdf, "Peso/Altura/IMC", `${evalData.peso||"—"}kg · ${evalData.altura||"—"}cm · IMC ${evalData.imc||"—"}`, y);
+  y = kv(pdf, "Documento", evalData.documento||"—", y);
+
+  y = sec(pdf, "Clínico", y);
+  y = blk(pdf, "Comorbidades", evalData.comorb, y);
+  y = blk(pdf, "Medicações", evalData.meds, y);
+  y = blk(pdf, "Alergias", evalData.alerg, y);
+  y = blk(pdf, "Passado cirúrgico", evalData.cirurg, y);
+  y = blk(pdf, "Intercorrências anestésicas", evalData.interc, y);
+
+  y = sec(pdf, "Alto impacto", y);
+  y = kv(pdf, "Ozempic/análogos", evalData.ozempic||"—", y);
+  y = kv(pdf, "Anticoagulante", evalData.anticoagulante||"—", y);
+  y = kv(pdf, "Alto impacto", evalData.altoImpacto||"—", y);
+  if((evalData.altoImpacto||"") === "Sim"){
+    y = kv(pdf, "Motivo", evalData.motivoAltoImpacto||"—", y);
+  }
+
+  y = sec(pdf, "Via aérea – detalhes", y);
+  y = kv(pdf, "Boca", evalData.boca||"—", y);
+  y = kv(pdf, "Pescoço", evalData.pescoco||"—", y);
+  y = kv(pdf, "Dentição", evalData.denticao||"—", y);
+  y = blk(pdf, "Observações", evalData.viaObs, y);
+
+  y = sec(pdf, "Estratégia anestésica", y);
+  y = blk(pdf, "Estratégia", evalData.estrat, y);
+  y = blk(pdf, "PONV", evalData.ponv, y);
+  y = blk(pdf, "Analgesia", evalData.analgesia, y);
+  y = kv(pdf, "Condição", evalData.condicao||"—", y);
+
+  y = sec(pdf, "Conduta", y);
+  y = kv(pdf, "Jejum", `${evalData.jejumSolidos||"8"}h sólidos · água até ${evalData.aguaAte||"2"}h antes`, y);
+  y = blk(pdf, "Orientações", evalData.conduta, y);
+
+  // ===== CONSENTIMENTO + ASSINATURAS =====
+  pdf.addPage();
+  drawHeader(pdf, "Consentimento informado");
+
+  let y2 = 34;
+  y2 = sec(pdf, "Texto", y2);
+  y2 = para(pdf, $("consentText").value || "", 20, y2, 170, 5) + 4;
+
+  y2 = sec(pdf, "Assinaturas", y2);
+
+  // linhas
+  pdf.setDrawColor(120);
+  pdf.line(20, y2+18, 105, y2+18);
+  pdf.line(120, y2+18, 195, y2+18);
+
+  pdf.setFont("helvetica","normal");
+  pdf.setFontSize(10);
+  pdf.setTextColor(25,35,45);
+  pdf.text("Paciente / responsável", 20, y2+24);
+  pdf.text("Médico", 120, y2+24);
+
+  // imagens das assinaturas (se existirem)
+  if(sigPacienteData){
+    try{ pdf.addImage(sigPacienteData, "PNG", 20, y2, 85, 18); }catch(e){}
+  }
+  if(sigMedicoData){
+    try{ pdf.addImage(sigMedicoData, "PNG", 120, y2, 75, 18); }catch(e){}
+  }
+
+  // data/hora
+  const stamp = new Date().toLocaleString("pt-BR");
+  pdf.setTextColor(80,90,100);
+  pdf.setFontSize(9);
+  pdf.text(`Data e hora: ${stamp}`, 20, y2+34);
+  pdf.text(`ID: ${reportId.slice(0,12)} · hash: ${hash}`, 20, y2+39);
+
+  // ===== ANEXOS =====
+  if(photoViaData || (examsData && examsData.length)){
+    pdf.addPage();
+    drawHeader(pdf, "Anexos");
+    let ya = 34;
+
+    if(photoViaData){
+      ya = sec(pdf, "Via aérea (foto)", ya);
+      try{
+        const fmt = photoViaData.startsWith("data:image/png") ? "PNG" : "JPEG";
+        pdf.addImage(photoViaData, fmt, 20, ya, 60, 60);
+        ya += 70;
+      }catch(e){
+        ya = para(pdf, "Não foi possível inserir a foto da via aérea.", 20, ya, 170, 5) + 4;
+      }
+    }
+
+    if(examsData && examsData.length){
+      ya = sec(pdf, "Exames", ya);
+      let x=20, size=48, gap=6, col=0;
+      for(const ex of examsData){
+        if(ya + size > 285){
+          pdf.addPage();
+          drawHeader(pdf, "Anexos – Exames");
+          ya = 34; x = 20; col = 0;
+        }
+        try{
+          const fmt = ex.startsWith("data:image/png") ? "PNG" : "JPEG";
+          pdf.addImage(ex, fmt, x, ya, size, size);
+        }catch(e){}
+        col++;
+        x += (size + gap);
+        if(col>=3){
+          col = 0; x = 20; ya += (size + gap);
+        }
+      }
+    }
+  }
+
+  // salvar
+  const nomeSafe = (evalData.nome||"Paciente").replace(/[^\w\s-]/g,"").trim().replace(/\s+/g,"_");
+  pdf.save(`Previa_${nomeSafe}.pdf`);
+  toast("PDF gerado.");
+}
+
+/* ===== PDF helpers ===== */
+function drawCover(pdf, ctx){
+  const W=210, H=297;
+
+  // topo azul
+  pdf.setFillColor(10,43,78);
+  pdf.rect(0,0,W,120,"F");
+
+  // logo
+  pdf.setTextColor(255,255,255);
+  pdf.setFont("helvetica","bold");
+  pdf.setFontSize(ctx.logoMode==="P" ? 52 : 44);
+  pdf.text(ctx.logoMode==="P" ? "P" : "Prévia", 20, 42);
+
+  pdf.setFont("helvetica","normal");
+  pdf.setFontSize(14);
+  pdf.setTextColor(220,230,240);
+  pdf.text("plataforma de avaliação pré-anestésica", 20, 56);
+
+  // box RT
+  pdf.setFillColor(255,255,255);
+  pdf.roundedRect(20, 72, 170, 42, 7, 7, "F");
+  pdf.setTextColor(10,22,40);
+  pdf.setFont("helvetica","bold");
+  pdf.setFontSize(17);
+  pdf.text("RT: Dr. Leonardo Alves Araújo", 26, 88);
+  pdf.setFont("helvetica","normal");
+  pdf.setFontSize(13);
+  pdf.setTextColor(45,60,75);
+  pdf.text("CRM-MG 47310 · RQE 40542", 26, 100);
+  pdf.text(`Modo: ${ctx.mode}`, 26, 110);
+
+  // foto paciente (se tiver)
+  if(photoPatientData){
+    try{
+      pdf.setDrawColor(230);
+      pdf.setFillColor(245);
+      pdf.roundedRect(132, 78, 52, 52, 8, 8, "FD");
+      const fmt = photoPatientData.startsWith("data:image/png") ? "PNG" : "JPEG";
+      pdf.addImage(photoPatientData, fmt, 132, 78, 52, 52);
+    }catch(e){}
+  }
+
+  // corpo branco
+  pdf.setFillColor(255,255,255);
+  pdf.rect(0,120,W,H-120,"F");
+
+  pdf.setTextColor(10,22,40);
+  pdf.setFont("helvetica","bold");
+  pdf.setFontSize(16);
+  pdf.text("Relatório pré-anestésico", 20, 145);
+
+  pdf.setFont("helvetica","normal");
+  pdf.setFontSize(12);
+  pdf.setTextColor(35,45,55);
+  pdf.text(evalData.nome || "Paciente: —", 20, 160);
+  pdf.text(`Procedimento: ${evalData.procedimento || "—"}`, 20, 170);
+  pdf.text(`ASA: ${evalData.asa||"—"} · Mallampati: ${evalData.mallampati||"—"}`, 20, 180);
+
+  // QR
+  try{
+    pdf.addImage(ctx.qrImg, "PNG", 160, 238, 35, 35);
+    pdf.setFontSize(9);
+    pdf.setTextColor(90,100,110);
+    pdf.text("Verificação Prévia", 160, 276);
+    pdf.text(ctx.reportId.slice(0,12), 160, 280);
+  }catch(e){}
+
+  pdf.setFontSize(9);
+  pdf.setTextColor(90,100,110);
+  pdf.text("Uso profissional. QR contém apenas ID e verificação (sem dados sensíveis).", 20, 290);
+}
+
+function drawHeader(pdf, title){
+  pdf.setFillColor(10,43,78);
+  pdf.rect(0,0,210,18,"F");
+  pdf.setTextColor(255,255,255);
+  pdf.setFont("helvetica","bold");
+  pdf.setFontSize(13);
+  pdf.text("Prévia", 20, 12);
+  pdf.setFont("helvetica","normal");
+  pdf.setFontSize(11);
+  pdf.setTextColor(220,230,240);
+  pdf.text(title, 55, 12);
+  pdf.setDrawColor(230);
+  pdf.setLineWidth(.2);
+  pdf.line(20, 22, 190, 22);
+}
+
+function sec(pdf, t, y){
+  if(y>270){ pdf.addPage(); drawHeader(pdf,"Continuação"); y=34; }
+  pdf.setTextColor(10,22,40);
+  pdf.setFont("helvetica","bold");
+  pdf.setFontSize(13);
+  pdf.text(t, 20, y);
+  pdf.setDrawColor(210);
+  pdf.line(20, y+2, 190, y+2);
+  return y+10;
+}
+function kv(pdf, k, v, y){
+  if(y>285){ pdf.addPage(); drawHeader(pdf,"Continuação"); y=34; }
+  pdf.setFont("helvetica","bold");
+  pdf.setFontSize(10.5);
+  pdf.setTextColor(20,30,40);
+  pdf.text(k + ":", 20, y);
+  pdf.setFont("helvetica","normal");
+  pdf.setTextColor(35,45,55);
+  pdf.text(String(v||"—"), 60, y);
+  return y+6;
+}
+function blk(pdf, title, text, y){
+  const t = (text||"").trim() || "—";
+  pdf.setFont("helvetica","bold");
+  pdf.setFontSize(10.5);
+  pdf.setTextColor(20,30,40);
+  pdf.text(title + ":", 20, y);
+  y += 6;
+  pdf.setFont("helvetica","normal");
+  pdf.setTextColor(35,45,55);
+  y = para(pdf, t, 20, y, 170, 5);
+  return y+2;
+}
+function para(pdf, text, x, y, w, lh){
+  const lines = pdf.splitTextToSize(String(text||""), w);
+  for(const ln of lines){
+    if(y>285){
+      pdf.addPage();
+      drawHeader(pdf,"Continuação");
+      y=34;
+    }
+    pdf.text(ln, x, y);
+    y += lh;
+  }
+  return y;
+}
+
+/* ========= Arquivos ========= */
+function fileToDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=>resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ========= Assinaturas ========= */
+function openSig(){
+  $("sigModal").style.display="block";
+
+  // inicializa pads (recria sempre pra não bugar)
+  const c1 = $("sigPaciente");
+  const c2 = $("sigMedico");
+  padPaciente = new SignaturePad(c1, { minWidth: 1, maxWidth: 2.5 });
+  padMedico   = new SignaturePad(c2, { minWidth: 1, maxWidth: 2.5 });
+
+  if(sigPacienteData){ padPaciente.fromDataURL(sigPacienteData); }
+  if(sigMedicoData){ padMedico.fromDataURL(sigMedicoData); }
+}
+function closeSig(){ $("sigModal").style.display="none"; }
+function clearSig(who){
+  if(who==="paciente" && padPaciente) padPaciente.clear();
+  if(who==="medico" && padMedico) padMedico.clear();
+}
+function saveSig(who){
+  if(who==="paciente"){
+    if(!padPaciente || padPaciente.isEmpty()) return alert("Assine primeiro (paciente).");
+    sigPacienteData = padPaciente.toDataURL("image/png");
+    toast("Assinatura do paciente salva.");
+  }
+  if(who==="medico"){
+    if(!padMedico || padMedico.isEmpty()) return alert("Assine primeiro (médico).");
+    sigMedicoData = padMedico.toDataURL("image/png");
+    toast("Assinatura do médico salva.");
+  }
+}
+
+/* ========= Coletar/atualizar ========= */
+function goQuickFromSteps(){
+  if(!collectStep()) return;
+  goQuick();
+}
+
+/* ========= Init ========= */
+(function init(){
+  $("logoMode").addEventListener("change", ()=>{
+    const lm = $("logoMode").value;
+    $("miniLogo").textContent = (lm==="P") ? "P" : "Prévia";
+  });
+
+  // tela home por padrão
+  showScreen("Home");
+  ensureConsentDefault();
+})();
+
+/* ========= Etapas ========= */
+function updateModeIntoEval(){
+  evalData.mode = $("mode").value || evalData.mode || "hospital";
+}
+function nextStepHook(){}
+
+function goQuick(){
+  // garante mode atualizado e consent preenchido
+  updateModeIntoEval();
+  ensureConsentDefault();
+  renderQuick();
+  showScreen("Quick");
+}
+function backToSteps(){ showScreen("Steps"); }
+
+function updateStepUI(){
+  updateModeIntoEval();
+  ensureConsentDefault();
+
+  const s = steps[currentStep];
+  $("stepTitle").textContent = s.title;
+  $("stepCount").textContent = `· ${currentStep+1} de ${steps.length}`;
+  $("progressFill").style.width = `${Math.round(((currentStep+1)/steps.length)*100)}%`;
+
+  $("btnSave").style.display="none";
+  $("btnNext").style.display="inline-block";
+
+  $("stepBody").innerHTML="";
+  s.render($("stepBody"));
+
+  const lm = $("logoMode").value;
+  $("miniLogo").textContent = (lm==="P") ? "P" : "Prévia";
+}
+
+/* ========= nav extras ========= */
+function backFromConsent(){ closeConsent(); }
+function backFromQuick(){ backToSteps(); }
 </script>
-
 </body>
 </html>
