@@ -3,29 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Prévia • Avaliação</title>
+  <title>Prévia • App</title>
   <meta name="color-scheme" content="dark light" />
+
   <style>
     :root{
       --bg:#0b0f14;
       --card:#0f1621;
-      --card2:#0c121b;
       --text:#e8eef7;
       --muted:#9fb0c6;
       --line:rgba(255,255,255,.10);
       --accent:#6aa9ff;
-      --ok:#56d364;
-      --warn:#ffb020;
-      --bad:#ff5d5d;
-      --shadow: 0 18px 50px rgba(0,0,0,.45);
-      --radius: 18px;
-      --radius2: 14px;
-      --pad: 18px;
-      --w: 980px;
-      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --shadow:0 18px 50px rgba(0,0,0,.45);
+      --radius:18px;
+      --font:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
     }
+
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
       margin:0;
       font-family:var(--font);
@@ -33,858 +27,119 @@
       background:
         radial-gradient(900px 420px at 12% -10%, rgba(106,169,255,.25), transparent 55%),
         radial-gradient(800px 380px at 90% 10%, rgba(86,211,100,.12), transparent 60%),
-        radial-gradient(650px 340px at 75% 90%, rgba(255,176,32,.12), transparent 55%),
         var(--bg);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
-    a{color:inherit}
-    .wrap{max-width:var(--w); margin:0 auto; padding:22px 16px 34px}
-    header{
-      display:flex; align-items:center; justify-content:space-between; gap:14px;
-      padding:14px 14px 10px;
+
+    .app{
+      width:100%;
+      max-width:420px;
+      padding:22px;
     }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      user-select:none;
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+      text-align:center;
     }
+
     .logo{
-      width:36px;height:36px;border-radius:12px;
-      background: linear-gradient(135deg, rgba(106,169,255,.95), rgba(106,169,255,.25));
-      box-shadow: 0 10px 20px rgba(106,169,255,.18);
+      width:64px;
+      height:64px;
+      border-radius:20px;
+      margin:0 auto 16px;
+      background:linear-gradient(135deg, rgba(106,169,255,.95), rgba(106,169,255,.25));
+      box-shadow:0 10px 25px rgba(106,169,255,.25);
       position:relative;
     }
+
     .logo:after{
       content:"";
-      position:absolute; inset:9px;
-      border-radius:10px;
+      position:absolute;
+      inset:14px;
+      border-radius:14px;
       background:rgba(11,15,20,.45);
       border:1px solid rgba(255,255,255,.14);
     }
-    .brand h1{margin:0; font-size:15px; letter-spacing:.2px}
-    .brand .sub{font-size:12px; color:var(--muted)}
-    .topActions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+
+    h1{
+      margin:8px 0 4px;
+      font-size:20px;
+      letter-spacing:.2px;
+    }
+
+    .sub{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:18px;
+    }
+
     .btn{
+      width:100%;
+      padding:14px 16px;
+      border-radius:14px;
       border:1px solid var(--line);
       background:rgba(255,255,255,.04);
       color:var(--text);
-      border-radius:14px;
-      padding:10px 12px;
       font-weight:600;
       cursor:pointer;
-      display:inline-flex; align-items:center; gap:8px;
-      transition: transform .06s ease, background .2s ease, border-color .2s ease;
-    }
-    .btn:hover{background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.18)}
-    .btn:active{transform: translateY(1px)}
-    .btn.primary{
-      background: linear-gradient(135deg, rgba(106,169,255,.95), rgba(106,169,255,.35));
-      border-color: rgba(106,169,255,.75);
-      color:#04101f;
-    }
-    .btn.primary:hover{filter:brightness(1.02)}
-    .btn.danger{border-color: rgba(255,93,93,.5)}
-    .btn.ghost{background:transparent}
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      border-radius:999px;
-      padding:8px 10px;
-      font-size:12px;
-      color:var(--muted);
-      white-space:nowrap;
-    }
-    .pill b{color:var(--text); font-weight:700}
-    .grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:14px;
-    }
-    @media (max-width: 860px){
-      .grid{grid-template-columns:1fr}
-      header{padding-left:0; padding-right:0}
-    }
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-    .card .inner{padding: var(--pad)}
-    .titleRow{
-      display:flex; align-items:flex-start; justify-content:space-between; gap:14px;
-      padding: 16px 18px 0;
-    }
-    .titleRow h2{margin:0; font-size:16px}
-    .titleRow p{margin:6px 0 0; color:var(--muted); font-size:12px; line-height:1.35}
-    .progressWrap{
-      padding: 14px 18px 12px;
-    }
-    .bar{
-      width:100%;
-      height:10px;
-      border-radius:999px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      overflow:hidden;
-    }
-    .bar > i{
-      display:block;
-      height:100%;
-      width:0%;
-      background: linear-gradient(90deg, rgba(106,169,255,.95), rgba(86,211,100,.75));
-      border-radius:999px;
-      transition: width .25s ease;
-    }
-    .steps{
       margin-top:10px;
-      display:flex; flex-wrap:wrap; gap:8px;
-    }
-    .stepTag{
-      font-size:12px;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      color: var(--muted);
-    }
-    .stepTag.on{color: var(--text); border-color: rgba(106,169,255,.55); background: rgba(106,169,255,.12)}
-    .stepTag.done{color: rgba(232,238,247,.95); border-color: rgba(86,211,100,.45); background: rgba(86,211,100,.10)}
-    form{padding: 0 18px 16px}
-    .pane{display:none}
-    .pane.on{display:block}
-    .fieldset{
-      padding: 14px;
-      border-radius: var(--radius2);
-      border:1px solid var(--line);
-      background: rgba(0,0,0,.14);
-      margin-bottom: 12px;
-    }
-    .fieldset h3{
-      margin:0 0 8px;
-      font-size:13px;
-      letter-spacing:.2px;
-    }
-    .row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    @media (max-width: 560px){
-      .row{grid-template-columns:1fr}
-    }
-    label{display:block; font-size:12px; color:var(--muted); margin: 8px 0 6px}
-    input, select, textarea{
-      width:100%;
-      padding: 12px 12px;
-      border-radius: 12px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      outline:none;
-    }
-    textarea{min-height:92px; resize:vertical}
-    input::placeholder, textarea::placeholder{color: rgba(159,176,198,.65)}
-    .checks{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:8px 12px;
-      margin-top:8px;
-    }
-    @media (max-width: 560px){ .checks{grid-template-columns:1fr} }
-    .check{
-      display:flex; align-items:center; gap:10px;
-      padding: 10px 10px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 12px;
-      background: rgba(255,255,255,.03);
-    }
-    .check input{width:18px; height:18px}
-    .footerNav{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding: 0 18px 18px;
-      flex-wrap:wrap;
-    }
-    .hint{font-size:12px; color:var(--muted)}
-    .side .inner{padding: 16px}
-    .side h3{margin:0 0 10px; font-size:13px}
-    .side .box{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      border-radius: 16px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-    .kv{display:flex; justify-content:space-between; gap:10px; font-size:13px; padding:6px 0; border-bottom:1px dashed rgba(255,255,255,.10)}
-    .kv:last-child{border-bottom:none}
-    .kv span{color:var(--muted)}
-    .asa{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      font-size:13px;
-    }
-    .asa b{font-size:14px}
-    .asa .badge{
-      padding:6px 10px; border-radius:999px; font-weight:800; font-size:12px;
-      border:1px solid rgba(255,255,255,.14);
-    }
-    .badge.ok{background: rgba(86,211,100,.10); border-color: rgba(86,211,100,.35); color: rgba(86,211,100,.95)}
-    .badge.warn{background: rgba(255,176,32,.10); border-color: rgba(255,176,32,.35); color: rgba(255,176,32,.95)}
-    .badge.bad{background: rgba(255,93,93,.10); border-color: rgba(255,93,93,.35); color: rgba(255,93,93,.95)}
-    .small{font-size:11px; color:var(--muted); line-height:1.35}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
-    .sep{height:1px; background:rgba(255,255,255,.10); margin: 10px 0}
-    .toast{
-      position: fixed;
-      bottom: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(15,22,33,.92);
-      border:1px solid rgba(255,255,255,.14);
-      border-radius: 999px;
-      padding: 10px 12px;
-      font-size: 12px;
-      color: var(--text);
-      display:none;
-      box-shadow: 0 18px 50px rgba(0,0,0,.55);
-      backdrop-filter: blur(10px);
-      z-index:999;
+      text-decoration:none;
+      display:block;
     }
 
-    /* Print = “PDF” */
-    @media print{
-      body{background:#fff;color:#111}
-      .btn,.topActions,.toast{display:none !important}
-      .card{box-shadow:none;border:1px solid #ddd;background:#fff}
-      .brand .sub, .hint, .small{color:#333}
-      input,select,textarea{border:1px solid #bbb; color:#111; background:#fff}
-      .bar, .steps, .footerNav{display:none !important}
-      .grid{grid-template-columns:1fr}
-      .wrap{max-width: 900px}
+    .btn:hover{
+      background:rgba(255,255,255,.06);
+    }
+
+    .btn.primary{
+      background:linear-gradient(135deg, rgba(106,169,255,.95), rgba(106,169,255,.35));
+      border-color:rgba(106,169,255,.75);
+      color:#04101f;
+    }
+
+    .footer{
+      margin-top:18px;
+      font-size:11px;
+      color:var(--muted);
     }
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h1>Prévia • Avaliação</h1>
-          <div class="sub">v1 (protótipo clínico) • salva automaticamente</div>
-        </div>
+  <div class="app">
+    <div class="card">
+
+      <div class="logo"></div>
+
+      <h1>Prévia</h1>
+      <div class="sub">avaliação pré-anestésica digital</div>
+
+      <!-- BOTÃO PRINCIPAL -->
+      <a class="btn primary" href="avaliacao.html">
+        Iniciar avaliação
+      </a>
+
+      <!-- FUTURO -->
+      <a class="btn" href="#">
+        Histórico (em breve)
+      </a>
+
+      <a class="btn" href="#">
+        Sobre o Prévia
+      </a>
+
+      <div class="footer">
+        Protótipo clínico • v1
       </div>
 
-      <div class="topActions">
-        <span class="pill">Paciente: <b id="pillPaciente">—</b></span>
-        <button class="btn" type="button" id="btnSalvar">Salvar agora</button>
-        <button class="btn ghost" type="button" id="btnPDF">Gerar PDF</button>
-        <button class="btn danger" type="button" id="btnLimpar">Limpar</button>
-      </div>
-    </header>
-
-    <div class="grid">
-      <section class="card">
-        <div class="titleRow">
-          <div>
-            <h2 id="stepTitle">Dados do paciente</h2>
-            <p id="stepDesc">Preencha o essencial. O resto a gente lapida depois — o importante é rodar.</p>
-          </div>
-          <span class="pill">ID: <b class="mono" id="pillID">PV-—</b></span>
-        </div>
-
-        <div class="progressWrap">
-          <div class="bar"><i id="barFill"></i></div>
-          <div class="steps" id="stepTags"></div>
-        </div>
-
-        <form id="form">
-          <!-- STEP 1 -->
-          <div class="pane on" data-step="0">
-            <div class="fieldset">
-              <h3>Identificação</h3>
-              <div class="row">
-                <div>
-                  <label>Nome completo</label>
-                  <input name="nome" placeholder="Ex.: Maria Aparecida Silva" autocomplete="name" />
-                </div>
-                <div>
-                  <label>Data de nascimento</label>
-                  <input name="nascimento" type="date" />
-                </div>
-              </div>
-              <div class="row">
-                <div>
-                  <label>Telefone</label>
-                  <input name="telefone" placeholder="(31) 9xxxx-xxxx" inputmode="tel" />
-                </div>
-                <div>
-                  <label>E-mail</label>
-                  <input name="email" placeholder="exemplo@email.com" inputmode="email" autocomplete="email" />
-                </div>
-              </div>
-            </div>
-
-            <div class="fieldset">
-              <h3>Medidas (se souber)</h3>
-              <div class="row">
-                <div>
-                  <label>Peso (kg)</label>
-                  <input name="peso" type="number" step="0.1" placeholder="Ex.: 72" />
-                </div>
-                <div>
-                  <label>Altura (cm)</label>
-                  <input name="altura" type="number" step="1" placeholder="Ex.: 168" />
-                </div>
-              </div>
-            </div>
-
-            <div class="fieldset">
-              <h3>Hábitos</h3>
-              <div class="checks">
-                <label class="check"><input type="checkbox" name="tabagismo" />Tabagismo atual</label>
-                <label class="check"><input type="checkbox" name="etilismo" />Etilismo frequente</label>
-                <label class="check"><input type="checkbox" name="drogas" />Uso de drogas/medicações não prescritas</label>
-                <label class="check"><input type="checkbox" name="gestante" />Gestante (se aplicável)</label>
-              </div>
-            </div>
-          </div>
-
-          <!-- STEP 2 -->
-          <div class="pane" data-step="1">
-            <div class="fieldset">
-              <h3>Cirurgia / Procedimento</h3>
-              <div class="row">
-                <div>
-                  <label>Procedimento</label>
-                  <input name="procedimento" placeholder="Ex.: Rinoplastia, lipo, videolaparoscopia..." />
-                </div>
-                <div>
-                  <label>Data prevista</label>
-                  <input name="dataCirurgia" type="date" />
-                </div>
-              </div>
-              <div class="row">
-                <div>
-                  <label>Tipo</label>
-                  <select name="tipoCirurgia">
-                    <option value="">Selecione</option>
-                    <option>Ambulatorial</option>
-                    <option>Internação</option>
-                    <option>Urgência</option>
-                  </select>
-                </div>
-                <div>
-                  <label>Jejum previsto (horas)</label>
-                  <input name="jejum" type="number" step="1" placeholder="Ex.: 8" />
-                </div>
-              </div>
-            </div>
-
-            <div class="fieldset">
-              <h3>Anestesia / eventos prévios</h3>
-              <div class="checks">
-                <label class="check"><input type="checkbox" name="anestPrev" />Já fez anestesia antes</label>
-                <label class="check"><input type="checkbox" name="pov" />Náuseas/vômitos pós-op prévios</label>
-                <label class="check"><input type="checkbox" name="dificil" />Relato de intubação difícil</label>
-                <label class="check"><input type="checkbox" name="alergiaAnest" />Reação/alergia em anestesia prévia</label>
-              </div>
-              <label>Detalhes (se houver)</label>
-              <textarea name="detalhesAnest" placeholder="Ex.: náuseas importantes, broncoespasmo, alergia suspeita, dificuldade de via aérea..."></textarea>
-            </div>
-          </div>
-
-          <!-- STEP 3 -->
-          <div class="pane" data-step="2">
-            <div class="fieldset">
-              <h3>Comorbidades</h3>
-              <div class="checks">
-                <label class="check"><input type="checkbox" name="hipertensao" />Hipertensão</label>
-                <label class="check"><input type="checkbox" name="diabetes" />Diabetes</label>
-                <label class="check"><input type="checkbox" name="asma" />Asma/DPOC</label>
-                <label class="check"><input type="checkbox" name="apneia" />Apneia do sono (diagnóstico/suspeita)</label>
-                <label class="check"><input type="checkbox" name="cardiopatia" />Cardiopatia</label>
-                <label class="check"><input type="checkbox" name="renal" />Doença renal</label>
-                <label class="check"><input type="checkbox" name="hepatica" />Doença hepática</label>
-                <label class="check"><input type="checkbox" name="tireoide" />Distúrbio de tireoide</label>
-                <label class="check"><input type="checkbox" name="trombose" />TEV/TVP/EP prévia</label>
-                <label class="check"><input type="checkbox" name="avc" />AVC/AIT prévio</label>
-                <label class="check"><input type="checkbox" name="coronaria" />Angina/infarto prévio</label>
-                <label class="check"><input type="checkbox" name="insufCard" />Insuficiência cardíaca</label>
-              </div>
-              <label>Observações</label>
-              <textarea name="obsComorb" placeholder="Controle, medicações, crises recentes, internações, etc."></textarea>
-            </div>
-          </div>
-
-          <!-- STEP 4 -->
-          <div class="pane" data-step="3">
-            <div class="fieldset">
-              <h3>Medicações em uso</h3>
-              <label>Liste medicações (nome + dose + horário)</label>
-              <textarea name="meds" placeholder="Ex.: Losartana 50mg 1x/dia; Metformina 850mg 2x/dia..."></textarea>
-            </div>
-
-            <div class="fieldset">
-              <h3>Alergias</h3>
-              <div class="checks">
-                <label class="check"><input type="checkbox" name="alergiaNenhuma" />Sem alergias conhecidas</label>
-                <label class="check"><input type="checkbox" name="alergiaMedic" />Alergia a medicamento</label>
-                <label class="check"><input type="checkbox" name="alergiaLatex" />Alergia a látex</label>
-                <label class="check"><input type="checkbox" name="alergiaAlimento" />Alergia alimentar</label>
-              </div>
-              <label>Quais? (se aplicável)</label>
-              <textarea name="alergias" placeholder="Ex.: Dipirona (urticária), Penicilina, látex..."></textarea>
-            </div>
-          </div>
-
-          <!-- STEP 5 -->
-          <div class="pane" data-step="4">
-            <div class="fieldset">
-              <h3>Capacidade funcional</h3>
-              <label>Consegue subir 2 lances de escada sem parar?</label>
-              <select name="escada">
-                <option value="">Selecione</option>
-                <option value="sim">Sim</option>
-                <option value="nao">Não</option>
-                <option value="naosei">Não sei / limitações</option>
-              </select>
-
-              <div class="row">
-                <div>
-                  <label>Dispneia aos esforços?</label>
-                  <select name="dispneia">
-                    <option value="">Selecione</option>
-                    <option>Não</option>
-                    <option>Leve</option>
-                    <option>Moderada</option>
-                    <option>Importante</option>
-                  </select>
-                </div>
-                <div>
-                  <label>Dor torácica?</label>
-                  <select name="dorTorax">
-                    <option value="">Selecione</option>
-                    <option>Não</option>
-                    <option>Rara</option>
-                    <option>Frequentemente</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="fieldset">
-              <h3>Exames disponíveis (opcional)</h3>
-              <div class="checks">
-                <label class="check"><input type="checkbox" name="examesOk" />Exames recentes disponíveis</label>
-                <label class="check"><input type="checkbox" name="eco" />Ecocardiograma</label>
-                <label class="check"><input type="checkbox" name="ecg" />ECG</label>
-                <label class="check"><input type="checkbox" name="rx" />Raio-X / imagem</label>
-              </div>
-              <label>Observações / datas</label>
-              <textarea name="obsExames" placeholder="Ex.: ECG 01/2026 normal; Hb 13,2; creat 0,9..."></textarea>
-            </div>
-          </div>
-
-          <!-- STEP 6 -->
-          <div class="pane" data-step="5">
-            <div class="fieldset">
-              <h3>Resumo</h3>
-              <div class="small">
-                Confira os dados abaixo. Ajuste se precisar (voltar) e finalize.
-              </div>
-              <div class="sep"></div>
-              <div id="resumo" class="small"></div>
-            </div>
-
-            <div class="fieldset">
-              <h3>Observações finais</h3>
-              <textarea name="obsFinais" placeholder="Ex.: orientações específicas, jejum, suspensão/ajuste de medicações, riscos discutidos..."></textarea>
-            </div>
-
-            <div class="fieldset">
-              <h3>Consentimento (protótipo)</h3>
-              <div class="checks">
-                <label class="check"><input type="checkbox" name="confirmo" />Confirmo que as informações foram fornecidas pelo paciente/responsável.</label>
-              </div>
-              <div class="small">
-                *Este protótipo não substitui avaliação presencial quando indicada. Use como triagem e apoio ao pré-anestésico.*
-              </div>
-            </div>
-          </div>
-        </form>
-
-        <div class="footerNav">
-          <div class="hint" id="navHint">Dica: você pode fechar a página. Ela salva sozinha.</div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn" type="button" id="btnVoltar">← Voltar</button>
-            <button class="btn primary" type="button" id="btnAvancar">Avançar →</button>
-          </div>
-        </div>
-      </section>
-
-      <aside class="card side">
-        <div class="inner">
-          <h3>Painel rápido</h3>
-
-          <div class="box">
-            <div class="kv"><span>Paciente</span><b id="sNome">—</b></div>
-            <div class="kv"><span>Idade</span><b id="sIdade">—</b></div>
-            <div class="kv"><span>IMC</span><b id="sImc">—</b></div>
-            <div class="kv"><span>Procedimento</span><b id="sProc">—</b></div>
-          </div>
-
-          <div class="asa" id="asaBox">
-            <div>
-              <div style="font-size:12px;color:var(--muted)">ASA sugerido</div>
-              <b id="asaTxt">—</b>
-            </div>
-            <span class="badge warn" id="asaBadge">avaliar</span>
-          </div>
-
-          <div class="box">
-            <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Pontos de atenção</div>
-            <div id="flags" class="small">—</div>
-          </div>
-
-          <div class="small">
-            Se algo aqui ficar “muito automático”, ótimo: depois a gente evolui com regras mais finas e anexos.
-            O importante agora é **rodar no mundo real**.
-          </div>
-        </div>
-      </aside>
     </div>
   </div>
-
-  <div class="toast" id="toast">Salvo ✅</div>
-
-  <script>
-    // ====== Config ======
-    const STORAGE_KEY = "previa_avaliacao_v1";
-    const STEPS = [
-      { title:"Dados do paciente", desc:"Preencha o essencial. O resto a gente lapida depois — o importante é rodar." },
-      { title:"Procedimento & anestesia prévia", desc:"Contexto cirúrgico e histórico anestésico. Onde mora o risco (e a paz)." },
-      { title:"Comorbidades", desc:"Marque o que existe e anote o que importa: controle, crise, internação, gravidade." },
-      { title:"Medicações & alergias", desc:"Aqui mora 80% das pegadinhas do perioperatório. Vamos deixar isso limpo." },
-      { title:"Funcionalidade & exames", desc:"Capacidade funcional e exames recentes. O mínimo bem feito já muda o jogo." },
-      { title:"Resumo", desc:"Checagem final + observações. E pronto: prévia objetiva e bonita." }
-    ];
-
-    // ====== Helpers ======
-    const $ = (q, el=document) => el.querySelector(q);
-    const $$ = (q, el=document) => Array.from(el.querySelectorAll(q));
-    const toastEl = $("#toast");
-    const showToast = (msg="Salvo ✅") => {
-      toastEl.textContent = msg;
-      toastEl.style.display = "block";
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(()=> toastEl.style.display="none", 1200);
-    };
-
-    const form = $("#form");
-    const panes = $$(".pane");
-    const stepTagsEl = $("#stepTags");
-    const barFill = $("#barFill");
-    const stepTitle = $("#stepTitle");
-    const stepDesc  = $("#stepDesc");
-    const navHint   = $("#navHint");
-
-    let step = 0;
-    let pvId = "";
-
-    // Build step tags
-    STEPS.forEach((s, i)=>{
-      const tag = document.createElement("div");
-      tag.className = "stepTag" + (i===0 ? " on" : "");
-      tag.textContent = `${i+1}. ${s.title}`;
-      tag.addEventListener("click", ()=> goTo(i));
-      stepTagsEl.appendChild(tag);
-    });
-
-    const getData = () => {
-      const fd = new FormData(form);
-      // checkboxes: include unchecked false
-      const data = {};
-      for (const [k,v] of fd.entries()) data[k]=v;
-      $$("input[type=checkbox]", form).forEach(cb=>{
-        data[cb.name] = cb.checked;
-      });
-      return data;
-    };
-
-    const setData = (data) => {
-      Object.entries(data||{}).forEach(([k,v])=>{
-        const el = form.elements[k];
-        if(!el) return;
-        if(el.type === "checkbox"){
-          el.checked = !!v;
-        }else{
-          el.value = v ?? "";
-        }
-      });
-    };
-
-    const save = (silent=false) => {
-      const data = getData();
-      const payload = {
-        pvId,
-        step,
-        updatedAt: new Date().toISOString(),
-        data
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-      if(!silent) showToast("Salvo ✅");
-      updateSide();
-      if(step === 5) renderResumo();
-    };
-
-    const load = () => {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) {
-        pvId = makeId();
-        $("#pillID").textContent = pvId;
-        save(true);
-        return;
-      }
-      try{
-        const payload = JSON.parse(raw);
-        pvId = payload.pvId || makeId();
-        step = Number.isFinite(payload.step) ? payload.step : 0;
-        $("#pillID").textContent = pvId;
-        setData(payload.data || {});
-        goTo(step, true);
-      }catch(e){
-        pvId = makeId();
-        $("#pillID").textContent = pvId;
-      }
-      updateSide();
-    };
-
-    const makeId = () => {
-      const n = Math.floor(10000 + Math.random()*89999);
-      return `PV-${n}`;
-    };
-
-    const ageFromDOB = (dobStr) => {
-      if(!dobStr) return null;
-      const d = new Date(dobStr);
-      if(isNaN(d.getTime())) return null;
-      const now = new Date();
-      let age = now.getFullYear() - d.getFullYear();
-      const m = now.getMonth() - d.getMonth();
-      if(m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
-      return age;
-    };
-
-    const calcIMC = (peso, alturaCm) => {
-      const p = parseFloat(peso);
-      const a = parseFloat(alturaCm);
-      if(!p || !a) return null;
-      const h = a/100;
-      const imc = p/(h*h);
-      if(!isFinite(imc)) return null;
-      return Math.round(imc*10)/10;
-    };
-
-    // ASA heuristic (simples, ajustável)
-    const calcASA = (d) => {
-      const flags = [];
-
-      const anyMajor =
-        d.cardiopatia || d.insufCard || d.coronaria || d.avc || d.renal || d.hepatica;
-
-      const anyMild =
-        d.hipertensao || d.diabetes || d.asma || d.apneia || d.tireoide || d.trombose || d.tabagismo;
-
-      const imc = calcIMC(d.peso, d.altura);
-
-      if(d.gestante) flags.push("Gestação: considerar ajustes anestésicos e jejum.");
-      if(d.dificil)  flags.push("Relato de via aérea difícil: planejar abordagem e backup.");
-      if(d.alergiaAnest || d.alergiaMedic || d.alergiaLatex) flags.push("Alergias relevantes: revisar e documentar bem.");
-      if(d.pov) flags.push("Histórico de NVPO: considerar profilaxia multimodal.");
-      if(d.apneia) flags.push("Apneia do sono: atenção em sedação/opioides e pós-op.");
-      if(imc && imc >= 35) flags.push("IMC ≥ 35: risco aumentado (via aérea/ventilação).");
-      if(d.dispneia === "Importante") flags.push("Dispneia importante: considerar avaliação adicional.");
-      if(d.dorTorax && d.dorTorax !== "Não") flags.push("Dor torácica: precisa ser caracterizada.");
-
-      // ASA suggestion:
-      let asa = "ASA I";
-      let level = "ok";
-
-      if(anyMajor) { asa = "ASA III"; level = "warn"; }
-      else if(anyMild) { asa = "ASA II"; level = "ok"; }
-
-      // Escaladores
-      if(d.insufCard || d.coronaria || d.avc) { asa = "ASA III"; level = "warn"; }
-      if(d.dispneia === "Importante" || d.escada === "nao") { asa = "ASA III"; level = "warn"; }
-      if(imc && imc >= 40) { asa = "ASA III"; level = "warn"; }
-
-      // Se nada preenchido, não chutar
-      const touched = Object.values(d).some(v => v === true || (typeof v === "string" && v.trim()));
-      if(!touched) { asa = "—"; level = "warn"; }
-
-      return { asa, level, flags: flags.length ? flags : ["—"] };
-    };
-
-    const updateSide = () => {
-      const d = getData();
-      const nome = (d.nome || "").trim();
-      const idade = ageFromDOB(d.nascimento);
-      const imc = calcIMC(d.peso, d.altura);
-      const proc = (d.procedimento || "").trim();
-
-      $("#sNome").textContent = nome || "—";
-      $("#pillPaciente").textContent = nome ? nome.split(" ")[0] : "—";
-      $("#sIdade").textContent = (idade === null) ? "—" : `${idade} anos`;
-      $("#sImc").textContent = (imc === null) ? "—" : imc.toFixed(1);
-      $("#sProc").textContent = proc || "—";
-
-      const { asa, level, flags } = calcASA(d);
-      $("#asaTxt").textContent = asa;
-
-      const badge = $("#asaBadge");
-      badge.className = "badge " + (level==="ok" ? "ok" : level==="bad" ? "bad" : "warn");
-      badge.textContent = (asa==="ASA I") ? "baixo risco" :
-                          (asa==="ASA II") ? "atenção" :
-                          (asa==="ASA III") ? "moderado/alto" :
-                          "avaliar";
-
-      $("#flags").innerHTML = flags.map(f => `• ${escapeHtml(f)}`).join("<br>");
-    };
-
-    const escapeHtml = (s="") =>
-      s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-
-    const renderResumo = () => {
-      const d = getData();
-      const idade = ageFromDOB(d.nascimento);
-      const imc = calcIMC(d.peso, d.altura);
-      const { asa, flags } = calcASA(d);
-
-      const bits = [];
-      const line = (k, v) => bits.push(`<div class="kv"><span>${escapeHtml(k)}</span><b>${escapeHtml(v || "—")}</b></div>`);
-
-      line("ID", pvId);
-      line("Nome", d.nome || "");
-      line("Idade", (idade===null) ? "" : `${idade} anos`);
-      line("Telefone", d.telefone || "");
-      line("E-mail", d.email || "");
-      line("Peso/Altura", (d.peso || d.altura) ? `${d.peso||"—"} kg / ${d.altura||"—"} cm` : "");
-      line("IMC", (imc===null) ? "" : imc.toFixed(1));
-      line("Procedimento", d.procedimento || "");
-      line("Data", d.dataCirurgia || "");
-      line("Tipo", d.tipoCirurgia || "");
-      line("Jejum", d.jejum ? `${d.jejum} h` : "");
-      line("ASA sugerido", asa);
-
-      const checkList = (title, arr) => {
-        bits.push(`<div style="margin-top:10px; font-weight:800">${escapeHtml(title)}</div>`);
-        bits.push(`<div class="small">${arr.length ? arr.map(x=>"• "+escapeHtml(x)).join("<br>") : "—"}</div>`);
-      };
-
-      const comorb = [];
-      if(d.hipertensao) comorb.push("Hipertensão");
-      if(d.diabetes) comorb.push("Diabetes");
-      if(d.asma) comorb.push("Asma/DPOC");
-      if(d.apneia) comorb.push("Apneia do sono");
-      if(d.cardiopatia) comorb.push("Cardiopatia");
-      if(d.insufCard) comorb.push("Insuficiência cardíaca");
-      if(d.coronaria) comorb.push("Doença coronariana");
-      if(d.avc) comorb.push("AVC/AIT prévio");
-      if(d.renal) comorb.push("Doença renal");
-      if(d.hepatica) comorb.push("Doença hepática");
-      if(d.tireoide) comorb.push("Tireoide");
-      if(d.trombose) comorb.push("TEV/TVP/EP prévia");
-      if(d.tabagismo) comorb.push("Tabagismo atual");
-
-      checkList("Comorbidades/itens marcados", comorb);
-      if(d.obsComorb) bits.push(`<div class="small" style="margin-top:6px"><b>Obs:</b> ${escapeHtml(d.obsComorb)}</div>`);
-
-      bits.push(`<div style="margin-top:10px; font-weight:800">Medicações</div>`);
-      bits.push(`<div class="small">${escapeHtml(d.meds || "—")}</div>`);
-
-      bits.push(`<div style="margin-top:10px; font-weight:800">Alergias</div>`);
-      bits.push(`<div class="small">${escapeHtml(d.alergias || (d.alergiaNenhuma ? "Sem alergias conhecidas" : "—"))}</div>`);
-
-      bits.push(`<div style="margin-top:10px; font-weight:800">Pontos de atenção</div>`);
-      bits.push(`<div class="small">${flags.map(f=>"• "+escapeHtml(f)).join("<br>")}</div>`);
-
-      $("#resumo").innerHTML = bits.join("");
-    };
-
-    const goTo = (i, silent=false) => {
-      step = Math.max(0, Math.min(STEPS.length-1, i));
-      panes.forEach(p=> p.classList.toggle("on", Number(p.dataset.step) === step));
-      const tags = $$(".stepTag", stepTagsEl);
-      tags.forEach((t, idx)=>{
-        t.classList.toggle("on", idx === step);
-        t.classList.toggle("done", idx < step);
-      });
-
-      stepTitle.textContent = STEPS[step].title;
-      stepDesc.textContent  = STEPS[step].desc;
-      barFill.style.width = ((step)/(STEPS.length-1))*100 + "%";
-
-      $("#btnVoltar").disabled = (step===0);
-      $("#btnAvancar").textContent = (step===STEPS.length-1) ? "Finalizar ✔" : "Avançar →";
-
-      navHint.textContent = (step===STEPS.length-1)
-        ? "Finalize, gere PDF se quiser e pronto. Sem drama."
-        : "Dica: você pode fechar a página. Ela salva sozinha.";
-
-      if(!silent) save(true);
-      updateSide();
-      if(step === 5) renderResumo();
-      $("#pillID").textContent = pvId;
-    };
-
-    // ====== Events ======
-    $("#btnVoltar").addEventListener("click", ()=> goTo(step-1));
-    $("#btnAvancar").addEventListener("click", ()=>{
-      if(step < STEPS.length-1) return goTo(step+1);
-      // Finalizar
-      const d = getData();
-      if(!d.confirmo){
-        showToast("Marque a confirmação no final 🙂");
-        return;
-      }
-      save(false);
-      showToast("Finalizado ✅");
-      renderResumo();
-    });
-
-    $("#btnSalvar").addEventListener("click", ()=> save(false));
-    $("#btnPDF").addEventListener("click", ()=>{
-      save(true);
-      // render resumo antes de imprimir
-      goTo(5, true);
-      renderResumo();
-      window.print();
-    });
-
-    $("#btnLimpar").addEventListener("click", ()=>{
-      if(!confirm("Limpar tudo desta avaliação?")) return;
-      localStorage.removeItem(STORAGE_KEY);
-      // reset
-      form.reset();
-      pvId = makeId();
-      $("#pillID").textContent = pvId;
-      goTo(0, true);
-      save(false);
-      showToast("Zerado 🧼");
-    });
-
-    // Auto-save (debounced)
-    let t;
-    form.addEventListener("input", ()=>{
-      clearTimeout(t);
-      t = setTimeout(()=> save(true), 250);
-    });
-
-    // On load
-    load();
-  </script>
 </body>
 </html>
