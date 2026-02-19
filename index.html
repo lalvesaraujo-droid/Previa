@@ -1,70 +1,60 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prévia</title>
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
 <style>
 body{
   margin:0;
   font-family:Inter, sans-serif;
-  background:linear-gradient(180deg,#0f2b4d,#153e6b);
-  color:white;
+  background:linear-gradient(180deg,#0f2a44,#1e3f66);
+  color:#fff;
 }
-
 .container{
-  max-width:700px;
+  max-width:520px;
   margin:auto;
   padding:20px;
 }
-
+h1{margin:0 0 5px 0}
 .card{
-  background:rgba(255,255,255,0.08);
-  border-radius:16px;
+  background:#ffffff15;
+  backdrop-filter:blur(10px);
+  border-radius:18px;
   padding:18px;
-  margin-bottom:18px;
+  margin:14px 0;
 }
-
 input, textarea, select{
   width:100%;
-  padding:10px;
+  padding:12px;
   border-radius:10px;
   border:none;
-  margin-top:6px;
+  margin-top:8px;
   margin-bottom:12px;
   font-size:15px;
 }
-
+textarea{min-height:70px}
 button{
-  padding:12px 16px;
+  width:100%;
+  padding:14px;
   border:none;
   border-radius:12px;
+  font-size:16px;
   font-weight:600;
-  cursor:pointer;
+  margin-top:10px;
 }
-
-.primary{
-  background:#2e7be6;
-  color:white;
-}
-
-.green{
-  background:#27c46b;
-  color:white;
-}
-
-h1{margin:0}
-.small{opacity:.7;font-size:13px}
-
-canvas{
+.btn-primary{background:#22c55e;color:white}
+.btn-secondary{background:#3b82f6;color:white}
+.btn-clear{background:#ffffff30;color:white;width:48%;display:inline-block}
+.sig{
   background:white;
-  border-radius:10px;
-  width:100%;
+  border-radius:12px;
   height:140px;
 }
 </style>
@@ -74,229 +64,193 @@ canvas{
 <div class="container">
 
 <h1>Prévia</h1>
-<div class="small">plataforma de avaliação pré-anestésica</div>
-<div class="small">Dr Leonardo Alves Araújo • CRM-MG 47310 • RQE 40542</div>
+<div style="opacity:.8;margin-bottom:18px">
+plataforma de avaliação pré-anestésica<br>
+Dr Leonardo Alves Araújo · CRM-MG 47310 · RQE 40542
+</div>
 
+<!-- ETAPA 1 -->
 <div class="card">
-<label>Modo</label>
+<h3>Identificação</h3>
 <select id="modo">
 <option>Clínica / Hospital</option>
 <option>Estética</option>
 </select>
-
-<label>Nome do paciente</label>
-<input id="nome">
-
-<label>Procedimento</label>
-<input id="proc">
-
-<label>ASA</label>
-<input id="asa">
-
-<label>Mallampati</label>
-<input id="mall">
+<input id="nome" placeholder="Nome do paciente">
+<input id="proc" placeholder="Procedimento">
+<input id="asa" placeholder="ASA">
+<input id="mallampati" placeholder="Mallampati">
 </div>
 
+<!-- ETAPA 2 -->
 <div class="card">
-<h3>Dados clínicos</h3>
-<textarea id="comorb" placeholder="Comorbidades"></textarea>
-<textarea id="meds" placeholder="Medicações"></textarea>
+<h3>Comorbidades</h3>
+<textarea id="comorb" placeholder="Doenças e condições"></textarea>
+</div>
+
+<!-- ETAPA 3 -->
+<div class="card">
+<h3>Medicações e alergias</h3>
+<textarea id="medic" placeholder="Medicações"></textarea>
 <textarea id="alerg" placeholder="Alergias"></textarea>
+</div>
+
+<!-- ETAPA 4 -->
+<div class="card">
+<h3>Histórico anestésico</h3>
 <textarea id="cirurg" placeholder="Passado cirúrgico"></textarea>
 <textarea id="interc" placeholder="Intercorrências anestésicas"></textarea>
+</div>
+
+<!-- ETAPA 5 -->
+<div class="card">
+<h3>Plano anestésico</h3>
 <textarea id="estrat" placeholder="Estratégia anestésica"></textarea>
 <textarea id="cond" placeholder="Conduta"></textarea>
 </div>
 
+<!-- ETAPA 6 -->
 <div class="card">
 <h3>Consentimento</h3>
 <textarea id="consent">
-Declaro que recebi explicações claras sobre a anestesia proposta, seus benefícios e riscos (como náuseas, dor, alergias, complicações cardiorrespiratórias raras), alternativas e cuidados pós-operatórios. Autorizo a realização do procedimento anestésico planejado.
-
-Estou ciente de que exames e condições clínicas podem alterar a estratégia anestésica em benefício da minha segurança.
-
-Confirmo que forneci informações verdadeiras sobre minha saúde e medicações.
-
-Local e data: ____________
-
-Assinatura do paciente: ____________
+Declaro que recebi explicações claras sobre a anestesia proposta, seus benefícios e riscos (como náuseas, dor, alergias ou complicações raras), alternativas e cuidados necessários. Tive oportunidade de esclarecer dúvidas e autorizo a realização da anestesia conforme avaliação médica.
 </textarea>
 </div>
 
 <div class="card">
 <h3>Anexos</h3>
-<label>Foto do paciente (capa)</label>
-<input type="file" id="fotoPaciente">
-
+<label>Foto do paciente</label>
+<input type="file" id="foto">
 <label>Via aérea</label>
-<input type="file" id="fotoVia">
-
+<input type="file" id="via">
 <label>Exames</label>
 <input type="file" id="exames" multiple>
 </div>
 
 <div class="card">
 <h3>Assinaturas</h3>
-<div>Paciente</div>
-<canvas id="signPaciente"></canvas>
-<button onclick="limpar('signPaciente')">Limpar</button>
+Paciente
+<canvas id="sigPac" class="sig"></canvas>
+<button class="btn-clear" onclick="limpar('sigPac')">Limpar</button>
 
-<div style="margin-top:10px">Médico</div>
-<canvas id="signMedico"></canvas>
-<button onclick="limpar('signMedico')">Limpar</button>
+Médico
+<canvas id="sigMed" class="sig"></canvas>
+<button class="btn-clear" onclick="limpar('sigMed')">Limpar</button>
 </div>
 
-<button class="green" onclick="gerarPDF()">Gerar PDF Premium</button>
+<button class="btn-primary" onclick="gerarPDF()">Gerar PDF Premium</button>
 
 </div>
 
 <script>
-function ativarCanvas(id){
-  const canvas=document.getElementById(id);
-  const ctx=canvas.getContext("2d");
-  let desenhando=false;
-
-  canvas.addEventListener("mousedown",e=>{
-    desenhando=true;
-    ctx.moveTo(e.offsetX,e.offsetY);
-  });
-
-  canvas.addEventListener("mousemove",e=>{
-    if(!desenhando)return;
-    ctx.lineTo(e.offsetX,e.offsetY);
-    ctx.stroke();
-  });
-
-  canvas.addEventListener("mouseup",()=>desenhando=false);
-  canvas.addEventListener("mouseleave",()=>desenhando=false);
-}
-ativarCanvas("signPaciente");
-ativarCanvas("signMedico");
+const { jsPDF } = window.jspdf;
 
 function limpar(id){
   const c=document.getElementById(id);
-  c.getContext("2d").clearRect(0,0,c.width,c.height);
+  const ctx=c.getContext("2d");
+  ctx.clearRect(0,0,c.width,c.height);
 }
 
-async function gerarPDF(){
-  const {jsPDF}=window.jspdf;
-  const pdf=new jsPDF();
+function ativarAssinatura(canvas){
+  const ctx=canvas.getContext("2d");
+  let desenhando=false;
+  canvas.width=canvas.offsetWidth;
+  canvas.height=canvas.offsetHeight;
 
-  const nome=nomeEl("nome");
-  const proc=nomeEl("proc");
-  const asa=nomeEl("asa");
-  const mall=nomeEl("mall");
+  canvas.addEventListener("mousedown",()=>desenhando=true);
+  canvas.addEventListener("mouseup",()=>desenhando=false);
+  canvas.addEventListener("mousemove",e=>{
+    if(!desenhando)return;
+    ctx.lineWidth=2;
+    ctx.lineCap="round";
+    ctx.strokeStyle="black";
+    ctx.lineTo(e.offsetX,e.offsetY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX,e.offsetY);
+  });
 
-  const modo=nomeEl("modo");
-
-  function nomeEl(id){
-    return document.getElementById(id).value||"";
-  }
-
-  // CAPA
-  pdf.setFillColor(15,43,77);
-  pdf.rect(0,0,210,297,"F");
-
-  pdf.setTextColor(255,255,255);
-  pdf.setFontSize(26);
-  pdf.text("Prévia",20,30);
-
-  pdf.setFontSize(12);
-  pdf.text("plataforma de avaliação pré-anestésica",20,40);
-
-  pdf.text("Paciente: "+nome,20,60);
-  pdf.text("Procedimento: "+proc,20,70);
-  pdf.text("ASA "+asa+" Mallampati "+mall,20,80);
-  pdf.text("Modo: "+modo,20,90);
-
-  // QR
-  const qrData=nome+"|"+proc+"|"+Date.now();
-  const qrCanvas=document.createElement("canvas");
-  await QRCode.toCanvas(qrCanvas,qrData);
-  pdf.addImage(qrCanvas.toDataURL(), "PNG",150,40,40,40);
-
-  // FOTO PACIENTE
-  const fotoPac=document.getElementById("fotoPaciente").files[0];
-  if(fotoPac){
-    const img=await fileToImg(fotoPac);
-    pdf.addImage(img,"JPEG",150,90,40,40);
-  }
-
-  // RESUMO
-  pdf.addPage();
-  pdf.setTextColor(0,0,0);
-  pdf.setFontSize(16);
-  pdf.text("Resumo clínico",20,20);
-
-  bloco("Comorbidades","comorb");
-  bloco("Medicações","meds");
-  bloco("Alergias","alerg");
-  bloco("Passado cirúrgico","cirurg");
-  bloco("Intercorrências","interc");
-  bloco("Estratégia","estrat");
-  bloco("Conduta","cond");
-
-  function bloco(titulo,id){
-    const txt=document.getElementById(id).value;
-    if(!txt)return;
-    pdf.setFontSize(12);
-    pdf.text(titulo+": "+txt,20,linha+=8);
-  }
-
-  let linha=30;
-
-  // CONSENTIMENTO
-  pdf.addPage();
-  pdf.setFontSize(14);
-  pdf.text("Consentimento informado",20,20);
-
-  const consent=document.getElementById("consent").value;
-  pdf.setFontSize(11);
-  pdf.text(pdf.splitTextToSize(consent,170),20,30);
-
-  // ASSINATURAS
-  const sp=document.getElementById("signPaciente").toDataURL();
-  const sm=document.getElementById("signMedico").toDataURL();
-
-  pdf.text("Paciente",20,200);
-  pdf.addImage(sp,"PNG",20,205,60,25);
-
-  pdf.text("Médico",120,200);
-  pdf.addImage(sm,"PNG",120,205,60,25);
-
-  // ANEXOS
-  const via=document.getElementById("fotoVia").files[0];
-  const exames=document.getElementById("exames").files;
-
-  if(via||exames.length){
-    pdf.addPage();
-    pdf.text("Anexos",20,20);
-    let y=30;
-
-    if(via){
-      const img=await fileToImg(via);
-      pdf.text("Via aérea",20,y);
-      pdf.addImage(img,"JPEG",20,y+5,60,60);
-      y+=70;
-    }
-
-    for(let i=0;i<exames.length;i++){
-      const img=await fileToImg(exames[i]);
-      pdf.addImage(img,"JPEG",20+(i%3)*60,y+Math.floor(i/3)*60,50,50);
-    }
-  }
-
-  pdf.save("Previa_"+nome+".pdf");
-}
-
-function fileToImg(file){
-  return new Promise(res=>{
-    const r=new FileReader();
-    r.onload=e=>res(e.target.result);
-    r.readAsDataURL(file);
+  canvas.addEventListener("touchstart",()=>desenhando=true);
+  canvas.addEventListener("touchend",()=>desenhando=false);
+  canvas.addEventListener("touchmove",e=>{
+    e.preventDefault();
+    if(!desenhando)return;
+    const rect=canvas.getBoundingClientRect();
+    const x=e.touches[0].clientX-rect.left;
+    const y=e.touches[0].clientY-rect.top;
+    ctx.lineTo(x,y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x,y);
   });
 }
-</script>
 
+ativarAssinatura(document.getElementById("sigPac"));
+ativarAssinatura(document.getElementById("sigMed"));
+
+async function gerarPDF(){
+  const pdf=new jsPDF("p","mm","a4");
+
+  const nome=nomeVal("nome");
+  const proc=nomeVal("proc");
+  const asa=nomeVal("asa");
+  const mall=nomeVal("mallampati");
+
+  const qrData=`Previa|${nome}|${Date.now()}`;
+  const qr=await QRCode.toDataURL(qrData);
+
+  pdf.setFillColor(20,45,85);
+  pdf.rect(0,0,210,40,"F");
+  pdf.setTextColor(255,255,255);
+  pdf.setFontSize(22);
+  pdf.text("Prévia",15,20);
+  pdf.setFontSize(11);
+  pdf.text("avaliação pré-anestésica",15,28);
+
+  pdf.addImage(qr,"PNG",160,10,30,30);
+
+  pdf.setTextColor(0,0,0);
+  pdf.setFontSize(12);
+
+  let y=50;
+
+  function sec(titulo,conteudo){
+    pdf.setFont(undefined,"bold");
+    pdf.text(titulo,15,y);
+    y+=6;
+    pdf.setFont(undefined,"normal");
+    pdf.text(conteudo||"-",15,y);
+    y+=10;
+  }
+
+  sec("Paciente",nome);
+  sec("Procedimento",proc);
+  sec("ASA",asa);
+  sec("Mallampati",mall);
+  sec("Comorbidades",nomeVal("comorb"));
+  sec("Medicações",nomeVal("medic"));
+  sec("Alergias",nomeVal("alerg"));
+  sec("Histórico cirúrgico",nomeVal("cirurg"));
+  sec("Intercorrências anestésicas",nomeVal("interc"));
+  sec("Plano anestésico",nomeVal("estrat"));
+  sec("Conduta",nomeVal("cond"));
+  sec("Consentimento",nomeVal("consent"));
+
+  pdf.addPage();
+  pdf.text("Assinaturas",15,20);
+
+  pdf.addImage(document.getElementById("sigPac").toDataURL(),"PNG",15,30,80,40);
+  pdf.text("Paciente",15,75);
+
+  pdf.addImage(document.getElementById("sigMed").toDataURL(),"PNG",110,30,80,40);
+  pdf.text("Médico",110,75);
+
+  pdf.save("previa.pdf");
+}
+
+function nomeVal(id){
+  return document.getElementById(id).value;
+}
+</script>
 </body>
-</html> 
+</html>
