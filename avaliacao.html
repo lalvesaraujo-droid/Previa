@@ -299,7 +299,30 @@
           <div class="bar"><i id="barFill"></i></div>
           <div class="steps" id="stepTags"></div>
         </div>
+<!-- ====== PRINT HEADER (só aparece no PDF/print) ====== -->
+<section class="printHeader" id="printHeader">
+  <div class="phTop">
+    <div class="phBrand">
+      <div class="phLogo" aria-hidden="true"></div>
+      <div>
+        <div class="phTitle">Prévia • Avaliação Pré-Anestésica</div>
+        <div class="phSub" id="phSub">Documento gerado em —</div>
+      </div>
+    </div>
+    <div class="phMeta">
+      <div><span>ID</span><b class="mono" id="phId">PV-—</b></div>
+      <div><span>Paciente</span><b id="phPaciente">—</b></div>
+      <div><span>Nasc.</span><b id="phNasc">—</b></div>
+    </div>
+  </div>
 
+  <div class="phDoc">
+    <div class="phDocLine"><b id="phMedico">Médico:</b> <span id="phMedicoNome">—</span></div>
+    <div class="phDocLine"><b>CRM:</b> <span id="phCrm">—</span> &nbsp; <b>RQE:</b> <span id="phRqe">—</span></div>
+  </div>
+
+  <div class="phLine"></div>
+</section>
         <form id="form">
           <!-- STEP 1 -->
           <div class="pane on" data-step="0">
