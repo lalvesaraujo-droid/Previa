@@ -1,256 +1,992 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prévia</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prévia — avaliação pré-anestésica</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- jsPDF -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <!-- QRCode -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <style>
+    :root{
+      --bg1:#061a28;
+      --bg2:#0a2c44;
+      --card:rgba(255,255,255,.08);
+      --card2:rgba(255,255,255,.06);
+      --stroke:rgba(255,255,255,.12);
+      --text:#eaf3ff;
+      --muted:rgba(234,243,255,.70);
+      --muted2:rgba(234,243,255,.55);
+      --accent:#2f7df6;
+      --ok:#2ecc71;
+      --danger:#e74c3c;
+      --pill:rgba(255,255,255,.10);
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
 
-<style>
-body{
-  margin:0;
-  font-family:Inter, sans-serif;
-  background:linear-gradient(180deg,#0f2a44,#1e3f66);
-  color:#fff;
-}
-.container{
-  max-width:520px;
-  margin:auto;
-  padding:20px;
-}
-h1{margin:0 0 5px 0}
-.card{
-  background:#ffffff15;
-  backdrop-filter:blur(10px);
-  border-radius:18px;
-  padding:18px;
-  margin:14px 0;
-}
-input, textarea, select{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  margin-top:8px;
-  margin-bottom:12px;
-  font-size:15px;
-}
-textarea{min-height:70px}
-button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  font-size:16px;
-  font-weight:600;
-  margin-top:10px;
-}
-.btn-primary{background:#22c55e;color:white}
-.btn-secondary{background:#3b82f6;color:white}
-.btn-clear{background:#ffffff30;color:white;width:48%;display:inline-block}
-.sig{
-  background:white;
-  border-radius:12px;
-  height:140px;
-}
-</style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
+      background: radial-gradient(1200px 700px at 80% 10%, #164a73 0%, transparent 55%),
+                  radial-gradient(900px 600px at 20% 20%, #0f3a5d 0%, transparent 55%),
+                  linear-gradient(180deg,var(--bg2),var(--bg1));
+      min-height:100vh;
+      padding:22px 14px 40px;
+    }
+
+    .wrap{max-width:920px;margin:0 auto}
+    .brand{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+      margin-bottom:14px;
+    }
+    .brand-left{display:flex;flex-direction:column;gap:4px}
+    .logo{
+      font-size:44px;font-weight:900;letter-spacing:-1px;line-height:1;
+      display:flex;align-items:center;gap:10px;
+    }
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--accent);display:inline-block}
+    .sub{color:var(--muted);font-size:16px}
+    .rt{color:var(--muted2);font-size:15px;margin-top:4px}
+
+    .top-pills{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end
+    }
+    .pill{
+      background:var(--pill);border:1px solid var(--stroke);
+      padding:10px 12px;border-radius:999px;color:var(--muted);
+      font-size:13px;white-space:nowrap;
+    }
+
+    .card{
+      background:linear-gradient(180deg,var(--card),var(--card2));
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+      margin:14px 0;
+    }
+    .card h2{margin:0 0 10px;font-size:30px;letter-spacing:-.4px}
+    .card h3{margin:0 0 10px;font-size:22px;letter-spacing:-.2px}
+    .hint{color:var(--muted);margin:8px 0 0;font-size:14px}
+
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:760px){.grid2{grid-template-columns:1fr}}
+
+    label{display:block;color:var(--muted);font-size:13px;margin:10px 0 6px}
+    input, select, textarea{
+      width:100%;
+      padding:14px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.92);
+      color:#0b2232;
+      font-size:16px;
+      outline:none;
+    }
+    textarea{min-height:100px;resize:vertical}
+    .small textarea{min-height:84px}
+
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .row > *{flex:1}
+
+    .btns{
+      display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;align-items:center
+    }
+    button{
+      border:0;
+      padding:14px 16px;
+      border-radius:14px;
+      font-weight:800;
+      cursor:pointer;
+      font-size:15px;
+    }
+    .b-primary{background:var(--accent);color:white}
+    .b-ok{background:var(--ok);color:#063016}
+    .b-ghost{
+      background:rgba(255,255,255,.10);
+      border:1px solid var(--stroke);
+      color:var(--text);
+      font-weight:700;
+    }
+    .b-danger{background:var(--danger);color:white}
+
+    .divider{height:1px;background:rgba(255,255,255,.12);margin:14px 0}
+
+    /* Wizard */
+    .wiz-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .step-title{font-size:20px;font-weight:800}
+    .step-meta{color:var(--muted);font-size:13px}
+    .progress{
+      width:100%;
+      height:10px;
+      background:rgba(255,255,255,.12);
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      margin-top:10px;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--accent),#66a6ff);
+    }
+    .step{display:none}
+    .step.active{display:block}
+
+    /* History list */
+    .hist-item{
+      padding:12px 12px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      border-radius:14px;
+      margin:10px 0;
+      cursor:pointer;
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    }
+    .hist-item b{font-size:15px}
+    .hist-item span{color:var(--muted);font-size:13px}
+
+    /* Signature */
+    .sigbox{
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.92);
+      border-radius:14px;
+      padding:10px;
+    }
+    canvas{width:100%;height:180px;border-radius:12px;background:white}
+
+    .note{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+    }
+  </style>
 </head>
 
 <body>
-<div class="container">
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-left">
+        <div class="logo"><span class="dot"></span>Prévia</div>
+        <div class="sub">plataforma de avaliação pré-anestésica</div>
+        <div class="rt">Dr Leonardo Alves Araújo · CRM-MG 47310 · RQE 40542</div>
+      </div>
+      <div class="top-pills">
+        <div class="pill">8 etapas</div>
+        <div class="pill">QR · Assinaturas · PDF Premium</div>
+        <div class="pill">salva no aparelho</div>
+      </div>
+    </div>
 
-<h1>Prévia</h1>
-<div style="opacity:.8;margin-bottom:18px">
-plataforma de avaliação pré-anestésica<br>
-Dr Leonardo Alves Araújo · CRM-MG 47310 · RQE 40542
-</div>
+    <div class="card">
+      <h2>Home</h2>
+      <div class="hint">
+        Preencha em <b>8 etapas</b>. No final: <b>consentimento + assinaturas + QR + PDF premium</b>.
+      </div>
 
-<!-- ETAPA 1 -->
-<div class="card">
-<h3>Identificação</h3>
-<select id="modo">
-<option>Clínica / Hospital</option>
-<option>Estética</option>
-</select>
-<input id="nome" placeholder="Nome do paciente">
-<input id="proc" placeholder="Procedimento">
-<input id="asa" placeholder="ASA">
-<input id="mallampati" placeholder="Mallampati">
-</div>
+      <div class="grid2" style="margin-top:10px">
+        <div>
+          <label>Modo</label>
+          <select id="modo">
+            <option value="clinica">Clínica / Hospital</option>
+            <option value="estetica">Estética (premium)</option>
+          </select>
+        </div>
+        <div>
+          <label>Logo na capa</label>
+          <select id="logoCapa">
+            <option value="word">“Prévia” grande</option>
+            <option value="mini">“Prévia” discreto</option>
+          </select>
+        </div>
+      </div>
 
-<!-- ETAPA 2 -->
-<div class="card">
-<h3>Comorbidades</h3>
-<textarea id="comorb" placeholder="Doenças e condições"></textarea>
-</div>
+      <div class="btns">
+        <button class="b-primary" onclick="novaAvaliacao()">Nova avaliação</button>
+        <button class="b-ghost" onclick="toggleHistorico()">Histórico</button>
+        <button class="b-danger" onclick="apagarTudo()">Apagar tudo</button>
+      </div>
 
-<!-- ETAPA 3 -->
-<div class="card">
-<h3>Medicações e alergias</h3>
-<textarea id="medic" placeholder="Medicações"></textarea>
-<textarea id="alerg" placeholder="Alergias"></textarea>
-</div>
+      <div class="divider"></div>
 
-<!-- ETAPA 4 -->
-<div class="card">
-<h3>Histórico anestésico</h3>
-<textarea id="cirurg" placeholder="Passado cirúrgico"></textarea>
-<textarea id="interc" placeholder="Intercorrências anestésicas"></textarea>
-</div>
+      <div id="painelHistorico" style="display:none">
+        <h3>Histórico</h3>
+        <div class="note">Fica salvo no aparelho. Se limpar dados do Safari, o histórico some.</div>
+        <div id="historico"></div>
+      </div>
 
-<!-- ETAPA 5 -->
-<div class="card">
-<h3>Plano anestésico</h3>
-<textarea id="estrat" placeholder="Estratégia anestésica"></textarea>
-<textarea id="cond" placeholder="Conduta"></textarea>
-</div>
+      <div class="hint">
+        Link certo do Pages: <b>...github.io/Previa/</b>. Se não atualizar, abra em <b>aba privada</b>.
+      </div>
+    </div>
 
-<!-- ETAPA 6 -->
-<div class="card">
-<h3>Consentimento</h3>
-<textarea id="consent">
-Declaro que recebi explicações claras sobre a anestesia proposta, seus benefícios e riscos (como náuseas, dor, alergias ou complicações raras), alternativas e cuidados necessários. Tive oportunidade de esclarecer dúvidas e autorizo a realização da anestesia conforme avaliação médica.
-</textarea>
-</div>
+    <!-- WIZARD -->
+    <div class="card" id="wizard" style="display:none">
+      <div class="wiz-head">
+        <div>
+          <div class="step-title" id="stepTitle">Etapa</div>
+          <div class="step-meta" id="stepMeta">1 de 8</div>
+        </div>
+        <div class="row" style="max-width:420px">
+          <button class="b-ghost" onclick="voltarStep()">Voltar</button>
+          <button class="b-primary" onclick="proximoStep()">Próximo</button>
+        </div>
+      </div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
 
-<div class="card">
-<h3>Anexos</h3>
-<label>Foto do paciente</label>
-<input type="file" id="foto">
-<label>Via aérea</label>
-<input type="file" id="via">
-<label>Exames</label>
-<input type="file" id="exames" multiple>
-</div>
+      <!-- STEP 1 -->
+      <div class="step active" data-title="Identificação" id="s1">
+        <div class="grid2">
+          <div>
+            <label>Nome do paciente</label>
+            <input id="nome" placeholder="Nome completo" />
+          </div>
+          <div>
+            <label>Procedimento</label>
+            <input id="proc" placeholder="Ex.: Mamoplastia redutora" />
+          </div>
+        </div>
+        <div class="grid2">
+          <div>
+            <label>ASA</label>
+            <input id="asa" placeholder="I / II / III..." />
+          </div>
+          <div>
+            <label>Via aérea (Mallampati)</label>
+            <input id="mallampati" placeholder="I / II / III / IV" />
+          </div>
+        </div>
+      </div>
 
-<div class="card">
-<h3>Assinaturas</h3>
-Paciente
-<canvas id="sigPac" class="sig"></canvas>
-<button class="btn-clear" onclick="limpar('sigPac')">Limpar</button>
+      <!-- STEP 2 -->
+      <div class="step" data-title="Dados clínicos" id="s2">
+        <div class="grid2">
+          <div class="small">
+            <label>Comorbidades</label>
+            <textarea id="comorb" placeholder="Ex.: HAS, DM, ansiedade, dislipidemia..."></textarea>
+          </div>
+          <div class="small">
+            <label>Medicações</label>
+            <textarea id="medic" placeholder="Ex.: losartana 50 mg, metformina 850 mg..."></textarea>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="small">
+            <label>Alergias</label>
+            <textarea id="alerg" placeholder="Ex.: dipirona, látex... (ou 'nega')"></textarea>
+          </div>
+          <div class="small">
+            <label>Passado cirúrgico</label>
+            <textarea id="cirurg" placeholder="Ex.: cesárea (3x), apendicectomia..."></textarea>
+          </div>
+        </div>
+      </div>
 
-Médico
-<canvas id="sigMed" class="sig"></canvas>
-<button class="btn-clear" onclick="limpar('sigMed')">Limpar</button>
-</div>
+      <!-- STEP 3 -->
+      <div class="step" data-title="Intercorrências anestésicas" id="s3">
+        <label>Intercorrências anestésicas prévias</label>
+        <textarea id="interc" placeholder="Ex.: PONV importante, hipertermia maligna (se houver), dificuldade de intubação..."></textarea>
+        <div class="hint">Aqui é onde o “hospital grande” percebe que você pensou como anestesista. 😄</div>
+      </div>
 
-<button class="btn-primary" onclick="gerarPDF()">Gerar PDF Premium</button>
+      <!-- STEP 4 -->
+      <div class="step" data-title="Estratégia anestésica" id="s4">
+        <label>Estratégia anestésica</label>
+        <textarea id="estrat" placeholder="Ex.: Anestesia geral + analgesia sistêmica; profilaxia PONV; bloqueios se indicados..."></textarea>
+        <label>Conduta (jejum / orientações)</label>
+        <textarea id="cond" placeholder="Ex.: Jejum 8h sólidos; água até 2h; medicações usuais conforme orientação..."></textarea>
+      </div>
 
-</div>
+      <!-- STEP 5 -->
+      <div class="step" data-title="Consentimento" id="s5">
+        <label>Texto do consentimento (editável)</label>
+        <textarea id="consent"></textarea>
+        <div class="hint">Você pode manter um texto padrão e só ajustar caso a caso.</div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step" data-title="Anexos" id="s6">
+        <div class="grid2">
+          <div>
+            <label>Foto do paciente (capa)</label>
+            <input type="file" id="fotoCapa" accept="image/*" />
+          </div>
+          <div>
+            <label>Foto de via aérea</label>
+            <input type="file" id="fotoVia" accept="image/*" />
+          </div>
+        </div>
+        <label>Exames (múltiplos)</label>
+        <input type="file" id="exames" accept="image/*" multiple />
+        <div class="hint">Dica: se o PDF ficar pesado, use 2–4 imagens principais.</div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="step" data-title="Assinaturas" id="s7">
+        <div class="grid2">
+          <div>
+            <h3 style="margin:0 0 8px">Paciente</h3>
+            <div class="sigbox">
+              <canvas id="sigPaciente"></canvas>
+            </div>
+            <div class="btns">
+              <button class="b-ghost" onclick="limparAss('pac')">Limpar</button>
+            </div>
+          </div>
+          <div>
+            <h3 style="margin:0 0 8px">Médico</h3>
+            <div class="sigbox">
+              <canvas id="sigMedico"></canvas>
+            </div>
+            <div class="btns">
+              <button class="b-ghost" onclick="limparAss('med')">Limpar</button>
+            </div>
+          </div>
+        </div>
+        <div class="note">Dica: assine em modo horizontal no iPhone. Fica bem mais natural.</div>
+      </div>
+
+      <!-- STEP 8 -->
+      <div class="step" data-title="PDF Premium" id="s8">
+        <h3>Checklist</h3>
+        <div class="note">
+          • Foto do paciente (capa)<br/>
+          • Via aérea + exames (anexos)<br/>
+          • Consentimento (1 página)<br/>
+          • Assinaturas desenhadas<br/>
+          • QR na capa (ID + hash + metadados mínimos)
+        </div>
+
+        <div class="btns">
+          <button class="b-ghost" onclick="visaoRapida()">Visão rápida</button>
+          <button class="b-ghost" onclick="irAssinaturas()">Assinaturas</button>
+          <button class="b-ok" onclick="gerarPDFPremium()">Gerar PDF Premium</button>
+        </div>
+
+        <div class="divider"></div>
+        <div class="note">
+          Integração: hoje o QR carrega payload mínimo (ID + hash). Quando você plugar um servidor,
+          o QR pode apontar para uma URL do relatório.
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="btns">
+        <button class="b-ghost" onclick="salvarRascunho()">Salvar no aparelho</button>
+        <button class="b-ghost" onclick="voltarHome()">Voltar Home</button>
+      </div>
+    </div>
+  </div>
 
 <script>
-const { jsPDF } = window.jspdf;
+/* =========================
+   Helpers
+========================= */
+const $ = (id)=>document.getElementById(id);
+const campos = ["modo","logoCapa","nome","proc","asa","mallampati","comorb","medic","alerg","cirurg","interc","estrat","cond","consent"];
 
-function limpar(id){
-  const c=document.getElementById(id);
-  const ctx=c.getContext("2d");
-  ctx.clearRect(0,0,c.width,c.height);
+function v(id){ return ($(id)?.value || "").trim(); }
+function setv(id,val){ if($(id)) $(id).value = val ?? ""; }
+
+/* =========================
+   Wizard (8 steps)
+========================= */
+let step = 0;
+const steps = ["s1","s2","s3","s4","s5","s6","s7","s8"];
+
+function updateWizardUI(){
+  steps.forEach((sid,i)=>$(sid).classList.toggle("active", i===step));
+  const title = $(steps[step]).dataset.title || "Etapa";
+  $("stepTitle").textContent = title;
+  $("stepMeta").textContent = `${step+1} de ${steps.length}`;
+  $("bar").style.width = `${Math.round(((step+1)/steps.length)*100)}%`;
 }
 
-function ativarAssinatura(canvas){
-  const ctx=canvas.getContext("2d");
-  let desenhando=false;
-  canvas.width=canvas.offsetWidth;
-  canvas.height=canvas.offsetHeight;
+function proximoStep(){
+  if(step < steps.length-1){ step++; updateWizardUI(); window.scrollTo({top:0,behavior:"smooth"}); }
+}
+function voltarStep(){
+  if(step > 0){ step--; updateWizardUI(); window.scrollTo({top:0,behavior:"smooth"}); }
+}
+function irAssinaturas(){ step = 6; updateWizardUI(); window.scrollTo({top:0,behavior:"smooth"}); }
+function visaoRapida(){ alert(resumoTexto()); }
 
-  canvas.addEventListener("mousedown",()=>desenhando=true);
-  canvas.addEventListener("mouseup",()=>desenhando=false);
-  canvas.addEventListener("mousemove",e=>{
-    if(!desenhando)return;
-    ctx.lineWidth=2;
-    ctx.lineCap="round";
-    ctx.strokeStyle="black";
-    ctx.lineTo(e.offsetX,e.offsetY);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(e.offsetX,e.offsetY);
-  });
+/* =========================
+   Consentimento padrão
+   (curto, claro, editável)
+========================= */
+function consentPadrao(){
+  const modo = v("modo")==="estetica" ? "procedimento eletivo/estético" : "procedimento cirúrgico";
+  return `Declaro que recebi explicações claras sobre a anestesia proposta para o ${modo}, incluindo benefícios, alternativas e possíveis riscos e efeitos adversos (por exemplo: náuseas e vômitos, dor, alergias, alterações de pressão, sangramento, necessidade de oxigênio, punções/hematomas, dor de garganta, lesões dentárias, dificuldades de via aérea e, raramente, eventos graves). 
 
-  canvas.addEventListener("touchstart",()=>desenhando=true);
-  canvas.addEventListener("touchend",()=>desenhando=false);
-  canvas.addEventListener("touchmove",e=>{
-    e.preventDefault();
-    if(!desenhando)return;
-    const rect=canvas.getBoundingClientRect();
-    const x=e.touches[0].clientX-rect.left;
-    const y=e.touches[0].clientY-rect.top;
-    ctx.lineTo(x,y);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-  });
+Fui orientado(a) sobre jejum, uso de medicamentos e cuidados pré e pós-operatórios. Tive oportunidade de fazer perguntas e todas foram respondidas. Autorizo a realização do plano anestésico e de medidas necessárias à minha segurança, caso ocorram intercorrências.
+
+Estou ciente de que resultados e evolução podem variar e que a equipe poderá ajustar condutas conforme avaliação clínica.`;
 }
 
-ativarAssinatura(document.getElementById("sigPac"));
-ativarAssinatura(document.getElementById("sigMed"));
+/* =========================
+   Storage / Histórico
+========================= */
+const KEY = "previa_historico_v2";
 
-async function gerarPDF(){
-  const pdf=new jsPDF("p","mm","a4");
+function gerarID(){
+  return "PRV-" + Date.now().toString().slice(-10);
+}
 
-  const nome=nomeVal("nome");
-  const proc=nomeVal("proc");
-  const asa=nomeVal("asa");
-  const mall=nomeVal("mallampati");
+function carregarHistorico(){
+  return JSON.parse(localStorage.getItem(KEY) || "[]");
+}
+function salvarHistorico(lista){
+  localStorage.setItem(KEY, JSON.stringify(lista));
+}
+function hashMini(str){
+  let h=0;
+  for(let i=0;i<str.length;i++){ h=(h<<5)-h+str.charCodeAt(i); h|=0; }
+  return Math.abs(h).toString(16).slice(0,10);
+}
 
-  const qrData=`Previa|${nome}|${Date.now()}`;
-  const qr=await QRCode.toDataURL(qrData);
+function salvarAvaliacao(dados){
+  const lista = carregarHistorico();
+  // se existir id, substitui
+  const idx = lista.findIndex(x=>x.id===dados.id);
+  if(idx>=0) lista[idx]=dados;
+  else lista.push(dados);
+  salvarHistorico(lista);
+  listarHistorico();
+}
 
-  pdf.setFillColor(20,45,85);
-  pdf.rect(0,0,210,40,"F");
-  pdf.setTextColor(255,255,255);
-  pdf.setFontSize(22);
-  pdf.text("Prévia",15,20);
-  pdf.setFontSize(11);
-  pdf.text("avaliação pré-anestésica",15,28);
+function listarHistorico(){
+  const div = $("historico");
+  if(!div) return;
+  const lista = carregarHistorico().slice().reverse();
+  div.innerHTML = "";
 
-  pdf.addImage(qr,"PNG",160,10,30,30);
-
-  pdf.setTextColor(0,0,0);
-  pdf.setFontSize(12);
-
-  let y=50;
-
-  function sec(titulo,conteudo){
-    pdf.setFont(undefined,"bold");
-    pdf.text(titulo,15,y);
-    y+=6;
-    pdf.setFont(undefined,"normal");
-    pdf.text(conteudo||"-",15,y);
-    y+=10;
+  if(lista.length===0){
+    div.innerHTML = `<div class="note" style="margin-top:10px">Sem avaliações salvas ainda.</div>`;
+    return;
   }
 
-  sec("Paciente",nome);
-  sec("Procedimento",proc);
-  sec("ASA",asa);
-  sec("Mallampati",mall);
-  sec("Comorbidades",nomeVal("comorb"));
-  sec("Medicações",nomeVal("medic"));
-  sec("Alergias",nomeVal("alerg"));
-  sec("Histórico cirúrgico",nomeVal("cirurg"));
-  sec("Intercorrências anestésicas",nomeVal("interc"));
-  sec("Plano anestésico",nomeVal("estrat"));
-  sec("Conduta",nomeVal("cond"));
-  sec("Consentimento",nomeVal("consent"));
+  lista.forEach(a=>{
+    const el = document.createElement("div");
+    el.className = "hist-item";
+    el.innerHTML = `
+      <div>
+        <b>${(a.nome||"Sem nome")}</b><br/>
+        <span>${a.proc||"Procedimento não informado"} · ASA ${a.asa||"-"} · Mallampati ${a.mallampati||"-"}</span>
+      </div>
+      <div style="text-align:right">
+        <span>${a.data||""}</span><br/>
+        <span>ID ${a.id||""}</span>
+      </div>
+    `;
+    el.onclick = ()=>{
+      $("wizard").style.display="block";
+      $("painelHistorico").style.display="none";
+      carregarAvaliacao(a.id);
+      step = 0;
+      updateWizardUI();
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
+    div.appendChild(el);
+  });
+}
 
+function carregarAvaliacao(id){
+  const lista = carregarHistorico();
+  const a = lista.find(x=>x.id===id);
+  if(!a) return;
+
+  // Campos
+  campos.forEach(c=>{
+    if(c in a) setv(c, a[c]);
+  });
+
+  // IDs internos
+  window.__currentId = a.id;
+  window.__currentHash = a.hash;
+
+  // Consent fallback
+  if(!v("consent")) setv("consent", consentPadrao());
+}
+
+/* =========================
+   App controls
+========================= */
+function novaAvaliacao(){
+  $("wizard").style.display="block";
+  $("painelHistorico").style.display="none";
+  step=0;
+  updateWizardUI();
+
+  // limpa campos
+  campos.forEach(c=>{
+    if(c==="modo" || c==="logoCapa") return; // mantém seleções
+    setv(c,"");
+  });
+
+  // texto padrão
+  setv("consent", consentPadrao());
+
+  // limpa anexos
+  if($("fotoCapa")) $("fotoCapa").value="";
+  if($("fotoVia")) $("fotoVia").value="";
+  if($("exames")) $("exames").value="";
+
+  // limpa assinaturas
+  limparAss("pac"); limparAss("med");
+
+  // novo id
+  window.__currentId = gerarID();
+  window.__currentHash = "";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function voltarHome(){
+  $("wizard").style.display="none";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function toggleHistorico(){
+  const p = $("painelHistorico");
+  p.style.display = (p.style.display==="none" ? "block" : "none");
+  listarHistorico();
+}
+
+function apagarTudo(){
+  if(!confirm("Apagar TODO o histórico salvo neste aparelho?")) return;
+  localStorage.removeItem(KEY);
+  listarHistorico();
+  alert("Histórico apagado.");
+}
+
+function salvarRascunho(){
+  const dados = coletarDadosBasicos();
+  salvarAvaliacao(dados);
+  alert("Salvo no aparelho.");
+}
+
+function resumoTexto(){
+  const nome = v("nome") || "Sem nome";
+  const proc = v("proc") || "Procedimento não informado";
+  const asa = v("asa") || "-";
+  const mal = v("mallampati") || "-";
+  return `Prévia — resumo rápido\n\n${nome}\n${proc}\nASA ${asa} · Mallampati ${mal}\n\nComorbidades: ${v("comorb")||"-"}\nMedicações: ${v("medic")||"-"}\nAlergias: ${v("alerg")||"-"}\nPassado cirúrgico: ${v("cirurg")||"-"}\nIntercorrências: ${v("interc")||"-"}\n\nEstratégia: ${v("estrat")||"-"}\nConduta: ${v("cond")||"-"}`;
+}
+
+function coletarDadosBasicos(){
+  const id = window.__currentId || gerarID();
+  const data = new Date().toLocaleDateString("pt-BR");
+  const payload = JSON.stringify({
+    id, data,
+    nome:v("nome"), proc:v("proc"), asa:v("asa"), mallampati:v("mallampati"),
+    comorb:v("comorb"), medic:v("medic"), alerg:v("alerg"), cirurg:v("cirurg"),
+    interc:v("interc"), estrat:v("estrat"), cond:v("cond"),
+    consent:v("consent"),
+    modo:v("modo"), logoCapa:v("logoCapa")
+  });
+  const hash = hashMini(payload);
+
+  window.__currentId = id;
+  window.__currentHash = hash;
+
+  return {
+    id, hash, data,
+    modo:v("modo"),
+    logoCapa:v("logoCapa"),
+    nome:v("nome"),
+    proc:v("proc"),
+    asa:v("asa"),
+    mallampati:v("mallampati"),
+    comorb:v("comorb"),
+    medic:v("medic"),
+    alerg:v("alerg"),
+    cirurg:v("cirurg"),
+    interc:v("interc"),
+    estrat:v("estrat"),
+    cond:v("cond"),
+    consent:v("consent")
+  };
+}
+
+/* =========================
+   Signatures (Canvas)
+========================= */
+function setupCanvas(id){
+  const c = $(id);
+  const ctx = c.getContext("2d");
+
+  // fix resolution for crisp drawing
+  function resize(){
+    const rect = c.getBoundingClientRect();
+    c.width = Math.floor(rect.width * devicePixelRatio);
+    c.height = Math.floor(rect.height * devicePixelRatio);
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#0b2232";
+  }
+
+  let drawing=false, last=null;
+
+  function pos(e){
+    const r = c.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY) - r.top;
+    return {x,y};
+  }
+
+  function start(e){ drawing=true; last=pos(e); e.preventDefault(); }
+  function move(e){
+    if(!drawing) return;
+    const p = pos(e);
+    ctx.beginPath();
+    ctx.moveTo(last.x,last.y);
+    ctx.lineTo(p.x,p.y);
+    ctx.stroke();
+    last=p;
+    e.preventDefault();
+  }
+  function end(){ drawing=false; last=null; }
+
+  c.addEventListener("mousedown",start);
+  c.addEventListener("mousemove",move);
+  window.addEventListener("mouseup",end);
+
+  c.addEventListener("touchstart",start,{passive:false});
+  c.addEventListener("touchmove",move,{passive:false});
+  c.addEventListener("touchend",end);
+
+  resize();
+  window.addEventListener("resize",resize);
+
+  return {
+    clear: ()=>{ ctx.clearRect(0,0,c.width,c.height); },
+    toDataURL: ()=> c.toDataURL("image/png",1.0)
+  };
+}
+
+let sigPac, sigMed;
+
+function limparAss(who){
+  if(who==="pac" && sigPac) sigPac.clear();
+  if(who==="med" && sigMed) sigMed.clear();
+}
+
+/* =========================
+   Images from inputs
+========================= */
+function fileToDataURL(file){
+  return new Promise((res,rej)=>{
+    const r = new FileReader();
+    r.onload = ()=>res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+async function inputImage(id){
+  const inp = $(id);
+  if(!inp || !inp.files || inp.files.length===0) return null;
+  return await fileToDataURL(inp.files[0]);
+}
+
+async function inputImages(id){
+  const inp = $(id);
+  if(!inp || !inp.files || inp.files.length===0) return [];
+  const arr = [];
+  for(const f of inp.files) arr.push(await fileToDataURL(f));
+  return arr;
+}
+
+/* =========================
+   PDF PREMIUM
+========================= */
+async function gerarPDFPremium(){
+  const { jsPDF } = window.jspdf;
+
+  const dados = coletarDadosBasicos();
+
+  // salva no aparelho antes
+  salvarAvaliacao(dados);
+
+  const fotoCapa = await inputImage("fotoCapa");
+  const fotoVia  = await inputImage("fotoVia");
+  const exames   = await inputImages("exames");
+
+  const sigPaciente = sigPac?.toDataURL() || null;
+  const sigMedico   = sigMed?.toDataURL() || null;
+
+  // QR payload mínimo (sem dados sensíveis)
+  const baseUrl = location.href.split("#")[0];
+  const qrPayload = `PREVIA|${dados.id}|${dados.hash}|${dados.modo}`;
+  const qrDataURL = await QRCode.toDataURL(qrPayload, { margin: 1, width: 220 });
+
+  const pdf = new jsPDF({ unit:"mm", format:"a4" });
+  const W = 210, H = 297;
+
+  /* ===== CAPA AZUL ===== */
+  // fundo
+  pdf.setFillColor(10, 44, 68);
+  pdf.rect(0,0,W,H,"F");
+
+  // título
+  const logoMode = dados.logoCapa || "word";
+  pdf.setTextColor(255,255,255);
+  pdf.setFont("helvetica","bold");
+  pdf.setFontSize(logoMode==="word" ? 42 : 30);
+  pdf.text("Prévia", 18, 40);
+
+  pdf.setFont("helvetica","normal");
+  pdf.setFontSize(16);
+  pdf.setTextColor(210,230,255);
+  pdf.text("relatório pré-anestésico", 18, 54);
+
+  // box info
+  pdf.setDrawColor(255,255,255);
+  pdf.setFillColor(255,255,255, 0.08);
+  pdf.roundedRect(18, 72, 174, 68, 6, 6, "F");
+
+  pdf.setTextColor(255,255,255);
+  pdf.setFont("helvetica","bold"); pdf.setFontSize(16);
+  pdf.text((dados.nome||"Paciente"), 24, 88);
+
+  pdf.setFont("helvetica","normal"); pdf.setFontSize(12);
+  pdf.setTextColor(210,230,255);
+  pdf.text(dados.proc ? `Procedimento: ${dados.proc}` : "Procedimento: —", 24, 98);
+  pdf.text(`ASA: ${dados.asa||"—"}  ·  Mallampati: ${dados.mallampati||"—"}`, 24, 106);
+
+  pdf.setTextColor(190,215,245);
+  pdf.setFontSize(11);
+  pdf.text(`Modo: ${dados.modo==="estetica" ? "Estética" : "Clínica/Hospital"}`, 24, 116);
+  pdf.text(`Data: ${dados.data}  ·  ID: ${dados.id}`, 24, 124);
+  pdf.text(`Hash: ${dados.hash}`, 24, 132);
+
+  // foto capa
+  if(fotoCapa){
+    try{
+      // posiciona à direita
+      pdf.addImage(fotoCapa, "JPEG", 132, 80, 52, 52, undefined, "FAST");
+      pdf.setDrawColor(255,255,255);
+      pdf.roundedRect(132, 80, 52, 52, 4, 4, "S");
+    }catch(e){}
+  }
+
+  // QR
+  try{
+    pdf.addImage(qrDataURL, "PNG", 150, 150, 40, 40);
+    pdf.setTextColor(210,230,255);
+    pdf.setFontSize(9);
+    pdf.text("QR de verificação", 150, 195);
+  }catch(e){}
+
+  // rodapé RT
+  pdf.setTextColor(210,230,255);
+  pdf.setFontSize(11);
+  pdf.text("Dr Leonardo Alves Araújo · CRM-MG 47310 · RQE 40542", 18, 280);
+
+  /* ===== PÁGINA 2: RESUMO CLÍNICO ===== */
   pdf.addPage();
-  pdf.text("Assinaturas",15,20);
+  pdf.setFillColor(245,248,252);
+  pdf.rect(0,0,W,H,"F");
 
-  pdf.addImage(document.getElementById("sigPac").toDataURL(),"PNG",15,30,80,40);
-  pdf.text("Paciente",15,75);
+  // header azul
+  pdf.setFillColor(10,44,68);
+  pdf.rect(0,0,W,32,"F");
+  pdf.setTextColor(255,255,255);
+  pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
+  pdf.text("Prévia — Resumo clínico", 14, 20);
 
-  pdf.addImage(document.getElementById("sigMed").toDataURL(),"PNG",110,30,80,40);
-  pdf.text("Médico",110,75);
+  pdf.setFont("helvetica","normal");
+  pdf.setFontSize(10);
+  pdf.setTextColor(220,235,255);
+  pdf.text(`ID: ${dados.id} · ${dados.data} · ${dados.modo==="estetica" ? "Estética" : "Clínica/Hospital"}`, 14, 28);
 
-  pdf.save("previa.pdf");
+  // conteúdo
+  let y = 48;
+  pdf.setTextColor(20,30,40);
+
+  function bloco(titulo, texto){
+    pdf.setFont("helvetica","bold"); pdf.setFontSize(12);
+    pdf.text(titulo, 14, y);
+    y += 6;
+    pdf.setFont("helvetica","normal"); pdf.setFontSize(11);
+    const lines = pdf.splitTextToSize(texto || "—", 182);
+    pdf.text(lines, 14, y);
+    y += (lines.length*5.3) + 6;
+  }
+
+  bloco("Identificação", `${dados.nome||"—"}\nProcedimento: ${dados.proc||"—"}\nASA ${dados.asa||"—"} · Mallampati ${dados.mallampati||"—"}`);
+  bloco("Comorbidades", dados.comorb);
+  bloco("Medicações", dados.medic);
+  bloco("Alergias", dados.alerg);
+  bloco("Passado cirúrgico", dados.cirurg);
+  bloco("Intercorrências anestésicas", dados.interc);
+  bloco("Estratégia anestésica", dados.estrat);
+  bloco("Conduta", dados.cond);
+
+  /* ===== PÁGINA 3: CONSENTIMENTO ===== */
+  pdf.addPage();
+  pdf.setFillColor(245,248,252);
+  pdf.rect(0,0,W,H,"F");
+
+  pdf.setFillColor(10,44,68);
+  pdf.rect(0,0,W,32,"F");
+  pdf.setTextColor(255,255,255);
+  pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
+  pdf.text("Consentimento informado", 14, 20);
+
+  pdf.setFont("helvetica","normal"); pdf.setFontSize(10);
+  pdf.setTextColor(220,235,255);
+  pdf.text(`ID: ${dados.id} · ${dados.data}`, 14, 28);
+
+  pdf.setTextColor(20,30,40);
+  pdf.setFont("helvetica","normal"); pdf.setFontSize(11);
+  const consentLines = pdf.splitTextToSize(dados.consent || consentPadrao(), 182);
+  pdf.text(consentLines, 14, 48);
+
+  // assinatura textual
+  pdf.setFontSize(10);
+  pdf.setTextColor(80,90,100);
+  pdf.text("Assinaturas na próxima página.", 14, 280);
+
+  /* ===== PÁGINA 4: ASSINATURAS ===== */
+  pdf.addPage();
+  pdf.setFillColor(245,248,252);
+  pdf.rect(0,0,W,H,"F");
+
+  pdf.setFillColor(10,44,68);
+  pdf.rect(0,0,W,32,"F");
+  pdf.setTextColor(255,255,255);
+  pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
+  pdf.text("Assinaturas", 14, 20);
+
+  pdf.setFont("helvetica","normal"); pdf.setFontSize(10);
+  pdf.setTextColor(220,235,255);
+  pdf.text(`ID: ${dados.id} · ${dados.data}`, 14, 28);
+
+  pdf.setTextColor(20,30,40);
+  pdf.setFont("helvetica","bold"); pdf.setFontSize(12);
+  pdf.text("Paciente", 14, 52);
+  pdf.text("Médico", 14, 142);
+
+  pdf.setDrawColor(180);
+  pdf.roundedRect(14, 58, 182, 70, 4, 4, "S");
+  pdf.roundedRect(14, 148, 182, 70, 4, 4, "S");
+
+  // desenha assinaturas dentro
+  try{
+    if(sigPaciente) pdf.addImage(sigPaciente, "PNG", 16, 60, 178, 66, undefined, "FAST");
+  }catch(e){}
+  try{
+    if(sigMedico) pdf.addImage(sigMedico, "PNG", 16, 150, 178, 66, undefined, "FAST");
+  }catch(e){}
+
+  pdf.setFont("helvetica","normal"); pdf.setFontSize(10);
+  pdf.setTextColor(80,90,100);
+  pdf.text("Dr Leonardo Alves Araújo · CRM-MG 47310 · RQE 40542", 14, 232);
+
+  /* ===== PÁGINA 5+: ANEXOS (se houver) ===== */
+  const temAnexos = !!fotoVia || (exames && exames.length);
+  if(temAnexos){
+    pdf.addPage();
+    pdf.setFillColor(245,248,252);
+    pdf.rect(0,0,W,H,"F");
+
+    pdf.setFillColor(10,44,68);
+    pdf.rect(0,0,W,32,"F");
+    pdf.setTextColor(255,255,255);
+    pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
+    pdf.text("Anexos", 14, 20);
+
+    pdf.setFont("helvetica","normal"); pdf.setFontSize(10);
+    pdf.setTextColor(220,235,255);
+    pdf.text(`ID: ${dados.id} · ${dados.data}`, 14, 28);
+
+    let yy = 48;
+
+    if(fotoVia){
+      pdf.setTextColor(20,30,40);
+      pdf.setFont("helvetica","bold"); pdf.setFontSize(12);
+      pdf.text("Via aérea", 14, yy);
+      yy += 6;
+      try{
+        pdf.addImage(fotoVia, "JPEG", 14, yy, 80, 80, undefined, "FAST");
+      }catch(e){}
+      yy += 88;
+    }
+
+    if(exames && exames.length){
+      pdf.setFont("helvetica","bold"); pdf.setFontSize(12);
+      pdf.setTextColor(20,30,40);
+      pdf.text("Exames", 14, yy);
+      yy += 6;
+
+      let x = 14;
+      let col = 0;
+      const size = 52;
+
+      for(let i=0;i<exames.length;i++){
+        try{
+          pdf.addImage(exames[i], "JPEG", x, yy, size, size, undefined, "FAST");
+        }catch(e){}
+
+        col++;
+        x += (size + 6);
+
+        if(col===3){
+          col=0; x=14; yy += (size+8);
+          if(yy > 230 && i < exames.length-1){
+            pdf.addPage();
+            pdf.setFillColor(245,248,252);
+            pdf.rect(0,0,W,H,"F");
+            pdf.setFillColor(10,44,68); pdf.rect(0,0,W,32,"F");
+            pdf.setTextColor(255,255,255);
+            pdf.setFont("helvetica","bold"); pdf.setFontSize(18);
+            pdf.text("Anexos (continuação)", 14, 20);
+            pdf.setFont("helvetica","normal"); pdf.setFontSize(10);
+            pdf.setTextColor(220,235,255);
+            pdf.text(`ID: ${dados.id} · ${dados.data}`, 14, 28);
+            yy = 48;
+          }
+        }
+      }
+    }
+  }
+
+  // Salva
+  const safeName = (dados.nome || "Paciente").replace(/[^\p{L}\p{N}\s_-]/gu,"").trim().slice(0,40) || "Paciente";
+  pdf.save(`Previa_${safeName}_${dados.id}.pdf`);
 }
 
-function nomeVal(id){
-  return document.getElementById(id).value;
+/* =========================
+   Init
+========================= */
+function init(){
+  listarHistorico();
+  $("painelHistorico").style.display="none";
+
+  // signatures
+  sigPac = setupCanvas("sigPaciente");
+  sigMed = setupCanvas("sigMedico");
+
+  // update consent when mode changes (only if user hasn't edited much)
+  $("modo").addEventListener("change", ()=>{
+    const c = v("consent");
+    // se estiver vazio ou ainda igual ao padrão anterior, atualiza
+    if(!c || c.length < 20) setv("consent", consentPadrao());
+  });
+
+  updateWizardUI();
 }
+init();
 </script>
+
 </body>
 </html>
