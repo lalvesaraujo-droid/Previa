@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dr. Leonardo Alves Araújo</title>
+  <meta name="description" content="Médico anestesiologista. Fundador do Prévia, plataforma digital para avaliação pré-anestésica." />
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0d1b2f;
+      --card:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.12);
+      --text:#eef4ff;
+      --muted:#a9b7d0;
+      --accent:#6aa9ff;
+      --accent2:#8ed0ff;
+      --radius:24px;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 10% -10%, rgba(106,169,255,.18), transparent 60%),
+        radial-gradient(900px 600px at 100% 0%, rgba(0,255,180,.08), transparent 50%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{
+      width:min(1100px,92%);
+      margin:0 auto;
+    }
+    header{
+      padding:28px 0;
+    }
+    .brand{
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .logo{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      background:linear-gradient(135deg,var(--accent),#4f7ed6);
+      box-shadow:0 10px 28px rgba(106,169,255,.35);
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:28px;
+      align-items:center;
+      padding:36px 0 52px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .hero-copy{
+      padding:42px;
+    }
+    .eyebrow{
+      display:inline-block;
+      padding:8px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      color:var(--accent2);
+      font-size:14px;
+      margin-bottom:18px;
+      background:rgba(255,255,255,.04);
+    }
+    h1{
+      margin:0 0 16px;
+      font-size:clamp(34px,6vw,62px);
+      line-height:1.02;
+      letter-spacing:-1.6px;
+    }
+    .sub{
+      margin:0;
+      font-size:18px;
+      line-height:1.7;
+      color:var(--muted);
+      max-width:720px;
+    }
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-top:28px;
+    }
+    .btn{
+      display:inline-block;
+      padding:16px 24px;
+      border-radius:16px;
+      text-decoration:none;
+      font-weight:700;
+      transition:.2s ease;
+      border:1px solid transparent;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),#7fb8ff);
+      color:#04111f;
+    }
+    .btn-secondary{
+      border-color:var(--line);
+      color:var(--text);
+      background:rgba(255,255,255,.04);
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .panel{
+      padding:30px;
+    }
+    .mini{
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:12px;
+    }
+    .big{
+      font-size:28px;
+      line-height:1.25;
+      font-weight:700;
+      margin:0 0 18px;
+    }
+    .list{
+      display:grid;
+      gap:12px;
+      margin-top:18px;
+    }
+    .item{
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+    }
+    section{
+      padding:14px 0 28px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+    .feature{
+      padding:24px;
+    }
+    .feature h3{
+      margin:0 0 10px;
+      font-size:20px;
+    }
+    .feature p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.65;
+    }
+    .cta{
+      padding:34px;
+      margin:26px 0 44px;
+      text-align:center;
+    }
+    .cta h2{
+      margin:0 0 12px;
+      font-size:34px;
+    }
+    .cta p{
+      margin:0 auto 22px;
+      max-width:700px;
+      color:var(--muted);
+      line-height:1.7;
+    }
+    footer{
+      padding:10px 0 40px;
+      color:var(--muted);
+      text-align:center;
+      font-size:14px;
+    }
+    @media (max-width:900px){
+      .hero,.grid{grid-template-columns:1fr}
+      .hero-copy,.panel,.cta{padding:24px}
+      .actions{flex-direction:column}
+      .btn{text-align:center}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo"></div>
+        <div>Dr. Leonardo Alves Araújo</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="card hero-copy">
+          <div class="eyebrow">Médico anestesiologista • fundador do Prévia</div>
+          <h1>Saúde, tecnologia e cuidado antes do primeiro sono cirúrgico.</h1>
+          <p class="sub">
+            Sou Leonardo Alves Araújo, médico anestesiologista, e estou construindo o Prévia:
+            uma plataforma digital para tornar a avaliação pré-anestésica mais clara, segura,
+            eficiente e humana.
+          </p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://lalvesaraujo-droid.github.io/Previa/">Conhecer o Prévia</a>
+            <a class="btn btn-secondary" href="#sobre">Saiba mais</a>
+          </div>
+        </div>
+
+        <div class="card panel">
+          <div class="mini">Visão</div>
+          <p class="big">Começamos pela anestesia. O destino é uma healthtech global.</p>
+          <div class="list">
+            <div class="item">Avaliação pré-anestésica digital</div>
+            <div class="item">Fluxo mais simples para médicos e pacientes</div>
+            <div class="item">Base para identidade médica digital</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sobre">
+        <div class="grid">
+          <div class="card feature">
+            <h3>Quem sou</h3>
+            <p>
+              Médico anestesiologista com olhar clínico e mentalidade construtora. Trabalho na
+              fronteira entre medicina, experiência do paciente e produto digital.
+            </p>
+          </div>
+
+          <div class="card feature">
+            <h3>O que estou criando</h3>
+            <p>
+              O Prévia nasce para organizar informações, reduzir ruído e melhorar a jornada
+              pré-operatória com tecnologia simples, elegante e útil.
+            </p>
+          </div>
+
+          <div class="card feature">
+            <h3>Para onde isso vai</h3>
+            <p>
+              Primeiro anestesia. Depois, prontuário inteligente, identidade de saúde e uma
+              plataforma escalável para medicina perioperatória e além.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="card cta">
+          <h2>O futuro da avaliação pré-anestésica começa agora.</h2>
+          <p>
+            O protótipo já está no ar. O próximo passo é transformar fluxo clínico em produto,
+            produto em padrão, e padrão em escala.
+          </p>
+          <a class="btn btn-primary" href="https://lalvesaraujo-droid.github.io/Previa/">Abrir protótipo do Prévia</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © Dr. Leonardo Alves Araújo • Belo Horizonte • Prévia
+    </footer>
+  </div>
+</body>
+</html>
