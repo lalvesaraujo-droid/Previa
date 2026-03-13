@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prévia ID — Emergency Card</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #152033;
+      --muted: #6b7280;
+      --line: #e6ebf2;
+      --primary: #0f4c81;
+      --primary-soft: #eaf3fb;
+      --danger: #b42318;
+      --danger-soft: #fef3f2;
+      --success: #067647;
+      --success-soft: #ecfdf3;
+      --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #eef4fb 0%, #f8fbff 100%);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .lang-switcher button {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .lang-switcher button:hover {
+      background: #f9fafb;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(15, 76, 129, 0.06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 22px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, #ffffff 0%, #f5faff 100%);
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .identity h2 {
+      margin: 0 0 6px 0;
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+    }
+
+    .identity p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .badge-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .pill.primary {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .pill.success {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .pill.danger {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      padding: 18px;
+    }
+
+    .section {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .section h3 {
+      margin: 0 0 12px 0;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .critical {
+      border: 1px solid #fecdca;
+      background: var(--danger-soft);
+    }
+
+    .critical ul,
+    .section ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .critical li,
+    .section li {
+      margin-bottom: 8px;
+      line-height: 1.45;
+    }
+
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .info-box {
+      border: 1px solid var(--line);
+      background: #fbfdff;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+    }
+
+    .value {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 0 18px 18px 18px;
+    }
+
+    .footer-actions a,
+    .footer-actions button {
+      border: none;
+      background: var(--primary);
+      color: white;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .footer-actions .secondary {
+      background: white;
+      color: var(--primary);
+      border: 1px solid var(--line);
+    }
+
+    .note {
+      padding: 0 18px 18px 18px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 760px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .item-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-top {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <h1 id="brandTitle">Prévia ID</h1>
+        <span id="brandSubtitle">Global Medical Identity</span>
+      </div>
+
+      <div class="lang-switcher">
+        <button onclick="setLanguage('pt')">PT</button>
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('es')">ES</button>
+        <button onclick="setLanguage('zh')">中文</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hero">
+        <div class="hero-top">
+          <div class="identity">
+            <h2 id="patientName">Leonardo Alves Araújo</h2>
+            <p id="cardType">Emergency Card</p>
+
+            <div class="badge-group">
+              <span class="pill primary" id="verifiedBadge">✔ Physician Verified</span>
+              <span class="pill success" id="reportBadge">✔ Reports Attached</span>
+              <span class="pill danger" id="bloodTypeBadge">B+ Blood Type</span>
+            </div>
+          </div>
+
+          <div class="info-box" style="min-width: 220px;">
+            <div class="label" id="emergencyContactLabel">Emergency Contact</div>
+            <div class="value">Paula Andrade Ribeiro Chaves</div>
+            <div style="margin-top: 6px; color: var(--muted); font-weight: 600;">+55 31 98797-1049</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div>
+          <div class="section critical">
+            <h3 id="criticalTitle">🚨 Critical Alerts / Red Flags</h3>
+            <ul id="criticalList">
+              <li>No severe drug allergy reported</li>
+              <li>No anticoagulant in use</li>
+              <li>No difficult airway history reported</li>
+            </ul>
+          </div>
+
+          <div class="section" style="margin-top: 16px;">
+            <h3 id="medicationsTitle">💊 Medications in Use</h3>
+            <ul id="medicationsList">
+              <li>Venvanse 40 mg — morning</li>
+              <li>Vilazodona 40 mg — lunch</li>
+            </ul>
+          </div>
+
+          <div class="section" style="margin-top: 16px;">
+            <h3 id="allergiesTitle">⚠ Allergies</h3>
+            <ul id="allergiesList">
+              <li>No known drug allergy</li>
+            </ul>
+          </div>
+
+          <div class="section" style="margin-top: 16px;">
+            <h3 id="examsTitle">📄 Recent Exams</h3>
+            <ul id="examsList">
+              <li>Laboratory tests — Nov 2025 / Mar 2026</li>
+              <li>Echocardiogram</li>
+              <li>MRI</li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <div class="section">
+            <h3 id="snapshotTitle">🩺 Emergency Snapshot</h3>
+
+            <div class="item-grid">
+              <div class="info-box">
+                <div class="label" id="lastMealLabel">Last Oral Intake</div>
+                <div class="value" id="lastMealValue">Not informed</div>
+              </div>
+
+              <div class="info-box">
+                <div class="label" id="comorbiditiesLabel">Comorbidities</div>
+                <div class="value" id="comorbiditiesValue">Dyslipidemia</div>
+              </div>
+
+              <div class="info-box">
+                <div class="label" id="smokingLabel">Smoking</div>
+                <div class="value" id="smokingValue">Never smoked</div>
+              </div>
+
+              <div class="info-box">
+                <div class="label" id="alcoholLabel">Alcohol</div>
+                <div class="value" id="alcoholValue">Social use</div>
+              </div>
+
+              <div class="info-box">
+                <div class="label" id="apneaLabel">Sleep Apnea</div>
+                <div class="value" id="apneaValue">No</div>
+              </div>
+
+              <div class="info-box">
+                <div class="label" id="bloodTypeLabel">Blood Type</div>
+                <div class="value" id="bloodTypeValue">B+</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section" style="margin-top: 16px;">
+            <h3 id="notesTitle">📝 Medical Notes</h3>
+            <p id="notesText" style="margin: 0; line-height: 1.55; color: var(--text);">
+              Patient denies medication allergy. Current medications include lisdexamfetamine and vilazodone.
+              No sleep apnea reported. Recent exams available for review.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-actions">
+        <a href="#" id="viewReportsBtn">View Reports</a>
+        <button class="secondary" onclick="window.print()" id="printBtn">Print / Save PDF</button>
+        <button class="secondary" onclick="shareCard()" id="shareBtn">Share</button>
+      </div>
+
+      <div class="note" id="privacyNote">
+        For emergency access only. Full record should remain protected and shared according to patient authorization and local regulations.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const translations = {
+      pt: {
+        brandTitle: "Prévia ID",
+        brandSubtitle: "Identidade Médica Global",
+        cardType: "Cartão de Emergência",
+        verifiedBadge: "✔ Verificado por médico",
+        reportBadge: "✔ Exames anexados",
+        bloodTypeBadge: "B+ Tipo sanguíneo",
+        emergencyContactLabel: "Contato de emergência",
+        criticalTitle: "🚨 Alertas Críticos / Red Flags",
+        criticalList: [
+          "Nenhuma alergia medicamentosa grave relatada",
+          "Sem uso de anticoagulante",
+          "Sem histórico de via aérea difícil"
+        ],
+        medicationsTitle: "💊 Medicamentos em uso",
+        medicationsList: [
+          "Venvanse 40 mg — manhã",
+          "Vilazodona 40 mg — almoço"
+        ],
+        allergiesTitle: "⚠ Alergias",
+        allergiesList: [
+          "Nega alergia medicamentosa"
+        ],
+        examsTitle: "📄 Exames recentes",
+        examsList: [
+          "Exames laboratoriais — nov/2025 e mar/2026",
+          "Ecocardiograma",
+          "Ressonância magnética"
+        ],
+        snapshotTitle: "🩺 Resumo de Emergência",
+        lastMealLabel: "Última ingestão",
+        lastMealValue: "Não informado",
+        comorbiditiesLabel: "Comorbidades",
+        comorbiditiesValue: "Dislipidemia",
+        smokingLabel: "Tabagismo",
+        smokingValue: "Nunca fumou",
+        alcoholLabel: "Álcool",
+        alcoholValue: "Uso social",
+        apneaLabel: "Apneia do sono",
+        apneaValue: "Não",
+        bloodTypeLabel: "Tipo sanguíneo",
+        bloodTypeValue: "B+",
+        notesTitle: "📝 Observações médicas",
+        notesText: "Paciente nega alergia medicamentosa. Em uso de lisdexanfetamina e vilazodona. Nega apneia do sono. Exames recentes disponíveis para revisão.",
+        viewReportsBtn: "Ver exames",
+        printBtn: "Imprimir / Salvar PDF",
+        shareBtn: "Compartilhar",
+        privacyNote: "Acesso destinado a situações de emergência. O prontuário completo deve permanecer protegido e ser compartilhado conforme autorização do paciente e normas locais."
+      },
+      en: {
+        brandTitle: "Prévia ID",
+        brandSubtitle: "Global Medical Identity",
+        cardType: "Emergency Card",
+        verifiedBadge: "✔ Physician Verified",
+        reportBadge: "✔ Reports Attached",
+        bloodTypeBadge: "B+ Blood Type",
+        emergencyContactLabel: "Emergency Contact",
+        criticalTitle: "🚨 Critical Alerts / Red Flags",
+        criticalList: [
+          "No severe drug allergy reported",
+          "No anticoagulant in use",
+          "No difficult airway history reported"
+        ],
+        medicationsTitle: "💊 Medications in Use",
+        medicationsList: [
+          "Venvanse 40 mg — morning",
+          "Vilazodone 40 mg — lunch"
+        ],
+        allergiesTitle: "⚠ Allergies",
+        allergiesList: [
+          "No known drug allergy"
+        ],
+        examsTitle: "📄 Recent Exams",
+        examsList: [
+          "Laboratory tests — Nov 2025 and Mar 2026",
+          "Echocardiogram",
+          "MRI"
+        ],
+        snapshotTitle: "🩺 Emergency Snapshot",
+        lastMealLabel: "Last Oral Intake",
+        lastMealValue: "Not informed",
+        comorbiditiesLabel: "Comorbidities",
+        comorbiditiesValue: "Dyslipidemia",
+        smokingLabel: "Smoking",
+        smokingValue: "Never smoked",
+        alcoholLabel: "Alcohol",
+        alcoholValue: "Social use",
+        apneaLabel: "Sleep Apnea",
+        apneaValue: "No",
+        bloodTypeLabel: "Blood Type",
+        bloodTypeValue: "B+",
+        notesTitle: "📝 Medical Notes",
+        notesText: "Patient denies medication allergy. Current medications include lisdexamfetamine and vilazodone. No sleep apnea reported. Recent exams available for review.",
+        viewReportsBtn: "View Reports",
+        printBtn: "Print / Save PDF",
+        shareBtn: "Share",
+        privacyNote: "For emergency access only. Full record should remain protected and shared according to patient authorization and local regulations."
+      },
+      es: {
+        brandTitle: "Prévia ID",
+        brandSubtitle: "Identidad Médica Global",
+        cardType: "Tarjeta de Emergencia",
+        verifiedBadge: "✔ Verificado por médico",
+        reportBadge: "✔ Informes adjuntos",
+        bloodTypeBadge: "B+ Grupo sanguíneo",
+        emergencyContactLabel: "Contacto de emergencia",
+        criticalTitle: "🚨 Alertas Críticas / Red Flags",
+        criticalList: [
+          "No se reporta alergia grave a medicamentos",
+          "Sin uso de anticoagulantes",
+          "Sin antecedente de vía aérea difícil"
+        ],
+        medicationsTitle: "💊 Medicamentos en uso",
+        medicationsList: [
+          "Venvanse 40 mg — mañana",
+          "Vilazodona 40 mg — almuerzo"
+        ],
+        allergiesTitle: "⚠ Alergias",
+        allergiesList: [
+          "Niega alergia medicamentosa"
+        ],
+        examsTitle: "📄 Exámenes recientes",
+        examsList: [
+          "Análisis de laboratorio — nov/2025 y mar/2026",
+          "Ecocardiograma",
+          "Resonancia magnética"
+        ],
+        snapshotTitle: "🩺 Resumen de Emergencia",
+        lastMealLabel: "Última ingesta",
+        lastMealValue: "No informado",
+        comorbiditiesLabel: "Comorbilidades",
+        comorbiditiesValue: "Dislipidemia",
+        smokingLabel: "Tabaquismo",
+        smokingValue: "Nunca fumó",
+        alcoholLabel: "Alcohol",
+        alcoholValue: "Uso social",
+        apneaLabel: "Apnea del sueño",
+        apneaValue: "No",
+        bloodTypeLabel: "Grupo sanguíneo",
+        bloodTypeValue: "B+",
+        notesTitle: "📝 Notas médicas",
+        notesText: "El paciente niega alergia a medicamentos. Usa lisdexanfetamina y vilazodona. Niega apnea del sueño. Exámenes recientes disponibles para revisión.",
+        viewReportsBtn: "Ver exámenes",
+        printBtn: "Imprimir / Guardar PDF",
+        shareBtn: "Compartir",
+        privacyNote: "Acceso destinado solo a emergencias. El historial completo debe permanecer protegido y compartirse según autorización del paciente y normativa local."
+      },
+      zh: {
+        brandTitle: "Prévia ID",
+        brandSubtitle: "全球医疗身份",
+        cardType: "紧急医疗卡",
+        verifiedBadge: "✔ 医生已核实",
+        reportBadge: "✔ 已附检查报告",
+        bloodTypeBadge: "B+ 血型",
+        emergencyContactLabel: "紧急联系人",
+        criticalTitle: "🚨 关键警报 / 红旗提示",
+        criticalList: [
+          "未报告严重药物过敏",
+          "未使用抗凝药",
+          "无困难气道病史"
+        ],
+        medicationsTitle: "💊 当前用药",
+        medicationsList: [
+          "Venvanse 40 mg — 上午",
+          "Vilazodona 40 mg — 中午"
+        ],
+        allergiesTitle: "⚠ 过敏史",
+        allergiesList: [
+          "无已知药物过敏"
+        ],
+        examsTitle: "📄 近期检查",
+        examsList: [
+          "实验室检查 — 2025年11月 / 2026年3月",
+          "超声心动图",
+          "磁共振成像"
+        ],
+        snapshotTitle: "🩺 紧急摘要",
+        lastMealLabel: "最后进食时间",
+        lastMealValue: "未提供",
+        comorbiditiesLabel: "合并症",
+        comorbiditiesValue: "血脂异常",
+        smokingLabel: "吸烟",
+        smokingValue: "从不吸烟",
+        alcoholLabel: "饮酒",
+        alcoholValue: "社交饮酒",
+        apneaLabel: "睡眠呼吸暂停",
+        apneaValue: "否",
+        bloodTypeLabel: "血型",
+        bloodTypeValue: "B+",
+        notesTitle: "📝 医疗备注",
+        notesText: "患者否认药物过敏。当前使用 lisdexamfetamine 和 vilazodone。无睡眠呼吸暂停。近期检查报告可供查看。",
+        viewReportsBtn: "查看报告",
+        printBtn: "打印 / 保存 PDF",
+        shareBtn: "分享",
+        privacyNote: "仅限紧急情况下访问。完整病历应根据患者授权和当地规定进行保护和共享。"
+      }
+    };
+
+    function setLanguage(lang) {
+      const t = translations[lang];
+
+      document.getElementById("brandTitle").textContent = t.brandTitle;
+      document.getElementById("brandSubtitle").textContent = t.brandSubtitle;
+      document.getElementById("cardType").textContent = t.cardType;
+      document.getElementById("verifiedBadge").textContent = t.verifiedBadge;
+      document.getElementById("reportBadge").textContent = t.reportBadge;
+      document.getElementById("bloodTypeBadge").textContent = t.bloodTypeBadge;
+      document.getElementById("emergencyContactLabel").textContent = t.emergencyContactLabel;
+      document.getElementById("criticalTitle").textContent = t.criticalTitle;
+      document.getElementById("medicationsTitle").textContent = t.medicationsTitle;
+      document.getElementById("allergiesTitle").textContent = t.allergiesTitle;
+      document.getElementById("examsTitle").textContent = t.examsTitle;
+      document.getElementById("snapshotTitle").textContent = t.snapshotTitle;
+      document.getElementById("lastMealLabel").textContent = t.lastMealLabel;
+      document.getElementById("lastMealValue").textContent = t.lastMealValue;
+      document.getElementById("comorbiditiesLabel").textContent = t.comorbiditiesLabel;
+      document.getElementById("comorbiditiesValue").textContent = t.comorbiditiesValue;
+      document.getElementById("smokingLabel").textContent = t.smokingLabel;
+      document.getElementById("smokingValue").textContent = t.smokingValue;
+      document.getElementById("alcoholLabel").textContent = t.alcoholLabel;
+      document.getElementById("alcoholValue").textContent = t.alcoholValue;
+      document.getElementById("apneaLabel").textContent = t.apneaLabel;
+      document.getElementById("apneaValue").textContent = t.apneaValue;
+      document.getElementById("bloodTypeLabel").textContent = t.bloodTypeLabel;
+      document.getElementById("bloodTypeValue").textContent = t.bloodTypeValue;
+      document.getElementById("notesTitle").textContent = t.notesTitle;
+      document.getElementById("notesText").textContent = t.notesText;
+      document.getElementById("viewReportsBtn").textContent = t.viewReportsBtn;
+      document.getElementById("printBtn").textContent = t.printBtn;
+      document.getElementById("shareBtn").textContent = t.shareBtn;
+      document.getElementById("privacyNote").textContent = t.privacyNote;
+
+      fillList("criticalList", t.criticalList);
+      fillList("medicationsList", t.medicationsList);
+      fillList("allergiesList", t.allergiesList);
+      fillList("examsList", t.examsList);
+    }
+
+    function fillList(elementId, items) {
+      const ul = document.getElementById(elementId);
+      ul.innerHTML = "";
+      items.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        ul.appendChild(li);
+      });
+    }
+
+    function shareCard() {
+      const shareData = {
+        title: "Prévia ID",
+        text: "Emergency medical card",
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard.");
+      }
+    }
+
+    const browserLang = (navigator.language || "pt").slice(0, 2);
+    const supported = ["pt", "en", "es", "zh"];
+    setLanguage(supported.includes(browserLang) ? browserLang : "pt");
+  </script>
+</body>
+</html>
