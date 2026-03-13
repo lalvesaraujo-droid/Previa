@@ -288,16 +288,52 @@ margin-bottom:10px;
 ">
 Escaneie para abrir o cartão médico
 </div>
+<div style="
+background:white;
+padding:18px;
+border-radius:18px;
+border:1px solid #e6ebf2;
+box-shadow:0 10px 24px rgba(16,24,40,0.06);
+text-align:center;
+">
 
 <img
+id="qrImage"
 src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://lalvesaraujo-droid.github.io/Previa/emergency.html"
 style="
-width:180px;
-height:180px;
-border-radius:12px;
-box-shadow:0 8px 20px rgba(0,0,0,0.08);
+width:200px;
+height:200px;
+border-radius:14px;
 "
 />
+
+<div style="margin-top:12px; display:flex; gap:8px; justify-content:center;">
+
+<button onclick="shareCard()" style="
+background:#0f4c81;
+color:white;
+border:none;
+padding:8px 14px;
+border-radius:10px;
+font-size:13px;
+">
+Compartilhar
+</button>
+
+<button onclick="downloadQR()" style="
+background:#0f4c81;
+color:white;
+border:none;
+padding:8px 14px;
+border-radius:10px;
+font-size:13px;
+">
+Baixar QR
+</button>
+
+</div>
+
+</div>
 
 </div>
             <p id="cardType">Emergency Card</p>
@@ -680,6 +716,17 @@ box-shadow:0 8px 20px rgba(0,0,0,0.08);
     const browserLang = (navigator.language || "pt").slice(0, 2);
     const supported = ["pt", "en", "es", "zh"];
     setLanguage(supported.includes(browserLang) ? browserLang : "pt");
+    function downloadQR() {
+
+  const img = document.getElementById("qrImage").src;
+
+  const a = document.createElement("a");
+  a.href = img;
+  a.download = "previa-id-qr.png";
+
+  a.click();
+
+}
   </script>
 </body>
 </html>
