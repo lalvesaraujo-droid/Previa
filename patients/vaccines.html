@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prévia ID • Vacinas</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(180deg, #f4f8fb 0%, #eef4f8 100%);
+      color: #112133;
+      min-height: 100vh;
+      padding: 24px 16px 40px;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      color: #1e5eff;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .brand {
+      font-size: 14px;
+      font-weight: 700;
+      color: #5f6f82;
+      letter-spacing: 0.4px;
+    }
+
+    .hero {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 12px 32px rgba(25, 42, 70, 0.08);
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #eaf2ff;
+      color: #1e5eff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: 28px;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #617286;
+      line-height: 1.55;
+    }
+
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 10px 24px rgba(25, 42, 70, 0.06);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .small-muted {
+      color: #728297;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .patient-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .field {
+      background: #f7fafc;
+      border: 1px solid #e5edf5;
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      color: #7f8c9b;
+      margin-bottom: 6px;
+    }
+
+    .field-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: #13263d;
+      line-height: 1.4;
+    }
+
+    .vaccine-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .vaccine-item {
+      border: 1px solid #e5edf5;
+      border-radius: 18px;
+      padding: 16px;
+      background: #fbfdff;
+    }
+
+    .vaccine-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .vaccine-meta {
+      color: #5f7084;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .lang-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: #edf3f8;
+      color: #3c5168;
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      transition: 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: #1e5eff;
+      color: white;
+    }
+
+    .lang-content {
+      display: none;
+      background: #f7fafc;
+      border: 1px solid #e5edf5;
+      border-radius: 18px;
+      padding: 16px;
+      line-height: 1.7;
+      color: #213549;
+      font-size: 15px;
+    }
+
+    .lang-content.active {
+      display: block;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .action-btn {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 15px;
+      transition: 0.2s ease;
+    }
+
+    .primary {
+      background: #1e5eff;
+      color: white;
+    }
+
+    .secondary {
+      background: #eef4f8;
+      color: #18324d;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #7a8896;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      .patient-grid,
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="topbar">
+      <a class="back-btn" href="index.html">← Voltar</a>
+      <div class="brand">PRÉVIA ID</div>
+    </div>
+
+    <section class="hero">
+      <div class="badge">Vaccination Passport</div>
+      <h1>Carteira de Vacinação</h1>
+      <p class="subtitle">
+        Registro digital de imunização integrado ao seu perfil de saúde.
+        Seguro, visual, multilíngue e pronto para uso em emergência, consulta ou viagem.
+      </p>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <span>Paciente</span>
+        <span class="small-muted">Fonte: Ministério da Saúde</span>
+      </div>
+
+      <div class="patient-grid">
+        <div class="field">
+          <div class="field-label">Nome</div>
+          <div class="field-value">Leonardo Alves Araujo</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Data de nascimento</div>
+          <div class="field-value">29/01/1982</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Sexo</div>
+          <div class="field-value">Masculino</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Nacionalidade</div>
+          <div class="field-value">Brasileiro</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <span>Vacinação COVID-19</span>
+        <span class="small-muted">4 registros</span>
+      </div>
+
+      <div class="vaccine-list">
+        <div class="vaccine-item">
+          <div class="vaccine-name">CoronaVac</div>
+          <div class="vaccine-meta">
+            Data: 22/01/2021<br />
+            Dose: 1/2<br />
+            Lote: 202009013<br />
+            Local: Hospital Madre Teresa • Belo Horizonte/MG
+          </div>
+        </div>
+
+        <div class="vaccine-item">
+          <div class="vaccine-name">CoronaVac</div>
+          <div class="vaccine-meta">
+            Data: 18/02/2021<br />
+            Dose: 2/2<br />
+            Lote: 202009013<br />
+            Local: Hospital Madre Teresa • Belo Horizonte/MG
+          </div>
+        </div>
+
+        <div class="vaccine-item">
+          <div class="vaccine-name">Pfizer – Comirnaty</div>
+          <div class="vaccine-meta">
+            Data: 19/10/2021<br />
+            Dose: Reforço<br />
+            Lote: 31065BD<br />
+            Local: Centro de Saúde Padre Tarcísio • Belo Horizonte/MG
+          </div>
+        </div>
+
+        <div class="vaccine-item">
+          <div class="vaccine-name">AstraZeneca / Fiocruz – Covishield</div>
+          <div class="vaccine-meta">
+            Data: 22/06/2022<br />
+            Dose: 2º Reforço<br />
+            Lote: 21PVCD357W<br />
+            Local: Centro de Saúde Padre Tarcísio • Belo Horizonte/MG
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        Carteira emitida em 13/03/2026. Dados provenientes da Rede Nacional de Dados em Saúde (RNDS / DATASUS / Ministério da Saúde).
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <span>Versão Internacional</span>
+        <span class="small-muted">4 idiomas</span>
+      </div>
+
+      <div class="lang-tabs">
+        <button class="lang-btn active" onclick="showLang('pt', this)">Português</button>
+        <button class="lang-btn" onclick="showLang('en', this)">English</button>
+        <button class="lang-btn" onclick="showLang('es', this)">Español</button>
+        <button class="lang-btn" onclick="showLang('zh', this)">中文</button>
+      </div>
+
+      <div id="pt" class="lang-content active">
+        <strong>Vacinação contra COVID-19</strong><br><br>
+        • CoronaVac – 22/01/2021 – 1ª dose<br>
+        • CoronaVac – 18/02/2021 – 2ª dose<br>
+        • Pfizer Comirnaty – 19/10/2021 – Reforço<br>
+        • AstraZeneca / Fiocruz – 22/06/2022 – 2º reforço<br><br>
+        Documento emitido pelo Ministério da Saúde do Brasil.
+      </div>
+
+      <div id="en" class="lang-content">
+        <strong>COVID-19 Vaccination Record</strong><br><br>
+        • CoronaVac – Jan 22, 2021 – Dose 1<br>
+        • CoronaVac – Feb 18, 2021 – Dose 2<br>
+        • Pfizer Comirnaty – Oct 19, 2021 – Booster<br>
+        • AstraZeneca / Fiocruz – Jun 22, 2022 – Second booster<br><br>
+        Official record issued by the Brazilian Ministry of Health.
+      </div>
+
+      <div id="es" class="lang-content">
+        <strong>Registro de Vacunación contra COVID-19</strong><br><br>
+        • CoronaVac – 22 Ene 2021 – Dosis 1<br>
+        • CoronaVac – 18 Feb 2021 – Dosis 2<br>
+        • Pfizer Comirnaty – 19 Oct 2021 – Refuerzo<br>
+        • AstraZeneca / Fiocruz – 22 Jun 2022 – Segundo refuerzo<br><br>
+        Documento oficial emitido por el Ministerio de Salud de Brasil.
+      </div>
+
+      <div id="zh" class="lang-content">
+        <strong>新冠疫苗接种记录</strong><br><br>
+        • 科兴疫苗 – 2021年1月22日 – 第1剂<br>
+        • 科兴疫苗 – 2021年2月18日 – 第2剂<br>
+        • 辉瑞 Comirnaty – 2021年10月19日 – 加强针<br>
+        • 阿斯利康 / Fiocruz – 2022年6月22日 – 第二次加强针<br><br>
+        该文件由巴西卫生部签发。
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <span>Ações</span>
+        <span class="small-muted">Integração</span>
+      </div>
+
+      <div class="actions">
+        <a class="action-btn primary" href="#" onclick="alert('Aqui você poderá abrir o PDF oficial da carteira de vacinação.')">
+          Abrir PDF oficial
+        </a>
+
+        <a class="action-btn secondary" href="#" onclick="alert('Aqui você poderá exibir o QR Code oficial de validação.')">
+          Ver QR de validação
+        </a>
+      </div>
+
+      <div class="footer-note">
+        Próxima evolução: conectar upload automático do documento, extração estruturada e exibição do QR original dentro do Prévia ID.
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    function showLang(langId, btn) {
+      const contents = document.querySelectorAll('.lang-content');
+      const buttons = document.querySelectorAll('.lang-btn');
+
+      contents.forEach(content => content.classList.remove('active'));
+      buttons.forEach(button => button.classList.remove('active'));
+
+      document.getElementById(langId).classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
