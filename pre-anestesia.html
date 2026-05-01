@@ -1,4 +1,4 @@
-<!<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
@@ -6,15 +6,13 @@
 <title>Prévia | Avaliação Pré-Anestésica Online</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   background: linear-gradient(180deg, #061b33 0%, #07182b 100%);
-  color: #ffffff;
+  color: #fff;
   padding: 28px;
   text-align: center;
 }
@@ -25,45 +23,59 @@ body {
 }
 
 .logo {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: 3px;
-  margin-top: 20px;
-  margin-bottom: 48px;
-  opacity: 0.95;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  margin-top: 28px;
+  margin-bottom: 58px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  font-size: 18px;
+  margin-bottom: 34px;
 }
 
 h1 {
-  font-size: 42px;
-  line-height: 1.12;
-  margin: 0 0 24px;
-  font-weight: 850;
+  font-size: 48px;
+  line-height: 1.1;
+  margin: 0 0 26px;
+  font-weight: 900;
 }
 
 .sub {
-  font-size: 22px;
+  font-size: 24px;
   line-height: 1.45;
-  color: rgba(255,255,255,0.82);
-  margin-bottom: 34px;
+  color: rgba(255,255,255,0.78);
+  margin-bottom: 36px;
 }
 
 .btn {
   display: block;
   width: 100%;
-  max-width: 360px;
-  margin: 0 auto 18px;
+  max-width: 390px;
+  margin: 0 auto 14px;
   background: #2d86ff;
   color: white;
   text-decoration: none;
-  padding: 20px 24px;
-  border-radius: 22px;
-  font-size: 21px;
-  font-weight: 800;
-  box-shadow: 0 18px 45px rgba(45,134,255,0.38);
+  padding: 22px 24px;
+  border-radius: 26px;
+  font-size: 23px;
+  font-weight: 900;
+  box-shadow: 0 20px 50px rgba(45,134,255,0.42);
+}
+
+.benefits {
+  font-size: 17px;
+  color: rgba(255,255,255,0.70);
+  margin-bottom: 42px;
 }
 
 .small {
-  font-size: 18px;
+  font-size: 19px;
   color: rgba(255,255,255,0.72);
   margin-bottom: 36px;
 }
@@ -71,43 +83,42 @@ h1 {
 .card {
   background: rgba(255,255,255,0.07);
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 26px;
-  padding: 26px;
-  margin: 22px 0;
+  border-radius: 28px;
+  padding: 28px;
+  margin: 24px 0;
   text-align: left;
-  box-shadow: 0 14px 35px rgba(0,0,0,0.15);
 }
 
 .card h2 {
   margin: 0 0 18px;
-  font-size: 27px;
+  font-size: 28px;
 }
 
 .card p, .card li {
-  font-size: 19px;
-  line-height: 1.5;
+  font-size: 20px;
+  line-height: 1.55;
   color: rgba(255,255,255,0.84);
 }
 
 ul {
-  padding-left: 20px;
+  padding-left: 22px;
   margin: 0;
 }
 
 .pixbox {
-  background: rgba(45,134,255,0.12);
-  border: 1px solid rgba(45,134,255,0.35);
+  background: rgba(45,134,255,0.13);
+  border: 1px solid rgba(45,134,255,0.38);
 }
 
 .pixkey {
   background: rgba(255,255,255,0.10);
-  padding: 16px;
-  border-radius: 16px;
-  font-size: 21px;
-  font-weight: 800;
+  padding: 18px;
+  border-radius: 18px;
+  font-size: 23px;
+  font-weight: 900;
   text-align: center;
   letter-spacing: 1px;
-  margin: 16px 0;
+  margin: 18px 0;
   word-break: break-all;
 }
 
@@ -116,33 +127,24 @@ ul {
   border: none;
   background: white;
   color: #071b33;
-  padding: 17px;
-  border-radius: 16px;
-  font-size: 18px;
-  font-weight: 800;
+  padding: 18px;
+  border-radius: 18px;
+  font-size: 19px;
+  font-weight: 900;
   margin-top: 8px;
 }
 
 .whatsapp {
   background: #25D366;
   color: white;
-  box-shadow: 0 18px 45px rgba(37,211,102,0.28);
+  box-shadow: 0 18px 45px rgba(37,211,102,0.30);
 }
 
 .footer {
   font-size: 13px;
   color: rgba(255,255,255,0.52);
-  margin: 36px 0 10px;
+  margin: 38px 0 10px;
   line-height: 1.5;
-}
-
-.badge {
-  display: inline-block;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.10);
-  font-size: 14px;
-  margin-bottom: 22px;
 }
 </style>
 </head>
@@ -157,16 +159,20 @@ ul {
   <h1>Sua cirurgia segura começa aqui</h1>
 
   <div class="sub">
-    Evite atrasos, pendências ou cancelamentos.  
+    Evite atrasos ou cancelamentos na sua cirurgia.
     Faça sua avaliação pré-anestésica online com segurança.
   </div>
 
   <a class="btn" href="#pagamento">
-    Iniciar minha avaliação agora
+    Começar em menos de 5 minutos
   </a>
 
+  <div class="benefits">
+    ✔ Sem sair de casa • ✔ Seguro • ✔ Rápido
+  </div>
+
   <div class="small">
-    Atendimento rápido, seguro e sem burocracia.
+    Atendimento médico online, rápido e sem burocracia.
   </div>
 
   <div class="card">
