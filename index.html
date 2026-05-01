@@ -1,145 +1,243 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Prévia • App</title>
-  <meta name="color-scheme" content="dark light" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prévia | Avaliação Pré-Anestésica Digital</title>
 
-  <style>
-    :root{
-      --bg:#0b0f14;
-      --card:#0f1621;
-      --text:#e8eef7;
-      --muted:#9fb0c6;
-      --line:rgba(255,255,255,.10);
-      --accent:#6aa9ff;
-      --shadow:0 18px 50px rgba(0,0,0,.45);
-      --radius:18px;
-      --font:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    }
+<style>
+:root{
+  --bg1:#06111d;
+  --bg2:#0b2438;
+  --blue:#33c7ff;
+  --blue2:#006dff;
+  --text:#ffffff;
+  --muted:#b8c7d3;
+  --card:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.15);
+}
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:var(--font);
-      color:var(--text);
-      background:
-        radial-gradient(900px 420px at 12% -10%, rgba(106,169,255,.25), transparent 55%),
-        radial-gradient(800px 380px at 90% 10%, rgba(86,211,100,.12), transparent 60%),
-        var(--bg);
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+*{
+  box-sizing:border-box;
+}
 
-    .app{
-      width:100%;
-      max-width:420px;
-      padding:22px;
-    }
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:radial-gradient(circle at top,#143a55 0%,var(--bg2) 35%,var(--bg1) 100%);
+  color:var(--text);
+}
 
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:22px;
-      text-align:center;
-    }
+.app{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:28px 18px;
+}
 
-    .logo{
-      width:64px;
-      height:64px;
-      border-radius:20px;
-      margin:0 auto 16px;
-      background:linear-gradient(135deg, rgba(106,169,255,.95), rgba(106,169,255,.25));
-      box-shadow:0 10px 25px rgba(106,169,255,.25);
-      position:relative;
-    }
+.card{
+  width:100%;
+  max-width:520px;
+  padding:30px 24px;
+  border-radius:30px;
+  background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(255,255,255,.05));
+  border:1px solid var(--border);
+  box-shadow:0 28px 80px rgba(0,0,0,.42);
+  backdrop-filter:blur(18px);
+}
 
-    .logo:after{
-      content:"";
-      position:absolute;
-      inset:14px;
-      border-radius:14px;
-      background:rgba(11,15,20,.45);
-      border:1px solid rgba(255,255,255,.14);
-    }
+.logo{
+  width:58px;
+  height:58px;
+  border-radius:18px;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  margin-bottom:22px;
+  box-shadow:0 12px 35px rgba(51,199,255,.35);
+}
 
-    h1{
-      margin:8px 0 4px;
-      font-size:20px;
-      letter-spacing:.2px;
-    }
+.brand{
+  letter-spacing:4px;
+  font-size:14px;
+  color:#9ee7ff;
+  font-weight:700;
+  margin-bottom:14px;
+}
 
-    .sub{
-      color:var(--muted);
-      font-size:13px;
-      margin-bottom:18px;
-    }
+.badge{
+  display:inline-block;
+  padding:8px 13px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  color:#c8f1ff;
+  font-size:12px;
+  margin-bottom:18px;
+  background:rgba(255,255,255,.06);
+}
 
-    .btn{
-      width:100%;
-      padding:14px 16px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-weight:600;
-      cursor:pointer;
-      margin-top:10px;
-      text-decoration:none;
-      display:block;
-    }
+h1{
+  font-size:34px;
+  line-height:1.08;
+  margin:0 0 16px;
+  letter-spacing:-1px;
+}
 
-    .btn:hover{
-      background:rgba(255,255,255,.06);
-    }
+.sub{
+  font-size:17px;
+  line-height:1.55;
+  color:var(--muted);
+  margin-bottom:24px;
+}
 
-    .btn.primary{
-      background:linear-gradient(135deg, rgba(106,169,255,.95), rgba(106,169,255,.35));
-      border-color:rgba(106,169,255,.75);
-      color:#04101f;
-    }
+.btn{
+  display:block;
+  width:100%;
+  text-align:center;
+  text-decoration:none;
+  padding:17px 18px;
+  border-radius:17px;
+  margin-top:12px;
+  font-weight:700;
+  font-size:16px;
+  color:white;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.10);
+}
 
-    .footer{
-      margin-top:18px;
-      font-size:11px;
-      color:var(--muted);
-    }
-  </style>
+.btn.primary{
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  border:none;
+  box-shadow:0 14px 38px rgba(0,109,255,.35);
+}
+
+.grid{
+  margin-top:26px;
+  padding:18px;
+  border-radius:22px;
+  background:rgba(255,255,255,.07);
+  border:1px solid var(--border);
+}
+
+.item{
+  display:flex;
+  gap:10px;
+  font-size:15px;
+  color:#e7f6fb;
+  margin:13px 0;
+  line-height:1.35;
+}
+
+.check{
+  color:#54d9ff;
+  font-weight:800;
+}
+
+.section{
+  margin-top:24px;
+}
+
+.section h2{
+  font-size:19px;
+  margin:0 0 8px;
+}
+
+.section p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.55;
+}
+
+.quote{
+  margin-top:24px;
+  padding:18px;
+  border-radius:22px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--border);
+  color:#dceff7;
+  font-size:14px;
+  line-height:1.55;
+}
+
+.footer{
+  margin-top:24px;
+  text-align:center;
+  color:#8195a3;
+  font-size:12px;
+  line-height:1.55;
+}
+</style>
 </head>
 
 <body>
-  <div class="app">
-    <div class="card">
 
-      <div class="logo"></div>
+<div class="app">
+  <div class="card">
 
-      <h1>Prévia</h1>
-      <div class="sub">avaliação pré-anestésica digital</div>
+    <div class="logo"></div>
 
-      <!-- BOTÃO PRINCIPAL -->
-      <a class="btn primary" href="avaliacao.html">
-        Iniciar avaliação
-      </a>
+    <div class="brand">PRÉVIA</div>
 
-      <!-- FUTURO -->
-      <a class="btn" href="#">
-        Histórico (em breve)
-      </a>
-
-      <a class="btn" href="#">
-        Sobre o Prévia
-      </a>
-
-      <div class="footer">
-        Protótipo clínico • v1
-      </div>
-
+    <div class="badge">
+      Avaliação pré-anestésica digital premium
     </div>
+
+    <h1>Sua cirurgia começa antes do centro cirúrgico.</h1>
+
+    <div class="sub">
+      Um fluxo rápido, seguro e organizado para reunir dados clínicos,
+      exames e informações essenciais antes da cirurgia.
+    </div>
+
+    <a class="btn primary" href="https://previa-app1.vercel.app/">
+      Iniciar minha avaliação agora
+    </a>
+
+    <a class="btn" href="https://wa.me/5531995460202?text=Olá,%20quero%20realizar%20minha%20avaliação%20pré-anestésica%20pelo%20Prévia.">
+      Falar com a equipe
+    </a>
+
+    <div class="grid">
+      <div class="item"><span class="check">✓</span> Avaliação pré-anestésica digital</div>
+      <div class="item"><span class="check">✓</span> Organização de exames e dados clínicos</div>
+      <div class="item"><span class="check">✓</span> Resumo para anestesista e cirurgião</div>
+      <div class="item"><span class="check">✓</span> Mais segurança antes da cirurgia</div>
+      <div class="item"><span class="check">✓</span> Menos risco de atrasos e cancelamentos</div>
+    </div>
+
+    <div class="section">
+      <h2>Para pacientes</h2>
+      <p>
+        Preencha seus dados, envie informações importantes e antecipe sua avaliação
+        com mais praticidade e tranquilidade.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Para médicos e clínicas</h2>
+      <p>
+        O Prévia ajuda a organizar o pré-operatório, reduzir falhas de comunicação
+        e entregar um resumo clínico mais claro antes do procedimento.
+      </p>
+    </div>
+
+    <div class="quote">
+      “O objetivo é simples: transformar o pré-operatório em uma experiência
+      mais segura, elegante e eficiente.”
+    </div>
+
+    <a class="btn primary" href="https://previa-app1.vercel.app/">
+      Acessar o Prévia
+    </a>
+
+    <div class="footer">
+      Prévia Health Care<br>
+      Avaliação pré-anestésica digital<br><br>
+      Este sistema não substitui consulta médica presencial quando indicada.
+    </div>
+
   </div>
+</div>
+
 </body>
 </html>
