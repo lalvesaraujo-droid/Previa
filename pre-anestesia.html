@@ -17,17 +17,14 @@ body {
   text-align: center;
 }
 
-.container {
-  max-width: 520px;
-  margin: auto;
-}
+.container { max-width: 520px; margin: auto; }
 
 .logo {
   font-size: 22px;
   font-weight: 900;
   letter-spacing: 6px;
   margin-top: 28px;
-  margin-bottom: 58px;
+  margin-bottom: 50px;
 }
 
 .badge {
@@ -40,16 +37,16 @@ body {
 }
 
 h1 {
-  font-size: 48px;
+  font-size: 46px;
   line-height: 1.1;
   margin: 0 0 26px;
   font-weight: 900;
 }
 
 .sub {
-  font-size: 24px;
+  font-size: 23px;
   line-height: 1.45;
-  color: rgba(255,255,255,0.78);
+  color: rgba(255,255,255,0.80);
   margin-bottom: 36px;
 }
 
@@ -65,19 +62,14 @@ h1 {
   border-radius: 26px;
   font-size: 23px;
   font-weight: 900;
+  border: none;
   box-shadow: 0 20px 50px rgba(45,134,255,0.42);
 }
 
 .benefits {
   font-size: 17px;
-  color: rgba(255,255,255,0.70);
+  color: rgba(255,255,255,0.78);
   margin-bottom: 42px;
-}
-
-.small {
-  font-size: 19px;
-  color: rgba(255,255,255,0.72);
-  margin-bottom: 36px;
 }
 
 .card {
@@ -94,16 +86,28 @@ h1 {
   font-size: 28px;
 }
 
-.card p, .card li {
-  font-size: 20px;
+.card p, .card li, label {
+  font-size: 19px;
   line-height: 1.55;
   color: rgba(255,255,255,0.84);
 }
 
-ul {
-  padding-left: 22px;
-  margin: 0;
+input, textarea {
+  width: 100%;
+  padding: 17px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.10);
+  color: white;
+  font-size: 18px;
+  margin: 8px 0 18px;
 }
+
+input::placeholder, textarea::placeholder {
+  color: rgba(255,255,255,0.55);
+}
+
+textarea { min-height: 95px; }
 
 .pixbox {
   background: rgba(45,134,255,0.13);
@@ -140,6 +144,13 @@ ul {
   box-shadow: 0 18px 45px rgba(37,211,102,0.30);
 }
 
+.notice {
+  font-size: 16px;
+  color: rgba(255,255,255,0.65);
+  text-align: center;
+  margin-top: 16px;
+}
+
 .footer {
   font-size: 13px;
   color: rgba(255,255,255,0.52);
@@ -160,48 +171,52 @@ ul {
 
   <div class="sub">
     Evite atrasos ou cancelamentos na sua cirurgia.
-    Faça sua avaliação pré-anestésica online com segurança.
+    Antecipe sua avaliação pré-anestésica com segurança.
   </div>
 
-  <a class="btn" href="#pagamento">
+  <a class="btn" href="#formulario">
     Começar em menos de 5 minutos
   </a>
 
   <div class="benefits">
-    ✔ Sem sair de casa • ✔ Seguro • ✔ Rápido
-  </div>
-
-  <div class="small">
-    Atendimento médico online, rápido e sem burocracia.
+    ✔ Sem sair de casa • ✔ Avaliado por anestesiologista • ✔ Rápido
   </div>
 
   <div class="card">
     <h2>Como funciona</h2>
-    <p>1. Você inicia sua avaliação online</p>
-    <p>2. Envia seus dados e informações da cirurgia</p>
-    <p>3. A equipe médica analisa com segurança</p>
-    <p>4. Você recebe orientações e relatório pré-anestésico</p>
+    <p>1. Você preenche seus dados principais</p>
+    <p>2. Finaliza via Pix</p>
+    <p>3. Envia o comprovante pelo WhatsApp</p>
+    <p>4. Continua a avaliação completa no Prévia</p>
   </div>
 
-  <div class="card">
-    <h2>Indicado para</h2>
-    <ul>
-      <li>Pacientes com cirurgia agendada</li>
-      <li>Cirurgias eletivas</li>
-      <li>Procedimentos com anestesia</li>
-      <li>Pacientes que desejam antecipar a avaliação</li>
-    </ul>
-  </div>
+  <div class="card" id="formulario">
+    <h2>Dados da avaliação</h2>
 
-  <div class="card">
-    <h2>O que será avaliado</h2>
-    <ul>
-      <li>Histórico de saúde</li>
-      <li>Medicamentos em uso</li>
-      <li>Alergias</li>
-      <li>Exames enviados</li>
-      <li>Riscos e orientações antes da cirurgia</li>
-    </ul>
+    <label>Nome completo</label>
+    <input id="nome" placeholder="Digite seu nome completo">
+
+    <label>Idade</label>
+    <input id="idade" placeholder="Ex: 42 anos">
+
+    <label>Cirurgia</label>
+    <input id="cirurgia" placeholder="Ex: colecistectomia, plástica, ortopedia">
+
+    <label>Data da cirurgia</label>
+    <input id="data" placeholder="Ex: 15/05/2026">
+
+    <label>Médico cirurgião</label>
+    <input id="medico" placeholder="Nome do cirurgião">
+
+    <label>Hospital / Clínica</label>
+    <input id="hospital" placeholder="Local da cirurgia">
+
+    <label>Doenças, alergias ou medicamentos em uso</label>
+    <textarea id="obs" placeholder="Ex: hipertensão, diabetes, alergias, anticoagulantes..."></textarea>
+
+    <a class="btn" href="#pagamento">
+      Continuar para pagamento
+    </a>
   </div>
 
   <div class="card pixbox" id="pagamento">
@@ -219,14 +234,25 @@ ul {
     <button class="copybtn" onclick="copiarPix()">Copiar chave Pix</button>
 
     <p style="margin-top:20px;">
-      Após o Pix, envie o comprovante pelo WhatsApp para liberação da avaliação.
+      Após o pagamento, envie o comprovante pelo WhatsApp para liberação da avaliação.
     </p>
 
-    <a class="btn whatsapp"
-       href="https://wa.me/5531995460202?text=Ol%C3%A1%2C%20fiz%20o%20Pix%20e%20gostaria%20de%20iniciar%20minha%20avalia%C3%A7%C3%A3o%20pr%C3%A9-anest%C3%A9sica."
-       target="_blank">
-       Enviar comprovante pelo WhatsApp
-    </a>
+    <button class="btn whatsapp" onclick="enviarWhatsApp()">
+      Enviar dados e comprovante pelo WhatsApp
+    </button>
+
+    <div class="notice">
+      Depois do envio, acesse o link do Prévia na própria mensagem para concluir a avaliação.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>O que será avaliado</h2>
+    <p>• Histórico de saúde</p>
+    <p>• Medicamentos em uso</p>
+    <p>• Alergias</p>
+    <p>• Exames enviados</p>
+    <p>• Riscos e orientações antes da cirurgia</p>
   </div>
 
   <div class="card">
@@ -250,6 +276,40 @@ function copiarPix() {
   const pix = document.getElementById("pix").innerText;
   navigator.clipboard.writeText(pix);
   alert("Chave Pix copiada!");
+}
+
+function enviarWhatsApp() {
+  const nome = document.getElementById("nome").value || "Não informado";
+  const idade = document.getElementById("idade").value || "Não informado";
+  const cirurgia = document.getElementById("cirurgia").value || "Não informado";
+  const data = document.getElementById("data").value || "Não informado";
+  const medico = document.getElementById("medico").value || "Não informado";
+  const hospital = document.getElementById("hospital").value || "Não informado";
+  const obs = document.getElementById("obs").value || "Não informado";
+
+  const mensagem =
+`Olá, fiz o Pix e gostaria de iniciar minha avaliação pré-anestésica.
+
+DADOS DO PACIENTE:
+Nome: ${nome}
+Idade: ${idade}
+Cirurgia: ${cirurgia}
+Data da cirurgia: ${data}
+Cirurgião: ${medico}
+Hospital/Clínica: ${hospital}
+
+Informações clínicas:
+${obs}
+
+Vou enviar o comprovante do Pix em seguida.
+
+Para continuar sua avaliação completa, acesse:
+https://previa-app1.vercel.app/`;
+
+  const telefone = "5531995460202";
+  const url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+
+  window.open(url, "_blank");
 }
 </script>
 
